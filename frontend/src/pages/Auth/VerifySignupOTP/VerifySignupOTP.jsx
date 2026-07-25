@@ -106,9 +106,6 @@ function VerifySignupOTP() {
             setLoading(true);
 
             setError("");
-
-
-            console.log("STEP 1");
             const response = await verifyOtp({
 
                 email,
@@ -118,10 +115,6 @@ function VerifySignupOTP() {
                 purpose: "signup"
 
             });
-            console.log("STEP 2");
-            console.log("VERIFY RESPONSE:", response.data);
-
-            console.log("LOGIN FUNCTION =", login);
 
             login({
                 token: response.data.accessToken,
@@ -136,17 +129,7 @@ function VerifySignupOTP() {
                 case "student":
                     console.log("STEP 3");
 
-                    navigate("/student/dashboard", {
-
-                        replace: true
-
-                    });
-
-                    break;
-
-                case "employer":
-
-                    navigate("/employer/dashboard", {
+                    navigate("/student", {
 
                         replace: true
 
@@ -156,7 +139,7 @@ function VerifySignupOTP() {
 
                 case "admin":
 
-                    navigate("/admin/dashboard", {
+                    navigate("/admin", {
 
                         replace: true
 

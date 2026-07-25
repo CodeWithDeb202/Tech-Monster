@@ -55,13 +55,13 @@ function Login() {
 
 
 
-    setFormData((prev)=>({
+    setFormData((prev) => ({
 
 
       ...prev,
 
 
-      [name]:value
+      [name]: value
 
 
     }));
@@ -74,7 +74,7 @@ function Login() {
 
 
 
-  const handleSubmit = async(e)=>{
+  const handleSubmit = async (e) => {
 
 
     e.preventDefault();
@@ -84,7 +84,7 @@ function Login() {
 
 
 
-    if(!formData.email || !formData.password){
+    if (!formData.email || !formData.password) {
 
 
       return setError(
@@ -98,7 +98,7 @@ function Login() {
 
 
 
-    try{
+    try {
 
 
       setLoading(true);
@@ -129,39 +129,25 @@ function Login() {
 
 
       // Role Based Dashboard Navigation
-      
-      
-      if(user.role === "student"){
-        
+
+
+      if (user.role === "student") {
+
         console.log("Going....")
 
-        navigate("/student/dashboard");
+        navigate("/student");
+
+
+      } else if (user.role === "admin") {
+
+
+        navigate("/admin");
 
 
       }
 
-      else if(user.role === "employer"){
-
-
-        navigate("/employer/dashboard");
-
-
-      }
-
-      else if(user.role === "admin"){
-
-
-        navigate("/admin/dashboard");
-
-
-      }
-
-      else{
-
-        console.log("Not going on dashboard")
+      else {
         navigate("/login");
-
-
       }
 
 
@@ -169,7 +155,7 @@ function Login() {
 
     }
 
-    catch(err){
+    catch (err) {
 
 
 
@@ -184,7 +170,7 @@ function Login() {
 
     }
 
-    finally{
+    finally {
 
 
       setLoading(false);
@@ -223,10 +209,10 @@ function Login() {
         onSubmit={handleSubmit}
 
 
-        initial={{opacity:0}}
+        initial={{ opacity: 0 }}
 
 
-        animate={{opacity:1}}
+        animate={{ opacity: 1 }}
 
 
       >
@@ -313,7 +299,7 @@ function Login() {
               checked={rememberMe}
 
 
-              onChange={()=>
+              onChange={() =>
 
 
                 setRememberMe(!rememberMe)
@@ -378,13 +364,13 @@ function Login() {
 
             loading
 
-            ?
+              ?
 
-            "Logging In..."
+              "Logging In..."
 
-            :
+              :
 
-            "Login"
+              "Login"
 
 
           }
