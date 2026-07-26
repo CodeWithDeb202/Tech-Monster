@@ -16,7 +16,16 @@ import ProtectedRoute from './ProtectedRoute';
 import VerifySignupOTP from '../pages/Auth/VerifySignupOTP';
 import VerifyResetOTP from '../pages/Auth/VerifyResetOTP';
 
-import StudentDashboard from '../pages/Dashboard/Student';
+// Student Dashboard
+import StudentHome from '../pages/Dashboard/Student/Home';
+import StudentDashboard from '../pages/Dashboard/Student/Dashboard';
+import StudentTask from '../pages/Dashboard/Student/Tasks';
+import StudentAttendance from '../pages/Dashboard/Student/Attendance';
+import StudentAccount from '../pages/Dashboard/Student/Account';
+import StudentCertificate from '../pages/Dashboard/Student/Certificate';
+import StudentSetting from '../pages/Dashboard/Student/Setting';
+
+// Admin Dashboard
 import AdminDashboard from '../pages/Dashboard/Admin';
 
 
@@ -50,16 +59,16 @@ function AppRoutes() {
                         </ProtectedRoute>
                     }
                 >
-                    <Route path="/student/home" element={<StudentDashboard />} />
+                    <Route index element={<StudentHome />} />
                     <Route path="/student/dashboard" element={<StudentDashboard />} />
-                    <Route path="/student/tasks" element={<StudentDashboard />} />
-                    <Route path="/student/attendance" element={<StudentDashboard />} />
-                    <Route path="/student/account" element={<StudentDashboard />} />
-                    <Route path="/student/certificate" element={<StudentDashboard />} />
-                    <Route path="/student/settings" element={<StudentDashboard />} />
-                    <Route path="/student/help&support" element={<StudentDashboard />} />
-                    <Route path="/student/notification" element={<StudentDashboard />} />
-                    <Route path="/student/message" element={<StudentDashboard />} />
+                    <Route path="/student/tasks" element={<StudentTask />} />
+                    <Route path="/student/attendance" element={<StudentAttendance />} />
+                    <Route path="/student/account" element={<StudentAccount />} />
+                    <Route path="/student/certificate" element={<StudentCertificate />} />
+                    <Route path="/student/settings" element={<StudentSetting />} />
+                    <Route path="/student/help&support" element={''} />
+                    <Route path="/student/notification" element={''} />
+                    <Route path="/student/message" element={''} />
                 </Route>
 
 

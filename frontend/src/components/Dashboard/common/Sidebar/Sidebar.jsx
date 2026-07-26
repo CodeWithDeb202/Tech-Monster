@@ -28,7 +28,7 @@ function Sidebar({role="student"}) {
     }, [location.pathname]);
 
     const studentLinks = [
-        { name: "Home", path: "/student/home", icon: <FiHome /> },
+        { name: "Home", path: "/student", icon: <FiHome /> },
         { name: "Dashboard", path: "/student/dashboard", icon: <FiGrid /> },
         { name: "Daily Task", path: "/student/tasks", icon: <FiCheckSquare /> },
         { name: "Attendance", path: "/student/attendance", icon: <FiCalendar /> },
