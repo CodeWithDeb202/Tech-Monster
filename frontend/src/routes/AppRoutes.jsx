@@ -25,11 +25,14 @@ import StudentAccount from '../pages/Dashboard/Student/Account';
 import StudentCertificate from '../pages/Dashboard/Student/Certificate';
 import StudentSetting from '../pages/Dashboard/Student/Setting';
 
+
+
+import Notification from '../components/Dashboard/common/Notification';
+import Message from '../components/Dashboard/common/Message';
+
 // Admin Dashboard
 import AdminDashboard from '../pages/Dashboard/Admin';
-
-
-// Dashboards
+import HelpSupport from '../components/Dashboard/common/Help&Supp';
 
 
 
@@ -66,9 +69,9 @@ function AppRoutes() {
                     <Route path="/student/account" element={<StudentAccount />} />
                     <Route path="/student/certificate" element={<StudentCertificate />} />
                     <Route path="/student/settings" element={<StudentSetting />} />
-                    <Route path="/student/help&support" element={''} />
-                    <Route path="/student/notification" element={''} />
-                    <Route path="/student/message" element={''} />
+                    <Route path="/student/help&support" element={<HelpSupport />} />
+                    <Route path="/student/notification" element={<Notification />} />
+                    <Route path="/student/message" element={<Message />} />
                 </Route>
 
 

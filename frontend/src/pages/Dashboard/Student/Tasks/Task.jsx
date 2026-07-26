@@ -1,9 +1,17 @@
 import './Task.css';
 
-function Task(){
-    return(
+// import { useState } from "react";
+// import ProgressCircle from "../../../../components/Dashboard/Student/Tasks/ProgressCircle";
+// import CourseTaskCard from "../../../../components/Dashboard/Student/Tasks/CourseTaskCard";
+
+function Task() {
+    // const [open, setOpen] = useState(false);
+
+
+    return (
         <>
-            <h1>Task</h1>
+            
+
         </>
     )
 }

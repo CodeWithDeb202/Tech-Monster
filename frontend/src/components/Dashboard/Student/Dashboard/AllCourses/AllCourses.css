@@ -1,0 +1,41 @@
+.all-courses {
+
+    margin-top: 60px;
+
+}
+
+.course-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+
+}
+
+.course-heading h2 {
+
+    font-size: 30px;
+
+    color: #fff;
+
+}
+
+.course-heading p {
+
+    color: #8faac6;
+
+}
+
+.course-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    gap: 24px;
+
+}

@@ -97,3 +97,26 @@
         background-position: 0% 50%;
     }
 }
+
+
+@keyframes heroGlow {
+
+    0% {
+
+        transform: translate(0, 0);
+
+    }
+
+    50% {
+
+        transform: translate(-40px, 25px);
+
+    }
+
+    100% {
+
+        transform: translate(0, 0);
+
+    }
+
+}

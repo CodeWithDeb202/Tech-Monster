@@ -80,6 +80,18 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+
+.locked-link {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.lock-icon-right {
+  margin-left: auto;
+  font-size: 14px;
+  color: #ff3366;
+}
+
 .logout-btn {
     color: #f87171;
 }

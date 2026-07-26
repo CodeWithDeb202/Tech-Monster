@@ -17,10 +17,23 @@ import SearchBar from '../../../Common/SearchBar';
 function Navbar({ role = "student" }) {
 
     const navigate = useNavigate();
-    // const location = useLocation();
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showProfilePopup, setShowProfilePopup] = useState(false);
+    
+    // Notification Dropdown State & Mock Unread Notifications List
+    const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+    const [notifications, setNotifications] = useState([
+        { id: 1, message: 'New React & Node full-stack module uploaded.', read: false },
+        { id: 2, message: 'Your daily task for Day 15 was approved.', read: false },
+        { id: 3, message: 'Payment verified! Certificate unlocked.', read: true },
+    ]);
+
+    const unreadCount = notifications.filter(n => !n.read).length;
+
+    const handleMarkAsRead = (id) => {
+        setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+    };
 
     const handleLogout = () => {
         localStorage.clear();
@@ -46,15 +59,68 @@ function Navbar({ role = "student" }) {
                     </div>
 
                     {/* Middle Search Bar */}
-                    
                     <SearchBar />
-                    
 
                     {/* Right Icons & User Profile */}
                     <div id="navbar-right">
-                        <NavLink to={`/${role}/notification`} className={({isActive}) => isActive ? 'notification-btn active' : 'notification-btn'}>
-                            <FiBell />
-                        </NavLink>
+                        
+                        {/* Notification Bell with Dropdown & Badge Counter */}
+                        <div 
+                            className="notification-wrapper"
+                            onMouseEnter={() => setShowNotificationPopup(true)}
+                            onMouseLeave={() => setShowNotificationPopup(false)}
+                            style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
+                        >
+                            <NavLink to={`/${role}/notification`} className={({isActive}) => isActive ? 'notification-btn active' : 'notification-btn'}>
+                                <FiBell />
+                                {unreadCount > 0 && (
+                                    <motion.span 
+                                        className="navbar-notification-badge"
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ type: 'spring', stiffness: 500 }}
+                                    >
+                                        {unreadCount}
+                                    </motion.span>
+                                )}
+                            </NavLink>
+
+                            <AnimatePresence>
+                                {showNotificationPopup && (
+                                    <motion.div
+                                        className="navbar-notification-dropdown"
+                                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <div className="nav-notif-header">
+                                            <span>Notifications</span>
+                                            <span style={{ fontSize: '11px', color: '#00f0ff' }}>{unreadCount} New</span>
+                                        </div>
+                                        <div className="nav-notif-list">
+                                            {notifications.length === 0 ? (
+                                                <div className="nav-notif-item">No notifications</div>
+                                            ) : (
+                                                notifications.map((item) => (
+                                                    <div 
+                                                        key={item.id} 
+                                                        className={`nav-notif-item ${!item.read ? 'unread' : ''}`}
+                                                        onClick={() => handleMarkAsRead(item.id)}
+                                                    >
+                                                        <p>{item.message}</p>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                        <div className="nav-notif-footer">
+                                            <Link to={`/${role}/notification`}>View All Notifications →</Link>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
                         <NavLink to={`/${role}/message`} className={({isActive}) => isActive ? 'message-btn active' : 'message-btn'}>
                             <FiMessageSquare />
                         </NavLink>
@@ -95,6 +161,7 @@ function Navbar({ role = "student" }) {
                         </div>
                     </div>
                 </header>
+
                 {/* MOBILE OVERLAY */}
                 <AnimatePresence>
                     {isMobileMenuOpen && (

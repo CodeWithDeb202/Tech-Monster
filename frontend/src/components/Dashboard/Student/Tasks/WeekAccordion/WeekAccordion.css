@@ -1,0 +1,111 @@
+.week-card {
+
+    margin-bottom: 20px;
+
+    background: #081626;
+
+    border: 1px solid rgba(0, 255, 255, .18);
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    transition: .3s;
+
+}
+
+.week-card:hover {
+
+    box-shadow:
+
+        0 0 18px rgba(0, 255, 255, .18);
+
+}
+
+.week-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 20px 25px;
+
+    cursor: pointer;
+
+}
+
+.week-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+.week-left h3 {
+
+    color: white;
+
+    font-size: 22px;
+
+}
+
+.week-check {
+
+    font-size: 22px;
+
+    color: #00ff88;
+
+}
+
+.week-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+}
+
+.week-lock {
+
+    font-size: 24px;
+
+    color: #00e5ff;
+
+}
+
+.arrow {
+
+    font-size: 30px;
+
+    color: white;
+
+}
+
+.week-body {
+
+    padding: 20px;
+
+    background: #071320;
+
+    border-top: 1px solid rgba(255, 255, 255, .06);
+
+}
+
+.locked {
+
+    opacity: .7;
+
+}
+
+.locked .week-header {
+
+    cursor: not-allowed;
+
+}

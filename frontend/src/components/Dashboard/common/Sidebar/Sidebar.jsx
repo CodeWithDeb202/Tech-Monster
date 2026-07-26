@@ -1,8 +1,9 @@
 import './Sidebar.css';
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { 
     FiHome, 
     FiGrid, 
@@ -12,18 +13,17 @@ import {
     FiAward, 
     FiSettings, 
     FiLogOut, 
-    FiX
+    FiX,
+    FiLock,
+    FiHelpCircle // Added Help Icon
 } from "react-icons/fi";
 
-function Sidebar({role="student"}) {
-
+function Sidebar({ role = "student", isCourseCompleted = false }) {
     const navigate = useNavigate();
     const location = useLocation();
-    
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMobileMenuOpen(false);
     }, [location.pathname]);
 
@@ -33,7 +33,8 @@ function Sidebar({role="student"}) {
         { name: "Daily Task", path: "/student/tasks", icon: <FiCheckSquare /> },
         { name: "Attendance", path: "/student/attendance", icon: <FiCalendar /> },
         { name: "Account", path: "/student/account", icon: <FiUser /> },
-        { name: "Certificate", path: "/student/certificate", icon: <FiAward /> },
+        { name: "Certificate", path: "/student/certificate", icon: <FiAward />, locked: !isCourseCompleted },
+        { name: "Help & Support", path: "/student/help&support", icon: <FiHelpCircle /> }, // Added Help & Support Link
     ];
 
     const adminLinks = [
@@ -46,15 +47,21 @@ function Sidebar({role="student"}) {
 
     const navLinks = role === "admin" ? adminLinks : studentLinks;
 
+    const handleLinkClick = (e, link) => {
+        if (link.locked) {
+            e.preventDefault();
+            toast.info("1st course complete kara 100%");
+        }
+    };
+
     const handleLogout = () => {
         localStorage.clear();
         navigate("/login");
     };
 
-
     return(
         <>
-            {/* MOBILE OVERLAY */}
+            <ToastContainer />
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div 
@@ -67,7 +74,6 @@ function Sidebar({role="student"}) {
                 )}
             </AnimatePresence>
 
-            {/* SIDEBAR */}
             <motion.aside 
                 className={`dashboard-sidebar ${isMobileMenuOpen ? "mobile-open" : ""}`}
                 initial={{ x: -260 }}
@@ -85,10 +91,11 @@ function Sidebar({role="student"}) {
                     {navLinks.map((link, index) => {
                         const isActive = location.pathname === link.path;
                         return (
-                            <li key={index} className={isActive ? "active" : ""}>
-                                <Link to={link.path}>
-                                    {link.icon}
+                            <li key={index} className={`${isActive ? "active" : ""} ${link.locked ? "locked-link" : ""}`}>
+                                <Link to={link.locked ? "#" : link.path} onClick={(e) => handleLinkClick(e, link)}>
+                                    {link.linkIcon || link.icon}
                                     <span>{link.name}</span>
+                                    {link.locked && <FiLock className="lock-icon-right" />}
                                 </Link>
                             </li>
                         );
@@ -106,9 +113,8 @@ function Sidebar({role="student"}) {
                     </button>
                 </div>
             </motion.aside>
-        
         </>
-    )
+    );
 }
 
 export default Sidebar;
