@@ -1,0 +1,211 @@
+/* NAVBAR */
+#navDash{
+    display: flex;
+    flex-direction: column;
+    gap: -1px;
+}
+#dashboard-navbar {
+    height: 55px;
+    background: linear-gradient(270deg, rgba(7, 11, 25, 0.95), rgba(59, 130, 246, 0.12), rgba(168, 85, 247, 0.12), rgba(236, 72, 153, 0.12), rgba(14, 165, 233, 0.12), rgba(7, 11, 25, 0.95));
+    background-size: 400% 400%;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glow);
+    box-shadow: 0 5px 10px var(--neon);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    animation: infiniteRainbowGlow 12s ease infinite;
+    position: relative;
+    z-index: 1100;
+}
+
+#nav-left-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+#navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#navbar-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    animation: blueNeon 10s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+#navbar-logo:hover img{
+    transform: scale(1.1);
+}
+
+#navbar-logo h2 {
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: 600;
+    color: var(--text);
+}
+
+#navbar-logo h2 span {
+    color: var(--neon);
+}
+
+#menu-toggle-btn {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--neon);
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+    padding: 0.2rem 0.2rem 0 0.2rem;
+    transition: all 0.3s ease;
+}
+
+#menu-toggle-btn:hover{
+    background: var(--neon);
+    color: var(--dark);
+    font-weight: bold;
+}
+
+
+
+
+#navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notification-btn {
+    color: var(--neon);
+    font-size: 1.5rem;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    margin-right: 0.8rem;
+    cursor: pointer;
+}
+
+.notification-btn:hover,
+.notification-btn.active {
+    color: var(--golden);
+    filter: drop-shadow(0 0 10px var(--golden));
+}
+
+.message-btn{
+    color: var(--neon);
+    font-size: 1.5rem;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.message-btn:hover,
+.message-btn.active{
+    color: var(--glow);
+    filter: drop-shadow(0 0 10px var(--neon));
+}
+
+#verticalLine{
+    width: 3px;
+    height: 30px;
+    background-color: var(--success);
+    margin-left: 0.5rem;
+    border-radius: 50%;
+}
+#verticalLine:hover{
+    background-color: var(--text);
+}
+
+/* USER PROFILE & HOVER POPUP */
+#user-profile-wrapper {
+    position: relative;
+}
+
+#user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.4rem 0.75rem;
+    border-radius: 1.3rem;
+    transition: background 0.3s;
+}
+
+#user-profile:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#avatar-circle {
+    width: 36px;
+    height: 36px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+#username {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #e2e8f0;
+}
+
+.profile-popup {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    width: 160px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.9rem;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.popup-item:hover {
+    background: rgba(59, 130, 246, 0.15);
+    color: #38bdf8;
+}
+
+.popup-item.logout {
+    color: #f87171;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.popup-item.logout:hover {
+    background: rgba(248, 113, 113, 0.1);
+    color: #ef4444;
+}
