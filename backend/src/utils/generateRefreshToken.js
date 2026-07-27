@@ -1,23 +1,16 @@
 import jwt from "jsonwebtoken";
 
-const generateRefreshToken = (userId) => {
+const generateRefreshToken = (user) => {
 
     return jwt.sign(
-
         {
-
-            id: userId
-
+            id: user._id,
+            role: user.role
         },
-
         process.env.JWT_REFRESH_SECRET,
-
         {
-
             expiresIn: "7d"
-
         }
-
     );
 
 };

@@ -54,17 +54,63 @@ api.interceptors.response.use(
 
     async (error) => {
 
-        if (
+        const status = error.response?.status;
 
-            error.response?.status === 401
+        switch (status) {
 
-        ) {
+            case 401:
 
-            localStorage.removeItem("accessToken");
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("user");
 
-            localStorage.removeItem("user");
+                window.location.href = "/session-expired";
 
-            window.location.href = "/login";
+                break;
+
+            case 403:
+
+                if (
+                    error.response?.data?.message ===
+                    "Your account has been blocked."
+                ) {
+
+                    window.location.href = "/account-blocked";
+
+                } else {
+
+                    window.location.href = "/unauthorized";
+
+                }
+
+                break;
+
+            case 404:
+
+                window.location.href = "/404";
+
+                break;
+
+            case 429:
+
+                window.location.href = "/429";
+
+                break;
+
+            case 500:
+
+                window.location.href = "/500";
+
+                break;
+
+            case 503:
+
+                window.location.href = "/503";
+
+                break;
+
+            default:
+
+                break;
 
         }
 

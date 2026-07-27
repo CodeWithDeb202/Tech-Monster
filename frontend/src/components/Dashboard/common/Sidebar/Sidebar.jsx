@@ -1,18 +1,20 @@
 import './Sidebar.css';
+
+import useAuth from '../../../../hooks/useAuth';
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { 
-    FiHome, 
-    FiGrid, 
-    FiCheckSquare, 
-    FiCalendar, 
-    FiUser, 
-    FiAward, 
-    FiSettings, 
-    FiLogOut, 
+import {
+    FiHome,
+    FiGrid,
+    FiCheckSquare,
+    FiCalendar,
+    FiUser,
+    FiAward,
+    FiSettings,
+    FiLogOut,
     FiX,
     FiLock,
     FiHelpCircle // Added Help Icon
@@ -54,17 +56,21 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.clear();
-        navigate("/login");
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        await logout();
+
+        sessionStorage.setItem("logoutSuccess", "true");
+
+        navigate("/login", { replace: true });
     };
 
-    return(
+    return (
         <>
-            <ToastContainer />
             <AnimatePresence>
                 {isMobileMenuOpen && (
-                    <motion.div 
+                    <motion.div
                         className="sidebar-overlay"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -74,7 +80,7 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
                 )}
             </AnimatePresence>
 
-            <motion.aside 
+            <motion.aside
                 className={`dashboard-sidebar ${isMobileMenuOpen ? "mobile-open" : ""}`}
                 initial={{ x: -260 }}
                 animate={{ x: 0 }}

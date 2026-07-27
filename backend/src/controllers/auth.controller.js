@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
 
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
@@ -120,7 +121,35 @@ export const login = asyncHandler(async (req, res) => {
         );
     }
 
-    const isMatch = await user.comparePassword(password);
+    // ===============================
+    // Account Block Check
+    // ===============================
+
+    if (user.isBlocked) {
+
+        return res.status(403).json({
+
+            success: false,
+
+            statusCode: 403,
+
+            message: "Your account has been blocked."
+
+        });
+
+    }
+
+    // ===============================
+    // Password Check
+    // ===============================
+
+    const isMatch = await bcrypt.compare(
+
+        password,
+
+        user.password
+
+    );
 
     if (!isMatch) {
         throw new AppError(
@@ -155,9 +184,9 @@ export const login = asyncHandler(async (req, res) => {
         );
 
     }
-    const accessToken = generateToken(user._id);
+    const accessToken = generateToken(user);
 
-    const refreshToken = generateRefreshToken(user._id);
+    const refreshToken = generateRefreshToken(user);
     await RefreshToken.deleteMany({
 
         user: user._id
@@ -378,19 +407,11 @@ export const verifyOTP = asyncHandler(async (req, res) => {
 
         // Generate JWT Token
 
-        const accessToken = generateToken(
-
-            user._id
-
-        );
+        const accessToken = generateToken(user);
 
 
 
-        const refreshToken = generateRefreshToken(
-
-            user._id
-
-        );
+        const refreshToken = generateRefreshToken(user);
 
 
 
@@ -914,9 +935,12 @@ export const resetPassword = async (req, res) => {
 
 };
 
+
+
 export const logoutUser = async (req, res) => {
 
     try {
+        console.log("req.user =", req.user);
 
         await logActivity(
 
@@ -999,11 +1023,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
 
     );
 
-    const accessToken = generateToken(
-
-        decoded.id
-
-    );
+    const accessToken = generateToken(decoded.id);
 
     return res.status(200).json({
 

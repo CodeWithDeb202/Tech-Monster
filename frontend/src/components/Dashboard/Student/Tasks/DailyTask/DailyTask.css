@@ -1,0 +1,205 @@
+.daily-page {
+
+    padding: 35px;
+
+    background: #06111d;
+
+    min-height: 100vh;
+
+    color: white;
+
+}
+
+.daily-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 35px;
+
+}
+
+.daily-header h1 {
+
+    font-size: 34px;
+
+    margin-bottom: 8px;
+
+}
+
+.daily-header p {
+
+    color: #8fa6c6;
+
+}
+
+.timer-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 14px 22px;
+
+    background: #081b2d;
+
+    border: 1px solid rgba(0, 255, 255, .2);
+
+    border-radius: 12px;
+
+    color: #00e5ff;
+
+    font-weight: 600;
+
+}
+
+.questions {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+}
+
+.question-card {
+
+    padding: 22px;
+
+    background: #091828;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    transition: .3s;
+
+}
+
+.question-card:hover {
+
+    border-color: #00e5ff;
+
+    box-shadow: 0 0 15px rgba(0, 255, 255, .18);
+
+}
+
+.question-card h2 {
+
+    margin-bottom: 12px;
+
+}
+
+.question-card p {
+
+    line-height: 1.7;
+
+    color: #c8d6e7;
+
+}
+
+.answer-section {
+
+    margin-top: 35px;
+
+}
+
+.answer-section h2 {
+
+    margin-bottom: 15px;
+
+}
+
+.answer-section textarea {
+
+    width: 100%;
+
+    height: 260px;
+
+    resize: none;
+
+    padding: 18px;
+
+    background: #081523;
+
+    border: 1px solid rgba(0, 255, 255, .15);
+
+    border-radius: 15px;
+
+    color: white;
+
+    font-size: 15px;
+
+    outline: none;
+
+}
+
+.answer-section textarea:focus {
+
+    border-color: #00e5ff;
+
+}
+
+.answer-section button {
+
+    margin-top: 20px;
+
+    padding: 15px 28px;
+
+    background: #00bcd4;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    transition: .3s;
+
+}
+
+.answer-section button:hover {
+
+    background: #00e5ff;
+
+    transform: translateY(-2px);
+
+}
+
+.status-box {
+
+    margin-top: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 18px;
+
+    background: #081828;
+
+    border-left: 4px solid #19ff88;
+
+    border-radius: 10px;
+
+    color: #c8d6e7;
+
+}

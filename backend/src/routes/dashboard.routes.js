@@ -1,18 +1,10 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 
 import authorizeRoles from "../middleware/role.middleware.js";
 
-import {
-
-    studentDashboard,
-
-    employerDashboard,
-
-    adminDashboard
-
-} from "../controllers/dashboard.controller.js";
+import { studentDashboard, adminDashboard } from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
@@ -20,7 +12,7 @@ router.get(
 
     "/student",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("student"),
 
@@ -30,21 +22,9 @@ router.get(
 
 router.get(
 
-    "/employer",
-
-    authMiddleware,
-
-    authorizeRoles("employer"),
-
-    employerDashboard
-
-);
-
-router.get(
-
     "/admin",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 

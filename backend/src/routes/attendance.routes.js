@@ -1,6 +1,6 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 
 import authorizeRoles from "../middleware/role.middleware.js";
 
@@ -20,28 +20,29 @@ const router = express.Router();
 
 router.post(
     "/check-in",
-    authMiddleware,
+    protect,
     authorizeRoles("student"),
     checkIn
 );
 
 router.put(
     "/check-out/:id",
-    authMiddleware,
+    protect,
     authorizeRoles("student"),
     checkOut
 );
 
 router.get(
     "/my-attendance",
-    authMiddleware,
+    protect,
     authorizeRoles("student"),
     getMyAttendance
 );
 
 router.get(
     "/internship/:id",
-    authMiddleware,
+    
+    protect,
     authorizeRoles("employer"),
     getInternAttendance
 );

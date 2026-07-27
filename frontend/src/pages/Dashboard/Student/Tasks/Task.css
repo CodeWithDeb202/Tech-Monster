@@ -1,0 +1,53 @@
+.tasks-page {
+
+    padding: 35px;
+
+    min-height: 100vh;
+
+    background: #06111d;
+
+}
+
+.page-title {
+
+    font-size: 38px;
+
+    color: white;
+
+    margin-bottom: 30px;
+
+    font-weight: 700;
+
+}
+
+.weeks-wrapper {
+
+    margin-left: 35px;
+
+    padding-left: 25px;
+
+    border-left: 2px solid rgba(0, 255, 255, .15);
+
+    animation: fade .4s;
+
+}
+
+@keyframes fade {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(15px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}

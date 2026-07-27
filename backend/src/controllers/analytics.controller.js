@@ -1,9 +1,4 @@
 import User from "../models/User.js";
-import Company from "../models/Company.js";
-import Internship from "../models/Internship.js";
-import Application from "../models/Application.js";
-import Meeting from "../models/Meeting.js";
-import Offer from "../models/Offer.js";
 
 import asyncHandler from "../utils/asyncHandler.js";
 

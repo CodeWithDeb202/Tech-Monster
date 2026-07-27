@@ -1,6 +1,6 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 
 import {
 
@@ -26,7 +26,7 @@ router.post(
 
     "/",
 
-    authMiddleware,
+    protect,
 
     sendMessage
 
@@ -36,7 +36,7 @@ router.get(
 
     "/:userId",
 
-    authMiddleware,
+    protect,
 
     getMessages
 
@@ -46,7 +46,7 @@ router.patch(
 
     "/seen/:userId",
 
-    authMiddleware,
+    protect,
 
     markAsSeen
 
@@ -56,7 +56,7 @@ router.post(
 
     "/upload",
 
-    authMiddleware,
+    protect,
 
     chatUpload.single("file"),
 

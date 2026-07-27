@@ -1,6 +1,6 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 
 import authorizeRoles from "../middleware/role.middleware.js";
 
@@ -17,7 +17,7 @@ router.get(
 
     "/dashboard",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 
@@ -29,7 +29,7 @@ router.get(
 
     "/monthly",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 

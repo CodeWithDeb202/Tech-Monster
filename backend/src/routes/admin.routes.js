@@ -1,6 +1,6 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 
 import authorizeRoles from "../middleware/role.middleware.js";
 
@@ -10,21 +10,11 @@ import {
 
     getAllUsers,
 
-    getAllCompanies,
-
-    getAllInternships,
-
-    getAllApplications,
-
     blockUser,
 
     unblockUser,
 
     deleteUser,
-
-    verifyCompany,
-
-    featureInternship
 
 } from "../controllers/admin.controller.js";
 
@@ -34,7 +24,7 @@ router.get(
 
     "/dashboard",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 
@@ -47,7 +37,7 @@ router.get(
 
     "/users",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 
@@ -56,48 +46,12 @@ router.get(
 );
 
 
-router.get(
-
-    "/companies",
-
-    authMiddleware,
-
-    authorizeRoles("admin"),
-
-    getAllCompanies
-
-);
-
-router.get(
-
-    "/internships",
-
-    authMiddleware,
-
-    authorizeRoles("admin"),
-
-    getAllInternships
-
-);
-
-router.get(
-
-    "/applications",
-
-    authMiddleware,
-
-    authorizeRoles("admin"),
-
-    getAllApplications
-
-);
-
 
 router.patch(
 
     "/users/:id/block",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 
@@ -109,7 +63,7 @@ router.patch(
 
     "/users/:id/unblock",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 
@@ -122,35 +76,11 @@ router.delete(
 
     "/users/:id",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("admin"),
 
     deleteUser
-
-);
-
-router.patch(
-
-    "/companies/:id/verify",
-
-    authMiddleware,
-
-    authorizeRoles("admin"),
-
-    verifyCompany
-
-);
-
-router.patch(
-
-    "/internship/:id/feature",
-
-    authMiddleware,
-
-    authorizeRoles("admin"),
-
-    featureInternship
 
 );
 

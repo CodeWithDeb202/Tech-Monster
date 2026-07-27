@@ -1,5 +1,3 @@
-import Internship from "../models/Internship.js";
-import Company from "../models/Company.js";
 import User from "../models/User.js";
 
 

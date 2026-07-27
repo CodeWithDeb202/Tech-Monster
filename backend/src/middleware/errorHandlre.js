@@ -180,15 +180,11 @@ const errorHandler = (
     ) {
 
         return res.status(statusCode).json({
-
             success: false,
-
+            statusCode,
             message,
-
             stack: err.stack,
-
             error: err
-
         });
 
     }
@@ -198,11 +194,9 @@ const errorHandler = (
     // ==========================================================
 
     return res.status(statusCode).json({
-
         success: false,
-
+        statusCode,
         message
-
     });
 
 };

@@ -1,5 +1,4 @@
 import Certificate from "../models/Certificate.js";
-import Offer from "../models/Offer.js";
 import Notification from "../models/Notification.js";
 
 import { generateCertificatePDF } from "../utils/generateCertificatePDF.js";

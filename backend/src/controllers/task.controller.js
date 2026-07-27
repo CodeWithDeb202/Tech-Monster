@@ -6,17 +6,11 @@ import AppError from "../utils/AppError.js";
 export const createTask = asyncHandler( async (req, res) => {
 
         const {
-
             title,
-
             description,
-
             assignedTo,
-
             internship,
-
             dueDate
-
         } = req.body;
 
         const task = await Task.create({

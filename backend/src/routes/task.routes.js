@@ -1,6 +1,6 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 import authorizeRoles from "../middleware/role.middleware.js";
 
 import {
@@ -24,9 +24,9 @@ router.post(
 
     "/",
 
-    authMiddleware,
+    protect,
 
-    authorizeRoles("employer"),
+    authorizeRoles("admin"),
 
     createTask
 
@@ -37,7 +37,7 @@ router.get(
 
     "/my-tasks",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("student"),
 
@@ -50,9 +50,9 @@ router.put(
 
     "/:id",
 
-    authMiddleware,
+    protect,
 
-    authorizeRoles("employer"),
+    authorizeRoles("admin"),
 
     updateTask
 
@@ -63,9 +63,9 @@ router.delete(
 
     "/:id",
 
-    authMiddleware,
+    protect,
 
-    authorizeRoles("employer"),
+    authorizeRoles("admin"),
 
     deleteTask
 
@@ -76,7 +76,7 @@ router.patch(
 
     "/:id/status",
 
-    authMiddleware,
+    protect,
 
     authorizeRoles("student"),
 

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import AuthContext from "./AuthContext";
+import * as authService from "../../services/api/authService";
 import { tokenStorage } from "../../services/auth/tokenStorage";
 
 function AuthProvider({ children }) {
@@ -18,14 +19,17 @@ function AuthProvider({ children }) {
 
     };
 
-    const logout = () => {
-
-        tokenStorage.clear();
-
-        setToken(null);
-        setUser(null);
-
-    };
+    const logout = useCallback(async () => {
+        try {
+            await authService.logout();
+        } catch (err) {
+            console.error(err);
+        } finally {
+            tokenStorage.clear();
+            setToken(null);
+            setUser(null);
+        }
+    }, []);
 
     return (
         <AuthContext.Provider

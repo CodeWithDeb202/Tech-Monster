@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronDown } from "react-icons/hi";
 import { FaLock, FaLockOpen, FaCheckCircle } from "react-icons/fa";
-import ProgressCircle from "./ProgressCircle";
+import ProgressCircle from "../ProgressCircle";
 import "./WeekAccordion.css";
 
 const WeekAccordion = ({

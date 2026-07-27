@@ -1,6 +1,6 @@
 import express from "express";
 
-import authMiddleware from "../middleware/auth.middleware.js";
+import {protect} from "../middleware/auth.middleware.js";
 
 import {
 
@@ -20,7 +20,7 @@ router.get(
 
     "/",
 
-    authMiddleware,
+    protect,
 
     getMyNotifications
 
@@ -30,7 +30,7 @@ router.patch(
 
     "/:id/read",
 
-    authMiddleware,
+    protect,
 
     markAsRead
 
@@ -40,7 +40,7 @@ router.patch(
 
     "/read-all",
 
-    authMiddleware,
+    protect,
 
     markAllAsRead
 
@@ -50,7 +50,7 @@ router.delete(
 
     "/:id",
 
-    authMiddleware,
+    protect,
 
     deleteNotification
 

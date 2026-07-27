@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { HiChevronDown } from "react-icons/hi";
-import ProgressCircle from "./ProgressCircle";
+import ProgressCircle from "../ProgressCircle";
 import "./CourseTaskCard.css";
 
 const CourseTaskCard = ({

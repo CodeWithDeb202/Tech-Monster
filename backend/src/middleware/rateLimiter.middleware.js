@@ -10,13 +10,13 @@ export const loginLimiter = rateLimit({
 
     legacyHeaders: false,
 
-    message: {
-
+    handler: (req, res) => {
+    res.status(429).json({
         success: false,
-
+        statusCode: 429,
         message: "Too many login attempts. Please try again after 15 minutes."
-
-    }
+    });
+}
 
 });
 
@@ -30,12 +30,12 @@ export const registerLimiter = rateLimit({
 
     legacyHeaders: false,
 
-    message: {
-
-        success: false,
-
-        message: "Too many registrations. Please try again later."
-
+    handler: (req, res) => {
+        res.status(429).json({
+            success: false,
+            statusCode: 429,
+            message: "Too many registrations. Please try again later."
+        });
     }
 
 });
@@ -50,12 +50,12 @@ export const forgotPasswordLimiter = rateLimit({
 
     legacyHeaders: false,
 
-    message: {
-
-        success: false,
-
-        message: "Too many password reset requests."
-
+    handler: (req, res) => {
+        res.status(429).json({
+            success: false,
+            statusCode: 429,
+            message: "Too many password reset requests."
+        });
     }
 
 });
@@ -70,12 +70,12 @@ export const otpLimiter = rateLimit({
 
     legacyHeaders: false,
 
-    message: {
-
-        success: false,
-
-        message: "Too many OTP requests."
-
+    handler: (req, res) => {
+        res.status(429).json({
+            success: false,
+            statusCode: 429,
+            message: "Too many OTP requests."
+        });
     }
 
 });

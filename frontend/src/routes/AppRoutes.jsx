@@ -1,4 +1,16 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+// Errors page
+
+import AuthenticationRequired from "../pages/StatusPages/AuthenticationRequired";
+import Unauthorized from "../pages/StatusPages/Unauthorized";
+import NotFound from "../pages/StatusPages/NotFound";
+import TooManyRequests from "../pages/StatusPages/TooManyRequests";
+import ServerError from "../pages/StatusPages/ServerError";
+import Maintenance from "../pages/StatusPages/Maintenance";
+import SessionExpired from "../pages/StatusPages/SessionExpired";
+import AccountBlocked from "../pages/StatusPages/AccountBlocked";
+import SomethingWentWrong from "../pages/StatusPages/SomethingWentWrong";
+import Offline from "../pages/StatusPages/Offline";
 
 import Landing from "../pages/LandingPages/Landing";
 
@@ -20,6 +32,7 @@ import VerifyResetOTP from '../pages/Auth/VerifyResetOTP';
 import StudentHome from '../pages/Dashboard/Student/Home';
 import StudentDashboard from '../pages/Dashboard/Student/Dashboard';
 import StudentTask from '../pages/Dashboard/Student/Tasks';
+import DailyTask from '../components/Dashboard/Student/Tasks/DailyTask';
 import StudentAttendance from '../pages/Dashboard/Student/Attendance';
 import StudentAccount from '../pages/Dashboard/Student/Account';
 import StudentCertificate from '../pages/Dashboard/Student/Certificate';
@@ -32,7 +45,7 @@ import Message from '../components/Dashboard/common/Message';
 
 // Admin Dashboard
 import AdminDashboard from '../pages/Dashboard/Admin';
-import HelpSupport from '../components/Dashboard/common/Help&Supp';
+// import HelpSupport from '../components/Dashboard/common/Help&Supp';
 
 
 
@@ -52,10 +65,23 @@ function AppRoutes() {
                 <Route path="/verify-reset-otp" element={<VerifyResetOTP />} />
 
 
+                {/* Status Pages */}
+                <Route path="/auth-required" element={<AuthenticationRequired />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="/429" element={<TooManyRequests />} />
+                <Route path="/500" element={<ServerError />} />
+                <Route path="/503" element={<Maintenance />} />
+                <Route path="/session-expired" element={<SessionExpired />} />
+                <Route path="/account-blocked" element={<AccountBlocked />} />
+                <Route path="/something-went-wrong" element={<SomethingWentWrong />} />
+                <Route path="/offline" element={<Offline />} />
+
+
 
                 {/* Student Dashboard Routes (Protected) */}
                 <Route
-                    path='/student'
+                    path="/student"
                     element={
                         <ProtectedRoute role="student">
                             <DashboardLayout role="student" />
@@ -63,31 +89,35 @@ function AppRoutes() {
                     }
                 >
                     <Route index element={<StudentHome />} />
-                    <Route path="/student/dashboard" element={<StudentDashboard />} />
-                    <Route path="/student/tasks" element={<StudentTask />} />
-                    <Route path="/student/attendance" element={<StudentAttendance />} />
-                    <Route path="/student/account" element={<StudentAccount />} />
-                    <Route path="/student/certificate" element={<StudentCertificate />} />
-                    <Route path="/student/settings" element={<StudentSetting />} />
-                    <Route path="/student/help&support" element={<HelpSupport />} />
-                    <Route path="/student/notification" element={<Notification />} />
-                    <Route path="/student/message" element={<Message />} />
+                    <Route path="dashboard" element={<StudentDashboard />} />
+                    <Route path="tasks" element={<StudentTask />} />
+                    <Route path="tasks/:taskId" element={<DailyTask />} />
+                    <Route path="attendance" element={<StudentAttendance />} />
+                    <Route path="account" element={<StudentAccount />} />
+                    <Route path="certificate" element={<StudentCertificate />} />
+                    <Route path="settings" element={<StudentSetting />} />
+                    <Route path="notification" element={<Notification />} />
+                    <Route path="message" element={<Message />} />
                 </Route>
 
 
 
                 {/* Admin Dashboard Routes (Protected) */}
                 <Route
-                path='/admin'
+                    path="/admin"
                     element={
                         <ProtectedRoute role="admin">
                             <DashboardLayout role="admin" />
                         </ProtectedRoute>
                     }
                 >
-                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                    {/* Apan eithi admin ra anyanya routes bi add kariparibe */}
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
                 </Route>
+
+
+                {/* 404 Fallback */}
+                <Route path="*" element={<NotFound />} />
 
             </Routes>
         </>

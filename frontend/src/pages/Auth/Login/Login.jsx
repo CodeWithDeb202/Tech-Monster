@@ -1,8 +1,9 @@
 import "./Login.css";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 import AuthLayout from "../../../layouts/AuthLayout/AuthLayout";
 
@@ -17,9 +18,16 @@ import useAuth from "../../../hooks/useAuth";
 
 
 function Login() {
-
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionStorage.getItem("logoutSuccess")) {
+        toast.success("Logout Successfully");
+        sessionStorage.removeItem("logoutSuccess");
+    }
+}, []);
+
+
 
 
   const { login } = useAuth();
