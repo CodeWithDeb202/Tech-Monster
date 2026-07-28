@@ -5,29 +5,29 @@ import {
   HiEnvelope,
   HiUserCircle,
 } from "react-icons/hi2";
+import { useNavigate } from "react-router-dom";
 
-const ProfileSummary = ({ user }) => {
-  const skills = user?.skills || [];
+import useAuth from "../../../../../hooks/useAuth";
 
-  const progress = user?.profileCompletion || 75;
+const ProfileSummary = ({ username }) => {
+  const navigate = useNavigate();
+  const {user} = useAuth();
+
+
+  const skills = username?.skills || [];
+  const progress = username?.profileCompletion || 0;
 
   return (
     <motion.section
       className="profile-summary"
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{
-        once: true,
-        amount: 0.3,
-      }}
-      transition={{
-        duration: 0.7,
-      }}
+      viewport={{once: true, amount: 0.3}}
+      transition={{duration: 0.7 }}
     >
       {/* Glow */}
 
       <div className="profile-glow profile-glow-1"></div>
-
       <div className="profile-glow profile-glow-2"></div>
 
       {/* LEFT */}
@@ -43,22 +43,24 @@ const ProfileSummary = ({ user }) => {
         >
           <img
             src={
-              user?.profilePhoto ||
-              "/images/default-avatar.png"
+              username?.profilePhoto || "/images/default-avatar.png"
             }
-            alt={user?.fullName}
+            alt={username?.fullName}
           />
         </motion.div>
 
         <div className="profile-info">
 
-          <h2>{user?.fullName}</h2>
+          <h2>{
+              username?.fullName?.trim() ? username?.fullName : user?.username?.charAt(0).toUpperCase() + user?.username?.slice(1)
+            }
+          </h2>
 
           <p>
 
             <HiEnvelope />
 
-            {user?.email}
+            {username?.email}
 
           </p>
 
@@ -145,11 +147,10 @@ const ProfileSummary = ({ user }) => {
             scale: .95,
           }}
           className="complete-btn"
+          onClick={() => navigate("/student/account")}
         >
           <HiUserCircle />
-
-          Complete Profile
-
+          {progress === 100 ? "Completed" : "Complete Profile"}
         </motion.button>
 
       </div>

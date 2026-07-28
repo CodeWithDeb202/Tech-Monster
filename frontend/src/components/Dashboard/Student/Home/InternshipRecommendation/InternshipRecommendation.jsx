@@ -1,4 +1,6 @@
-import "./CourseRecommendation.css";
+import "./InternshipRecommendation.css";
+
+import {useNavigate} from 'react-router-dom';
 
 import { motion } from "framer-motion";
 
@@ -9,62 +11,45 @@ import {
   HiPlayCircle,
 } from "react-icons/hi2";
 
-const CourseRecommendation = ({ courses = [] }) => {
+const InternshipRecommendation = ({ internships = [] }) => {
+  const navigate = useNavigate();
 
   return (
 
     <motion.section
-
       className="course-section"
-
       initial={{ opacity: 0, y: 80 }}
-
       whileInView={{ opacity: 1, y: 0 }}
-
       viewport={{ once: true }}
-
       transition={{ duration: .7 }}
-
     >
 
       {/* Header */}
 
       <div className="course-header">
-
         <div>
-
           <h2>
-
             <HiBookOpen />
-
-            Recommended Courses
-
+            Recommended Internships
           </h2>
 
           <p>
-
-            Courses selected specially for you.
-
+            Internships selected specially for you.
           </p>
-
         </div>
 
-        <motion.button
 
+
+        <motion.button
           whileHover={{
             scale: 1.05
           }}
-
           className="view-btn"
-
+          onClick={() => navigate('/student/dashboard')}
         >
-
           View All
-
           <HiArrowRight />
-
         </motion.button>
-
       </div>
 
       {/* Cards */}
@@ -73,11 +58,11 @@ const CourseRecommendation = ({ courses = [] }) => {
 
         {
 
-          courses.map((course,index)=>(
+          internships.map((internship,index)=>(
 
             <motion.div
 
-              key={course._id || index}
+              key={internship._id || index}
 
               className="course-card"
 
@@ -109,9 +94,9 @@ const CourseRecommendation = ({ courses = [] }) => {
 
                 <img
 
-                  src={course.thumbnail}
+                  src={internship.thumbnail}
 
-                  alt={course.title}
+                  alt={internship.title}
 
                 />
 
@@ -123,13 +108,13 @@ const CourseRecommendation = ({ courses = [] }) => {
 
                 <span className="course-category">
 
-                  {course.category}
+                  {internship.category}
 
                 </span>
 
                 <h3>
 
-                  {course.title}
+                  {internship.title}
 
                 </h3>
 
@@ -139,13 +124,13 @@ const CourseRecommendation = ({ courses = [] }) => {
 
                     <HiStar />
 
-                    {course.rating}
+                    {internship.rating}
 
                   </span>
 
                   <span>
 
-                    {course.lessons} Lessons
+                    {internship.lessons} lessons
 
                   </span>
 
@@ -183,4 +168,4 @@ const CourseRecommendation = ({ courses = [] }) => {
 
 };
 
-export default CourseRecommendation;
+export default InternshipRecommendation;

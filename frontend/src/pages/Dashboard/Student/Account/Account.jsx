@@ -1,30 +1,91 @@
-import { useState } from 'react';
-import AccountForm from '../../../../components/Dashboard/Student/Account/AccountForm';
-import ProfileView from '../../../../components/Dashboard/Student/Account/ProfileView';
-import './Account.css';
+import { useEffect, useState } from "react";
+
+import AccountForm from "../../../../components/Dashboard/Student/Account/AccountForm";
+
+import ProfileView from "../../../../components/Dashboard/Student/Account/ProfileView";
+
+import { getProfile } from "../../../../services/api/profileService";
+
+import "./Account.css";
 
 export default function Account() {
-  // Check if profile details already exist (simulate storage/database state)
-  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
   const [userData, setUserData] = useState(null);
 
-  const handleFormSubmit = (data) => {
-    setUserData(data);
-    setIsSubmitted(true);
-  };
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleDataUpdate = (updatedData) => {
-    setUserData(updatedData);
-  };
+  useEffect(() => {
+
+    loadProfile();
+
+  }, []);
+
+  const loadProfile = async () => {
+
+    try {
+
+      const res = await getProfile();
+
+      setUserData(res.data.user);
+
+      setIsSubmitted(res.data.user.profileCompleted);
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+
+    setLoading(false);
+
+  }
+
+  if (loading) return <h3>Loading...</h3>;
 
   return (
+
     <div className="account-page-wrapper">
-      <h2 className="account-main-title">Account</h2>
-      {!isSubmitted ? (
-        <AccountForm onSubmitForm={handleFormSubmit} />
-      ) : (
-        <ProfileView userData={userData} onUpdateData={handleDataUpdate} />
-      )}
+
+      <h2 className="account-main-title">
+
+        Account
+
+      </h2>
+
+      {
+
+        isSubmitted ?
+
+          <ProfileView
+
+            userData={userData}
+
+            onUpdateData={setUserData}
+
+          />
+
+          :
+
+          <AccountForm
+
+            initialEmail={userData?.email}
+
+            onSubmitForm={(data) => {
+
+              setUserData(data);
+
+              setIsSubmitted(true);
+
+            }}
+
+          />
+
+      }
+
     </div>
+
   );
+
 }

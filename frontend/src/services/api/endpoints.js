@@ -38,4 +38,10 @@ export const API = {
 
   },
 
+  PROFILE: {
+    GET: "/profile",
+    UPDATE: "/profile",
+    IMAGE: "/profile/profile-image"
+  },
+
 };

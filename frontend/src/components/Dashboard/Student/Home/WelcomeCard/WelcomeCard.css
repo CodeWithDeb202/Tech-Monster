@@ -64,9 +64,8 @@
 .welcomeCardMainCont h1 span {
     display: block;
     margin-top: 8px;
-    background: linear-gradient(90deg,
-            #00D4FF,
-            #3B82F6);
+    background: linear-gradient(90deg, #00D4FF, #3B82F6);
+    text-shadow: 0 0 10px var(--neon);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

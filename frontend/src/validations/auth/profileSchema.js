@@ -193,9 +193,11 @@ const profileSchema = z.object({
         .optional()
         .or(z.literal("")),
 
-    gender: z
-        .string()
-        .optional(),
+    gender: z.enum([
+        "male",
+        "female",
+        "other"
+    ]).optional(),
 
     dob: z
         .string()

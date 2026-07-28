@@ -43,8 +43,6 @@ function Navbar({ role = "student" }) {
         setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
     };
 
-    console.log(user)
-
     const handleLogout = async () => {
         await logout();
 

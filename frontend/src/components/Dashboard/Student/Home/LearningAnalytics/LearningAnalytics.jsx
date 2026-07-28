@@ -119,13 +119,13 @@ const LearningAnalytics = ({ analytics }) => {
 
               <h3>
 
-                {analytics?.completedCourses || 12}
+                {analytics?.completedCourses || 0}
 
               </h3>
 
               <p>
 
-                Completed Courses
+                Completed internships
 
               </p>
 
@@ -141,7 +141,7 @@ const LearningAnalytics = ({ analytics }) => {
 
               <h3>
 
-                {analytics?.hours || 124}h
+                {analytics?.hours || 0}h
 
               </h3>
 
@@ -163,7 +163,7 @@ const LearningAnalytics = ({ analytics }) => {
 
               <h3>
 
-                {analytics?.growth || 32}%
+                {analytics?.growth || 0}%
 
               </h3>
 

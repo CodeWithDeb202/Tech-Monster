@@ -1,36 +1,81 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaPencilAlt } from 'react-icons/fa';
 import './ProfileView.css';
+import { updateProfile, uploadProfileImage } from '../../../../../services/api/profileService';
 
 export default function ProfileView({ userData, onUpdateData }) {
-  const [data, setData] = useState(userData);
   const [editingField, setEditingField] = useState(null);
   const [tempValue, setTempValue] = useState('');
+
+  const [data, setData] = useState(userData);
+
+  useEffect(() => {
+
+    setData(userData);
+
+  }, [userData]);
+
 
   const handleEditClick = (fieldName, currentValue) => {
     setEditingField(fieldName);
     setTempValue(currentValue);
   };
 
-  const handleSave = (fieldName) => {
-    const updated = { ...data, [fieldName]: tempValue };
-    setData(updated);
-    onUpdateData(updated);
-    setEditingField(null);
-  };
+  const handleSave = async (field) => {
 
-  const handleImageUpdate = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const updated = { ...data, profileImage: URL.createObjectURL(file) };
-      setData(updated);
-      onUpdateData(updated);
+    try {
+
+      const res = await updateProfile({
+
+        [field]: tempValue
+
+      });
+
+      setData(res.data.user);
+
+      onUpdateData(res.data.user);
+
+      setEditingField(null);
+
     }
-  };
+
+    catch (err) {
+
+      console.log(err);
+
+    }
+
+  }
+
+  const handleImageUpdate = async (e) => {
+
+    try {
+
+      const file = e.target.files[0];
+
+      if (!file) return;
+
+      const form = new FormData();
+
+      form.append("image", file);
+
+      const res = await uploadProfileImage(form);
+
+      setData(res.data.user);
+
+      onUpdateData(res.data.user);
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+
+  }
 
   return (
-    <motion.div 
+    <motion.div
       className="profile-view-container"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -38,7 +83,7 @@ export default function ProfileView({ userData, onUpdateData }) {
     >
       <div className="profile-top-grid">
         <div className="profile-avatar-col">
-          <img src={data.profileImage} alt="Profile" className="profile-large-avatar" />
+          <img src={data.avatar} alt="Profile" className="profile-large-avatar" />
           <label className="edit-avatar-label">
             Edit Photo
             <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpdate} />
@@ -92,10 +137,10 @@ export default function ProfileView({ userData, onUpdateData }) {
             <div className="field-content">
               <label>{label}</label>
               {editingField === key ? (
-                <input 
-                  type="text" 
-                  value={tempValue} 
-                  onChange={(e) => setTempValue(e.target.value)} 
+                <input
+                  type="text"
+                  value={tempValue}
+                  onChange={(e) => setTempValue(e.target.value)}
                   onBlur={() => handleSave(key)}
                   autoFocus
                 />

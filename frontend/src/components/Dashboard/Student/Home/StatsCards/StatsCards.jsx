@@ -13,7 +13,7 @@ const StatsCards = ({ stats }) => {
   const data = [
     {
       id: 1,
-      title: "Enrolled Courses",
+      title: "Join internships",
       value: stats?.courses || 0,
       suffix: "",
       icon: HiAcademicCap,
@@ -46,14 +46,14 @@ const StatsCards = ({ stats }) => {
   ];
 
   return (
-    <div className="stats-grid">
+    <div id="stats-grid">
       {data.map((item, index) => {
         const IconComponent = item.icon;
 
         return (
           <motion.div
             key={item.id}
-            className="stats-card"
+            id="stats-card"
             initial={{ opacity: 0, y: 70 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
@@ -61,7 +61,7 @@ const StatsCards = ({ stats }) => {
             whileHover={{ y: -10, scale: 1.04 }}
           >
             <div
-              className="stats-icon"
+              id="stats-icon"
               style={{ background: item.color }}
             >
               {IconComponent && <IconComponent />}
@@ -70,12 +70,11 @@ const StatsCards = ({ stats }) => {
             <h4>{item.title}</h4>
 
             <h2>
-              {/* CountUp badle ebe kebala value print kariki dekhibe error jauči ki nahi */}
               {item.value} {item.suffix}
             </h2>
 
             <div
-              className="stats-line"
+              id="stats-line"
               style={{ background: item.color }}
             />
           </motion.div>

@@ -1,117 +1,83 @@
 import "./Home.css";
+console.log("Home Page Loaded");
+
+import { useEffect, useState } from "react";
+import api from "../../../../services/api/axios";
 
 import WelcomeCard from "../../../../components/Dashboard/Student/Home/WelcomeCard";
 import ProfileSummary from "../../../../components/Dashboard/Student/Home/ProfileSummary";
 import StatsCards from "../../../../components/Dashboard/Student/Home/StatsCards";
-import CourseRecommendation from "../../../../components/Dashboard/Student/Home/CourseRecommendation";
+import InternshipRecommendation from "../../../../components/Dashboard/Student/Home/InternshipRecommendation";
 import SuggestedUsers from "../../../../components/Dashboard/Student/Home/SuggestedUsers";
 import LearningStreak from "../../../../components/Dashboard/Student/Home/LearningStreak";
 import LearningAnalytics from "../../../../components/Dashboard/Student/Home/LearningAnalytics";
 
+
 const Home = () => {
 
   // Dummy Data
-  const user = {
-    fullName: "Debabrata Andia",
-    email: "debabrata@gmail.com",
-    profilePhoto: "/images/profile.jpg",
-    skills: ["React", "Node", "MongoDB", "Express", "JavaScript"],
-    profileCompletion: 78,
+  const [dashboard, setDashboard] = useState(null);
+
+  const loadDashboard = async () => {
+
+    try {
+      const res = await api.get("/dashboard/student");
+      console.log("res-dashboard :", res.data.dashboard)
+
+      setDashboard(res.data.dashboard);
+
+    } catch (err) {
+      console.log("Dashboard Error:", err);
+      console.log(err.response?.data);
+      console.log(err.response?.status);
+    }
   };
 
-  const stats = {
-    courses: 12,
-    attendance: 95,
-    tasks: 28,
-    badges: 8,
+  useEffect(() => {
+
+    console.log("useEffect running");
+    loadDashboard();
+
+  }, []);
+
+  // if (!dashboard) {
+  //   return <div>Loading...</div>;
+  // }
+
+
+  const analytics = dashboard?.analytics || {
+
+    completedCourses: 0,
+
+    hours: 0,
+
+    growth: 0,
+
+    weeklyData: [0, 0, 0, 0, 0, 0, 0]
+
   };
 
-  const streak = {
-    days: 45,
-    progress: 85,
-  };
-
-  const analytics = {
-    completedCourses: 12,
-    hours: 145,
-    growth: 32,
-    weeklyData: [50, 80, 60, 95, 75, 90, 100],
-  };
-
-  const courses = [
-    {
-      _id: 1,
-      thumbnail: "/images/react.jpg",
-      title: "React Masterclass",
-      category: "Frontend",
-      rating: 4.9,
-      lessons: 32,
-    },
-    {
-      _id: 2,
-      thumbnail: "/images/node.jpg",
-      title: "Node.js API",
-      category: "Backend",
-      rating: 4.8,
-      lessons: 26,
-    },
-    {
-      _id: 3,
-      thumbnail: "/images/mongo.jpg",
-      title: "MongoDB Complete",
-      category: "Database",
-      rating: 5.0,
-      lessons: 18,
-    },
-  ];
-
-  const users = [
-    {
-      _id: 1,
-      avatar: "/images/user1.jpg",
-      fullName: "Rahul Kumar",
-      role: "Frontend Developer",
-      skills: ["React", "Tailwind", "Redux"],
-      mutual: 3,
-    },
-    {
-      _id: 2,
-      avatar: "/images/user2.jpg",
-      fullName: "Ankit Das",
-      role: "Full Stack Developer",
-      skills: ["Node", "MongoDB", "Express"],
-      mutual: 5,
-    },
-    {
-      _id: 3,
-      avatar: "/images/user3.jpg",
-      fullName: "Priya Sharma",
-      role: "UI Designer",
-      skills: ["Figma", "UI", "UX"],
-      mutual: 2,
-    },
-  ];
 
   return (
     <div className="home-page">
 
-      <WelcomeCard user={user}
+      <WelcomeCard
+        username={dashboard?.user}
+        stats={dashboard?.stats}
+        streak={dashboard?.streak}
+      />
 
-        stats={stats}
+      <ProfileSummary username={dashboard?.user} />
 
-        streak={streak} />
+      <StatsCards stats={dashboard?.stats} />
 
-      <ProfileSummary user={user} />
-
-      <StatsCards stats={stats} />
-
-      <LearningStreak streak={streak} />
+      <LearningStreak streak={dashboard?.streak} />
 
       <LearningAnalytics analytics={analytics} />
 
-      <CourseRecommendation courses={courses} />
+      <InternshipRecommendation internships={dashboard?.recommendedInternships || []} />
 
-      <SuggestedUsers users={users} />
+      <SuggestedUsers users={dashboard?.suggestedUsers} />
 
     </div>
   );

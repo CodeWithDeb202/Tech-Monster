@@ -13,129 +13,76 @@ const LearningStreak = ({ streak }) => {
   return (
 
     <motion.section
-
-      className="learning-streak"
-
+      id="learning-streak"
       initial={{ opacity:0,y:80 }}
-
       whileInView={{ opacity:1,y:0 }}
-
       viewport={{ once:true }}
-
       transition={{ duration:.8 }}
-
     >
 
-      <div className="streak-glow"></div>
+      <div id="streak-glow"></div>
 
-      <div className="streak-left">
-
+      <div id="streak-left">
         <motion.div
-
           animate={{
-
             rotate:[0,8,-8,0],
-
             scale:[1,1.05,1]
-
           }}
-
           transition={{
-
             repeat:Infinity,
-
             duration:3
-
           }}
-
-          className="fire-icon"
+          id="fire-icon"
 
         >
-
           <HiFire/>
-
         </motion.div>
 
         <div>
-
           <h2>
-
             {streak?.days || 0} Day Streak 🔥
-
           </h2>
 
           <p>
-
             Keep learning every day to maintain your streak.
-
           </p>
-
         </div>
-
       </div>
 
-      <div className="streak-right">
-
-        <div className="streak-progress">
-
+      <div id="streak-right">
+        <div id="streak-progress">
           <motion.div
-
-            className="streak-fill"
-
+            id="streak-fill"
             initial={{ width:0 }}
-
             whileInView={{
-
-              width:`${streak?.progress || 75}%`
-
+              width:`${streak?.progress || 0}%`
             }}
-
             transition={{
-
               duration:2
-
             }}
-
           />
-
         </div>
 
-        <div className="streak-footer">
-
+        <div id="streak-footer">
           <span>
-
             <HiBolt/>
-
             Weekly Goal
-
           </span>
 
           <strong>
-
-            {streak?.progress || 75}%
-
+            {streak?.progress || 0}%
           </strong>
-
         </div>
 
         <motion.button
-
           whileHover={{
-
             scale:1.05,
-
             y:-4
-
           }}
-
           whileTap={{
-
             scale:.95
-
           }}
-
-          className="continue-streak-btn"
-
+          id="continue-streak-btn"
         >
 
           <HiArrowTrendingUp/>
@@ -145,7 +92,6 @@ const LearningStreak = ({ streak }) => {
         </motion.button>
 
       </div>
-
     </motion.section>
 
   );
