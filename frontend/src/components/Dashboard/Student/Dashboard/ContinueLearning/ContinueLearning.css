@@ -17,21 +17,16 @@
 }
 
 .section-title h2 {
-
     font-size: 28px;
-
-    color: #fff;
-
+    color: var(--neon);
     font-weight: 700;
+    margin-left: 1rem;
 
 }
 
 .section-title p {
-
-    color: #8da9c5;
-
+    color: var(--muted);
     font-size: 14px;
-
 }
 
 .continue-grid {

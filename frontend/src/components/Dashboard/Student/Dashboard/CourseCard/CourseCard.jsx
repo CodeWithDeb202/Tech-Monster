@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { Clock3, Star, ArrowRight } from "lucide-react";
+import { Clock3, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import "./CourseCard.css";
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ internship }) => {
   const [hover, setHover] = useState(false);
 
   return (
@@ -26,13 +26,13 @@ const CourseCard = ({ course }) => {
       {/* Top Banner */}
       <div className="course-banner">
         <div className="course-tag">
-          {course.enrolled ? "Enrolled" : "New"}
+          {internship?.enrolled ? "Enrolled" : "New"}
         </div>
       </div>
 
       {/* Title */}
       <div className="course-info">
-        <h3>{course.name}</h3>
+        <h3>{internship?.title}</h3>
       </div>
 
       {/* Hover Overlay */}
@@ -44,19 +44,25 @@ const CourseCard = ({ course }) => {
         }}
         transition={{ duration: 0.35 }}
       >
-        <h3>{course.name}</h3>
+        <h3>{internship?.title}</h3>
 
-        <p>{course.description}</p>
+        <p>{internship?.description}</p>
+        <p>{internship?.level}</p>
 
         <div className="course-meta">
           <span>
-            <Star size={15} />
-            {course.rating}
+            Total Tasks : &nbsp;
+            {internship?.totalTasks}
+          </span>
+
+          <span>
+            Total Notes : &nbsp;
+            {internship?.totalNotes}
           </span>
 
           <span>
             <Clock3 size={15} />
-            {course.duration}
+            {internship?.duration} days
           </span>
         </div>
 

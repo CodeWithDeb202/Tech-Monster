@@ -1,27 +1,15 @@
 .continue-card {
-
     position: relative;
-
     overflow: hidden;
-
+    height: 150px;
     padding: 22px;
-
-    height: 180px;
-
     border-radius: 18px;
-
     background: rgba(255, 255, 255, .04);
-
     border: 1px solid rgba(0, 255, 255, .25);
-
     backdrop-filter: blur(10px);
-
     cursor: pointer;
-
-    transition: .4s;
-
+    transition: all 0.5s ease-in;
     transform-style: preserve-3d;
-
 }
 
 .continue-card:hover {
@@ -37,21 +25,13 @@
 }
 
 .card-bg {
-
     position: absolute;
-
     width: 250px;
-
     height: 250px;
-
     background: radial-gradient(circle, #00ffff22, transparent);
-
     top: -120px;
-
     right: -120px;
-
     transition: .5s;
-
 }
 
 .continue-card:hover .card-bg {

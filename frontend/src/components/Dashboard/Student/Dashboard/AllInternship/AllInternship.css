@@ -17,25 +17,17 @@
 }
 
 .course-heading h2 {
-
     font-size: 30px;
-
-    color: #fff;
-
+    color: var(--neon);
+    margin-left: 1rem;
 }
 
 .course-heading p {
-
-    color: #8faac6;
-
+    color: var(--muted);
 }
 
 .course-grid {
-
     display: grid;
-
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
     gap: 24px;
-
 }

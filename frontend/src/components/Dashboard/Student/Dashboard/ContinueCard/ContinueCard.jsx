@@ -1,9 +1,9 @@
-import { motion } from "framer-motion";
+import {  motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import "./ContinueCard.css";
 
-const ContinueCard = ({ course }) => {
+const ContinueCard = ({ internship }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -16,15 +16,20 @@ const ContinueCard = ({ course }) => {
         rotateX: 6,
         rotateY: -6,
       }}
+      animate={{
+        height: hovered ? 240 : 150
+      }}
       transition={{
         type: "spring",
         stiffness: 200,
         damping: 18,
+        duration: 0.2,
+        ease: "easeInOut"
       }}
     >
       <div className="card-bg"></div>
 
-      <h3>{course.name}</h3>
+      <h3>{internship?.title}</h3>
 
       {!hovered ? (
         <motion.div
@@ -52,7 +57,7 @@ const ContinueCard = ({ course }) => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <span>{course.progress}% Completed</span>
+          <span>{internship?.progress}% Completed</span>
 
           <div className="progress">
 
@@ -60,14 +65,14 @@ const ContinueCard = ({ course }) => {
               className="progress-fill"
               initial={{ width: 0 }}
               animate={{
-                width: `${course.progress}%`,
+                width: `${internship?.progress}%`,
               }}
               transition={{ duration: 0.8 }}
             />
 
           </div>
 
-          <small>{course.lessonsLeft} Lessons Left</small>
+          <small>{internship?.lessonsLeft || '0'} Lessons Left</small>
 
           <button>
 

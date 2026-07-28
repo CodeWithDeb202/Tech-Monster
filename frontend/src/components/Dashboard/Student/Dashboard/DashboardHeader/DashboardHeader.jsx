@@ -13,7 +13,7 @@ const DashboardHeader = () => {
         <h1>Dashboard</h1>
 
         <p>
-          Continue your learning journey and discover new courses.
+          Continue your learning journey and discover new Internships.
         </p>
       </div>
     </motion.div>

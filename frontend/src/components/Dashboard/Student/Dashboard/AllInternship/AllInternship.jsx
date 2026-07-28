@@ -1,43 +1,38 @@
 import { motion } from "framer-motion";
-import ContinueCard from "../ContinueCard/ContinueCard";
-import "./ContinueLearning.css";
+import CourseCard from "../CourseCard/CourseCard";
+import "./AllInternship.css";
 
-const ContinueLearning = ({ internships }) => {
+
+
+const AllInternship = ({internships}) => {
   return (
-    <section className="continue-learning">
+    <section className="all-courses">
 
       <motion.div
-        className="section-title"
+        className="course-heading"
         initial={{ opacity: 0, x: -40 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
       >
-        <h2>Continue Learning</h2>
-
-        <p>Your joined internships</p>
-
+        <h2>All Internships</h2>
+        <p>Explore every available Internships</p>
       </motion.div>
 
-      <div className="continue-grid">
+      <div className="course-grid">
 
         {internships.map((internship, index) => (
-
           <motion.div
             key={internship._id}
             initial={{ opacity: 0, y: 80 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-
             transition={{
-              duration: 0.5,
-              delay: index * 0.1,
+              delay: index * .1,
+              duration: .5
             }}
           >
-
-            <ContinueCard internship={internship} />
-
+            <CourseCard internship={internship} />
           </motion.div>
-
         ))}
 
       </div>
@@ -46,4 +41,4 @@ const ContinueLearning = ({ internships }) => {
   );
 };
 
-export default ContinueLearning;
+export default AllInternship;

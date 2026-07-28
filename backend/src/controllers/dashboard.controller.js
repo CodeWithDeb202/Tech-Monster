@@ -3,11 +3,12 @@ import Task from "../models/Task.js";
 import Attendance from "../models/Attendance.js";
 import StudentInternship from "../models/StudentInternship.js";
 import UserBadge from "../models/UserBadge.js";
-import Internship from '../models/Internship.js'
+import Internship from '../models/Internship.js';
 
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const studentDashboard = asyncHandler(async (req, res) => {
+
 
 
     const user = await User.findById(req.user._id)
@@ -28,13 +29,16 @@ export const studentDashboard = asyncHandler(async (req, res) => {
 
     });
 
+    const allInternships = await StudentInternship.find()
+        .populate("internship");
 
+    const internships = allInternships.filter(item =>
+        item.student.equals(req.user._id)
+    );
 
-    const internships = await StudentInternship.find({
-
-        student: req.user._id
-
-    }).populate("internship");
+    const allInternship = await Internship.find({
+        isPublished: true
+    });
 
     const recommendedInternships = await Internship.find({
         isPublished: true
@@ -48,7 +52,9 @@ export const studentDashboard = asyncHandler(async (req, res) => {
         .select("firstName lastName avatar bio skills")
         .limit(4);
 
-
+    const enrolledIds = internships.map(i =>
+        i.internship?._id.toString()
+    );
 
     const badges = await UserBadge.find({
 
@@ -300,6 +306,18 @@ export const studentDashboard = asyncHandler(async (req, res) => {
                 status: item.status
             })),
 
+        allInternship: allInternship.map(item => ({
+            _id: item._id,
+            title: item.title,
+            thumbnail: item.thumbnail,
+            category: item.category,
+            level: item.level,
+            duration: item.duration,
+            totalTasks: item.totalTasks,
+            totalNotes: item.totalNotes,
+            enrolled: enrolledIds.includes(item._id.toString())
+        })),
+
         recommendedInternships: recommendedInternships.map(item => ({
             _id: item._id,
             title: item.title,
@@ -308,7 +326,8 @@ export const studentDashboard = asyncHandler(async (req, res) => {
             level: item.level,
             duration: item.duration,
             totalTasks: item.totalTasks,
-            totalNotes: item.totalNotes
+            totalNotes: item.totalNotes,
+            enrolled: enrolledIds.includes(item._id.toString())
         })),
 
 
@@ -341,6 +360,11 @@ export const studentDashboard = asyncHandler(async (req, res) => {
 
 
 });
+
+
+
+
+
 
 export const adminDashboard = asyncHandler(async (req, res) => {
 

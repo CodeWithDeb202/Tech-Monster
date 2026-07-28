@@ -1,5 +1,4 @@
 import "./Home.css";
-console.log("Home Page Loaded");
 
 import { useEffect, useState } from "react";
 import api from "../../../../services/api/axios";
@@ -22,7 +21,6 @@ const Home = () => {
 
     try {
       const res = await api.get("/dashboard/student");
-      console.log("res-dashboard :", res.data.dashboard)
 
       setDashboard(res.data.dashboard);
 
@@ -34,8 +32,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-
-    console.log("useEffect running");
     loadDashboard();
 
   }, []);

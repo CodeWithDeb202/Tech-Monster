@@ -3,20 +3,15 @@
 =========================== */
 
 .dashboard-page {
-
     min-height: 100vh;
-
-    padding: 30px;
-
+    padding: 1rem;
     position: relative;
-
     overflow: hidden;
-
     background:
         radial-gradient(circle at top left, #0d2d48 0%, transparent 35%),
         radial-gradient(circle at bottom right, #063b53 0%, transparent 30%),
         linear-gradient(135deg, #020817, #071423, #021a2f);
-
+        border-radius: 2rem;
 }
 
 
@@ -25,51 +20,29 @@
 =========================== */
 
 .dashboard-page::before {
-
     content: "";
-
     position: absolute;
-
     width: 350px;
-
     height: 350px;
-
     border-radius: 50%;
-
     background: #00ffff15;
-
     filter: blur(90px);
-
     top: -120px;
-
     left: -120px;
-
     animation: floatGlow1 8s ease-in-out infinite;
-
 }
 
 .dashboard-page::after {
-
     content: "";
-
     position: absolute;
-
     width: 300px;
-
     height: 300px;
-
     border-radius: 50%;
-
     background: #00bfff18;
-
     filter: blur(90px);
-
     bottom: -100px;
-
     right: -100px;
-
     animation: floatGlow2 10s ease-in-out infinite;
-
 }
 
 
@@ -78,13 +51,9 @@
 =========================== */
 
 .dashboard-page section {
-
     position: relative;
-
     z-index: 2;
-
     margin-bottom: 55px;
-
 }
 
 
@@ -93,17 +62,11 @@
 =========================== */
 
 .dashboard-container {
-
     background: rgba(255, 255, 255, .03);
-
     border: 1px solid rgba(255, 255, 255, .06);
-
     border-radius: 22px;
-
     backdrop-filter: blur(14px);
-
     padding: 28px;
-
 }
 
 

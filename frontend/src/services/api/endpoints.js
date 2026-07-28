@@ -43,5 +43,8 @@ export const API = {
     UPDATE: "/profile",
     IMAGE: "/profile/profile-image"
   },
+  DASHBOARD: {
+    STUDENT: "/dashboard/student"
+  }
 
 };

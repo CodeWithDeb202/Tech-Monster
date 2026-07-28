@@ -16,3 +16,12 @@
 [2026-07-29 00:35:01] error: Error: Invalid email or password
     at file:///C:/Users/Debabrata%20Andia/OneDrive/Desktop/DEMO/backend/src/controllers/auth.controller.js:115:15
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2026-07-29 02:01:27] error: ReferenceError: mongoose is not defined
+    at file:///C:/Users/Debabrata%20Andia/OneDrive/Desktop/DEMO/backend/src/controllers/dashboard.controller.js:36:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2026-07-29 02:42:29] error: ReferenceError: mongoose is not defined
+    at file:///C:/Users/Debabrata%20Andia/OneDrive/Desktop/DEMO/backend/src/controllers/dashboard.controller.js:55:26
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2026-07-29 02:42:55] error: ReferenceError: mongoose is not defined
+    at file:///C:/Users/Debabrata%20Andia/OneDrive/Desktop/DEMO/backend/src/controllers/dashboard.controller.js:55:26
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
