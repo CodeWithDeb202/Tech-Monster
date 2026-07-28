@@ -1,0 +1,135 @@
+import express from "express";
+
+
+import {
+
+    createInternship,
+
+    getAllInternships,
+
+    getSingleInternship,
+
+    joinInternship,
+
+    getMyInternships,
+
+    updateInternshipProgress,
+
+    completeInternship
+
+
+} from "../controllers/internship.controller.js";
+
+
+import { protect } from "../middleware/auth.middleware.js";
+
+
+import authorizeRoles from "../middleware/role.middleware.js";
+
+
+
+const router = express.Router();
+
+
+
+// ADMIN
+
+router.post(
+
+    "/",
+
+    protect,
+
+    authorizeRoles("admin"),
+
+    createInternship
+
+);
+
+
+
+
+
+// PUBLIC
+
+router.get(
+
+    "/",
+
+    getAllInternships
+
+);
+
+
+
+router.get(
+
+    "/:id",
+
+    getSingleInternship
+
+);
+
+
+
+
+// STUDENT
+
+
+router.post(
+
+    "/:id/join",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    joinInternship
+
+);
+
+
+
+router.get(
+
+    "/student/my",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    getMyInternships
+
+);
+
+
+
+router.put(
+
+    "/:id/progress",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    updateInternshipProgress
+
+);
+
+
+
+router.put(
+
+    "/:id/complete",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    completeInternship
+
+);
+
+
+
+export default router;

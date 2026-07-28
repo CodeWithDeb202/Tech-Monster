@@ -65,6 +65,10 @@ const userSchema = new mongoose.Schema(
             trim: true
         },
 
+        middleName: {
+            type: String,
+            default: ""
+        },
         lastName: {
             type: String,
             default: "",
@@ -73,7 +77,7 @@ const userSchema = new mongoose.Schema(
 
         avatar: {
             type: String,
-            default: ""
+            default: "/images/default-avatar.png"
         },
 
         phone: {
@@ -98,16 +102,20 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
+
+
+
+
         // ==========================
         // EDUCATION
         // ==========================
-
-        college: {
+        education: {
             type: String,
             default: ""
         },
 
-        degree: {
+
+        college: {
             type: String,
             default: ""
         },
@@ -118,6 +126,10 @@ const userSchema = new mongoose.Schema(
         },
 
         year: {
+            type: String,
+            default: ""
+        },
+        semester: {
             type: String,
             default: ""
         },
@@ -136,11 +148,6 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
-        portfolio: {
-            type: String,
-            default: ""
-        },
-
         // ==========================
         // PROFESSIONAL
         // ==========================
@@ -148,11 +155,6 @@ const userSchema = new mongoose.Schema(
         skills: {
             type: [String],
             default: []
-        },
-
-        resume: {
-            type: String,
-            default: ""
         },
 
         // ==========================
@@ -168,7 +170,32 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "",
             select: false
-        }
+        },
+
+        currentAddress: {
+            type: String,
+            default: ""
+        },
+
+        localAddress: {
+            type: String,
+            default: ""
+        },
+
+        district: {
+            type: String,
+            default: ""
+        },
+
+        state: {
+            type: String,
+            default: ""
+        },
+
+        pincode: {
+            type: String,
+            default: ""
+        },
 
     },
     {
@@ -183,7 +210,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function () {
 
     if (!this.isModified("password")) {
-        return ;
+        return;
     }
 
     const salt = await bcrypt.genSalt(10);

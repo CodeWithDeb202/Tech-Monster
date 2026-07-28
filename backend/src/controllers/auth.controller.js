@@ -234,6 +234,8 @@ export const login = asyncHandler(async (req, res) => {
         user: {
             id: user._id,
             username: user.username,
+            firstname: user.firstName,
+            lastname: user.lastName,
             email: user.email,
             role: user.role,
             avatar: user.avatar
@@ -464,6 +466,8 @@ export const verifyOTP = asyncHandler(async (req, res) => {
             user: {
                 id: user._id,
                 username: user.username,
+                firstname: user.firstName,
+                lastname: user.lastName,
                 email: user.email,
                 role: user.role,
                 avatar: user.avatar

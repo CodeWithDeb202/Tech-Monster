@@ -17,6 +17,8 @@ import notificationRoutes from "./routes/notification.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 
+import internshipRoutes from "./routes/internship.routes.js";
+
 
 import morganMiddleware from "./middleware/logger.middleware.js";
 import errorHandler from "./middleware/errorHandlre.js";
@@ -80,19 +82,19 @@ app.use(morganMiddleware);
 
 app.get("/api/health", (req, res) => {
 
-    if (process.env.MAINTENANCE_MODE === "true") {
+  if (process.env.MAINTENANCE_MODE === "true") {
 
-        return res.status(503).json({
-            success: false,
-            statusCode: 503,
-            message: "Website is under maintenance."
-        });
-
-    }
-
-    res.status(200).json({
-        success: true
+    return res.status(503).json({
+      success: false,
+      statusCode: 503,
+      message: "Website is under maintenance."
     });
+
+  }
+
+  res.status(200).json({
+    success: true
+  });
 
 });
 
@@ -130,7 +132,6 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/users", userRoutes);
 
 
-
 app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/api/tasks", taskRoutes);
@@ -152,6 +153,11 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
 app.use("/api/search", searchRoutes);
+
+app.use(
+  "/api/internships",
+  internshipRoutes
+);
 
 
 

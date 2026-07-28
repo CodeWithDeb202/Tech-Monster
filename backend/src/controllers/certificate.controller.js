@@ -1,114 +1,201 @@
 import Certificate from "../models/Certificate.js";
+import StudentInternship from "../models/StudentInternship.js";
 import Notification from "../models/Notification.js";
 
-import { generateCertificatePDF } from "../utils/generateCertificatePDF.js";
-import { sendCertificateEmail } from "../services/email.service.js";
+import { generateCertificatePDF }
+    from "../utils/generateCertificatePDF.js";
+
+import { sendCertificateEmail }
+    from "../services/email.service.js";
 
 import logActivity from "../utils/logActivity.js";
+
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
+
+
+
+// =====================================
+// ISSUE CERTIFICATE
+// =====================================
+
 export const issueCertificate = asyncHandler(async (req, res) => {
 
-    const { offerId } = req.body;
 
-    if (!offerId) {
+    const { internshipId } = req.body;
+
+
+
+    if (!internshipId) {
 
         throw new AppError(
-
-            "Offer ID is required",
-
+            "Internship ID is required",
             400
-
         );
 
     }
 
-    const offer = await Offer.findById(offerId)
-        .populate("student")
-        .populate("internship");
 
-    if (!offer) {
+
+    // Check student internship
+
+    const studentInternship =
+        await StudentInternship.findOne({
+
+            student: req.user._id,
+
+            internship: internshipId
+
+        })
+            .populate("student")
+            .populate("internship");
+
+
+
+
+    if (!studentInternship) {
 
         throw new AppError(
-
-            "Offer not found",
-
+            "Internship enrollment not found",
             404
-
         );
 
     }
 
-    const existingCertificate = await Certificate.findOne({
 
-        offer: offer._id
 
-    });
+    // Check completion
+
+
+    if (studentInternship.status !== "Completed") {
+
+        throw new AppError(
+            "Complete internship before certificate",
+            400
+        );
+
+    }
+
+
+
+
+    // Already certificate?
+
+
+    const existingCertificate =
+        await Certificate.findOne({
+
+            student: req.user._id,
+
+            internship: internshipId
+
+        });
+
+
 
     if (existingCertificate) {
 
         throw new AppError(
-
             "Certificate already issued",
-
             409
-
         );
 
     }
 
-    const certificateNumber =
 
+
+
+    // Certificate Number
+
+
+    const certificateNumber =
         "TM-" + Date.now();
 
-    const certificate = await Certificate.create({
 
-        student: offer.student._id,
 
-        internship: offer.internship._id,
 
-        employer: req.user._id,
+    // Create certificate
 
-        offer: offer._id,
 
-        certificateNumber
+    const certificate =
+        await Certificate.create({
 
-    });
+            student: req.user._id,
 
-    const pdfUrl = await generateCertificatePDF(
+            internship: internshipId,
 
-        certificate,
+            certificateNumber
 
-        offer.student,
+        });
 
-        offer.internship
 
-    );
+
+
+
+    // Generate PDF
+
+
+    const pdfUrl =
+        await generateCertificatePDF(
+
+            certificate,
+
+            studentInternship.student,
+
+            studentInternship.internship
+
+        );
+
+
+
 
     certificate.pdfUrl = pdfUrl;
 
+
     await certificate.save();
+
+
+
+
+
+    // Send Email
+
 
     await sendCertificateEmail(
 
-        offer.student.email,
+        studentInternship.student.email,
 
         pdfUrl
 
     );
 
+
+
+
+
+    // Notification
+
+
     await Notification.create({
 
-        user: offer.student._id,
+        user: req.user._id,
 
         title: "Certificate Issued",
 
-        message: "Your internship completion certificate has been issued.",
+        message:
+            `Your ${studentInternship.internship.title} internship certificate is ready.`,
 
         type: "certificate"
 
     });
+
+
+
+
+
+    // Activity Log
+
 
     await logActivity(
 
@@ -116,123 +203,146 @@ export const issueCertificate = asyncHandler(async (req, res) => {
 
         req.user._id,
 
-        "ISSUE_CERTIFICATE",
+        "CERTIFICATE_ISSUED",
 
         "Certificate",
 
-        `Issued certificate to ${offer.student.firstName}`
+        `Certificate generated for ${studentInternship.internship.title}`
 
     );
 
-    return res.status(201).json({
+
+
+
+
+    res.status(201).json({
 
         success: true,
 
-        message: "Certificate issued successfully",
+        message:
+            "Certificate issued successfully",
 
         certificate
 
     });
 
-});
 
-export const getMyCertificates = asyncHandler(async (req, res) => {
-
-    const certificates = await Certificate.find({
-
-        student: req.user._id
-
-    })
-
-    .populate(
-
-        "internship",
-
-        "title"
-
-    )
-
-    .sort({
-
-        createdAt: -1
-
-    });
-
-    return res.status(200).json({
-
-        success: true,
-
-        certificates
-
-    });
-
-});
-
-export const getEmployerCertificates = asyncHandler(async (req, res) => {
-
-    const certificates = await Certificate.find({
-
-        employer: req.user._id
-
-    })
-
-    .populate(
-
-        "student",
-
-        "firstName lastName email"
-
-    )
-
-    .populate(
-
-        "internship",
-
-        "title"
-
-    )
-
-    .sort({
-
-        createdAt: -1
-
-    });
-
-    return res.status(200).json({
-
-        success: true,
-
-        certificates
-
-    });
 
 });
 
 
-export const downloadCertificate = asyncHandler(async (req, res) => {
 
-    const certificate = await Certificate.findById(
 
-        req.params.id
 
-    );
 
-    if (!certificate) {
 
-        throw new AppError(
 
-            "Certificate not found",
+// =====================================
+// GET MY CERTIFICATES
+// =====================================
 
-            404
 
-        );
+export const getMyCertificates =
+    asyncHandler(async (req, res) => {
 
-    }
 
-    return res.download(
+        const certificates =
+            await Certificate.find({
 
-        certificate.pdfUrl
+                student: req.user._id
 
-    );
+            })
 
-});
+                .populate(
+                    "internship",
+                    "title category duration"
+                )
+
+                .sort({
+
+                    createdAt: -1
+
+                });
+
+
+
+
+        res.status(200).json({
+
+            success: true,
+
+            certificates
+
+        });
+
+
+
+    });
+
+
+
+
+
+
+
+
+// =====================================
+// DOWNLOAD CERTIFICATE
+// =====================================
+
+
+export const downloadCertificate =
+    asyncHandler(async (req, res) => {
+
+
+        const certificate =
+            await Certificate.findById(
+
+                req.params.id
+
+            );
+
+
+
+        if (!certificate) {
+
+            throw new AppError(
+                "Certificate not found",
+                404
+            );
+
+        }
+
+
+
+
+        if (
+
+            certificate.student.toString()
+            !==
+            req.user._id.toString()
+
+        ) {
+
+            throw new AppError(
+                "Unauthorized access",
+                403
+            );
+
+        }
+
+
+
+
+
+        res.status(200).json({
+
+            success: true,
+
+            pdfUrl: certificate.pdfUrl
+
+        });
+
+
+
+    });

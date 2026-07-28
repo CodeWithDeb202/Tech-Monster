@@ -30,7 +30,7 @@ export const uploadProfileImage = asyncHandler( async (req, res) => {
             req.user.id,
 
             {
-                profileImage: imageUrl
+                avatar: imageUrl
             },
 
             {
@@ -51,14 +51,47 @@ export const uploadProfileImage = asyncHandler( async (req, res) => {
 
         });
 
+});
 
 
-        res.status(500).json({
+export const updateProfile = asyncHandler(async (req, res) => {
 
-            success: false,
+    const user = await User.findById(req.user._id);
 
-            message: error.message
+    if (!user) {
+        throw new AppError("User not found",404);
+    }
 
-        });
+    Object.assign(user, req.body);
+
+    user.profileCompleted = true;
+
+    await user.save();
+
+    res.status(200).json({
+
+        success:true,
+
+        message:"Profile updated",
+
+        user
+
+    });
+
+});
+
+
+export const getProfile = asyncHandler(async(req,res)=>{
+
+    const user = await User.findById(req.user._id)
+    .select("-password");
+
+    res.json({
+
+        success:true,
+
+        user
+
+    });
 
 });

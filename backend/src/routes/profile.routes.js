@@ -1,6 +1,6 @@
 import express from "express";
 
-import { uploadProfileImage } from "../controllers/profile.controller.js";
+import { uploadProfileImage, updateProfile, getProfile } from "../controllers/profile.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
 
@@ -16,6 +16,18 @@ router.put(
     protect,
     upload.single("image"),
     uploadProfileImage
+);
+
+router.get(
+    "/",
+    protect,
+    getProfile
+);
+
+router.put(
+    "/",
+    protect,
+    updateProfile
 );
 
 
