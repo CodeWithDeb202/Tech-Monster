@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./SystemBar.css";
 
-const SystemBar = () => {
+const SystemBar = ({user = "DEB"}) => {
 
   const [dateTime, setDateTime] = useState(new Date());
 
@@ -19,7 +19,7 @@ const SystemBar = () => {
 
       {/* Left Side */}
       <div className="hostname">
-        HOST : DEB-SERVER
+        HOST : {user}-SERVER
       </div>
 
 

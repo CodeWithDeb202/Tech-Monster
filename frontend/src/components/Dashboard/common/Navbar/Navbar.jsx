@@ -1,7 +1,6 @@
 import './Navbar.css';
 
 import useAuth from '../../../../hooks/useAuth';
-import { toast } from 'react-toastify';
 
 import { useState } from "react";
 import { Link, useNavigate, NavLink } from "react-router-dom";
@@ -18,6 +17,12 @@ import SystemBar from '../../../Common/Navbar/SystemBar';
 import SearchBar from '../../../Common/SearchBar';
 
 function Navbar({ role = "student" }) {
+
+    const { logout, user } = useAuth();
+
+    const userName = user?.username || '';
+    const capitalName = userName.toUpperCase() || userName;
+
 
     const navigate = useNavigate();
 
@@ -38,7 +43,7 @@ function Navbar({ role = "student" }) {
         setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
     };
 
-    const { logout } = useAuth();
+    console.log(user)
 
     const handleLogout = async () => {
         await logout();
@@ -51,7 +56,7 @@ function Navbar({ role = "student" }) {
     return (
         <>
             <nav id='navDash'>
-                <SystemBar />
+                <SystemBar user={capitalName} />
 
                 <header id="dashboard-navbar">
                     <div id="nav-left-section">
@@ -145,7 +150,7 @@ function Navbar({ role = "student" }) {
                                 <div id="avatar-circle">
                                     <FiUser />
                                 </div>
-                                <span id="username">@Debabrata</span>
+                                <span id="username">@{userName || 'username'}</span>
                             </div>
 
                             <AnimatePresence>

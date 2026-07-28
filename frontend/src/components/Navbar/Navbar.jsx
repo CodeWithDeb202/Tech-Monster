@@ -41,7 +41,7 @@ function Navbar() {
         <>
 
             <motion.nav id='navbar' initial={{ y: -80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }}>
-                <Systembar />
+                <Systembar user='DEB' />
                 <div id='navbar-container' >
                     <a href={'#home'} onClick={() => setActiveLink('#')} id='navLogo'>
                         

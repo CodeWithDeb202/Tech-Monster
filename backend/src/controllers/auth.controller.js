@@ -232,17 +232,11 @@ export const login = asyncHandler(async (req, res) => {
         refreshToken,
 
         user: {
-
             id: user._id,
-
-            firstName: user.firstName,
-
-            lastName: user.lastName,
-
+            username: user.username,
             email: user.email,
-
-            role: user.role
-
+            role: user.role,
+            avatar: user.avatar
         }
 
     });
@@ -468,23 +462,11 @@ export const verifyOTP = asyncHandler(async (req, res) => {
 
 
             user: {
-
-
                 id: user._id,
-
-
-                firstName: user.firstName,
-
-
-                lastName: user.lastName,
-
-
+                username: user.username,
                 email: user.email,
-
-
-                role: user.role
-
-
+                role: user.role,
+                avatar: user.avatar
             }
 
 
