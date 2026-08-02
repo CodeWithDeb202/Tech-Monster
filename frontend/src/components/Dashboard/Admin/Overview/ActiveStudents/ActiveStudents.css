@@ -1,0 +1,33 @@
+#activeStudents{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#activeStudents h1{
+    margin-left: 1rem;
+    font-size: 1.7rem;
+    color: var(--neon);
+    position: relative;
+}
+
+#activeStudents h1::after{
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 150px;
+    height: 3px;
+    background-color: var(--glow);
+    border-radius: 50%;
+}
+
+#activeStudentCards{
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+

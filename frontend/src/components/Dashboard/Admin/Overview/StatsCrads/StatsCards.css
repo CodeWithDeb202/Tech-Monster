@@ -1,0 +1,30 @@
+#adminStatsCrads{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 1rem 0;
+}
+
+#adminStatsCard{
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+
+#adminStatsCard svg{
+    font-size: 2rem;
+    color: var(--neon);
+}
+
+#adminStatsCard h3{
+    font-size: 1.5rem;
+}
+
+#adminStatsCard p{
+    color: var(--muted);
+}
+

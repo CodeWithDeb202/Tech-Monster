@@ -10,24 +10,17 @@
     --muted: #cbd5e181;
     --radius: 12px;
     --transition: 0.3s ease;
-    /* Main Neon Color */
 
+    /* Main Neon Color */
     --neon: #00eaff;
 
-
     /* Dark Background */
-
     --dark: #020617;
 
-
     /* Secondary Glow */
-
     --glow: #0066ff;
 
-
     /* Text Color */
-
     --text: #ffffff;
-
     --golden: #ffd700;
 }

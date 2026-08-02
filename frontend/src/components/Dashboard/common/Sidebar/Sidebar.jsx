@@ -5,20 +5,23 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import {
     FiHome,
     FiGrid,
     FiCheckSquare,
     FiCalendar,
     FiUser,
+    FiBookOpen,
+    FiCreditCard,
     FiAward,
     FiSettings,
     FiLogOut,
     FiX,
     FiLock,
-    FiHelpCircle // Added Help Icon
+    FiHelpCircle
 } from "react-icons/fi";
+
 
 function Sidebar({ role = "student", isCourseCompleted = false }) {
     const navigate = useNavigate();
@@ -26,6 +29,7 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMobileMenuOpen(false);
     }, [location.pathname]);
 
@@ -40,14 +44,15 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
     ];
 
     const adminLinks = [
-        { name: "Overview", path: "/admin/dashboard", icon: <FiHome /> },
-        { name: "Manage Students", path: "/admin/students", icon: <FiUser /> },
-        { name: "Task Approvals", path: "/admin/tasks", icon: <FiCheckSquare /> },
-        { name: "Reports", path: "/admin/reports", icon: <FiGrid /> },
-        { name: "Settings", path: "/admin/settings", icon: <FiSettings /> },
+        { name: "Overview", path: "/demo_admin/dashboard", icon: <FiHome /> },
+        { name: "Manage Students", path: "/demo_admin/students", icon: <FiUser /> },
+        { name: "Internships", path: "/demo_admin/internships", icon: <FiBookOpen /> },
+        { name: "Task Approval", path: "/demo_admin/tasks", icon: <FiCheckSquare /> },
+        { name: "Reports", path: "/demo_admin/reports", icon: <FiGrid /> },
+        { name: "Certificate Approval", path: "/demo_admin/certificates", icon: <FiCreditCard /> },
     ];
 
-    const navLinks = role === "admin" ? adminLinks : studentLinks;
+    const navLinks = role === 'admin' ? adminLinks : studentLinks;
 
     const handleLinkClick = (e, link) => {
         if (link.locked) {

@@ -16,7 +16,7 @@ import logo from "../../../../assets/logo/logo.png";
 import SystemBar from '../../../Common/Navbar/SystemBar';
 import SearchBar from '../../../Common/SearchBar';
 
-function Navbar({ role = "student" }) {
+function Navbar({ role = "student"}) {
 
     const { logout, user } = useAuth();
 
@@ -148,7 +148,7 @@ function Navbar({ role = "student" }) {
                                 <div id="avatar-circle">
                                     <FiUser />
                                 </div>
-                                <span id="username">@{userName || 'username'}</span>
+                                <span id="username">{userName || 'username'}</span>
                             </div>
 
                             <AnimatePresence>

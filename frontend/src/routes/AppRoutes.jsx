@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 // Errors page
 
 import AuthenticationRequired from "../pages/StatusPages/AuthenticationRequired";
@@ -44,8 +44,14 @@ import Notification from '../components/Dashboard/common/Notification';
 import Message from '../components/Dashboard/common/Message';
 
 // Admin Dashboard
-import AdminDashboard from '../pages/Dashboard/Admin';
-// import HelpSupport from '../components/Dashboard/common/Help&Supp';
+import Overview from '../pages/Dashboard/Admin/Overview';
+import Students from '../pages/Dashboard/Admin/Students';
+import Reports from '../pages/Dashboard/Admin/Reports';
+import Internships from '../pages/Dashboard/Admin/Internships';
+import TaskApproval from '../pages/Dashboard/Admin/TasksApproval';
+import CertificateApproval from '../pages/Dashboard/Admin/CertificateApproval';
+import InternshipsForm from '../components/Dashboard/Admin/Internships/InternshipsForm';
+
 
 
 
@@ -111,9 +117,18 @@ function AppRoutes() {
                         </ProtectedRoute>
                     }
                 >
-                    <Route index element={<AdminDashboard />} />
-                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path='/demo_admin/dashboard' element={<Overview />} />
+                    <Route path='/demo_admin/students' element={<Students />} />
+                    <Route path='/demo_admin/internships' element={<Internships />} />
+                    <Route path='/demo_admin/internships-form' element={<InternshipsForm />} />
+
+                    <Route path='/demo_admin/tasks' element={<TaskApproval />} />
+                    <Route path='/demo_admin/reports' element={<Reports />} />
+                    <Route path='/demo_admin/certificates' element={<CertificateApproval />} />
+                    <Route path='/demo_admin/settings' element={<StudentSetting />} />
                 </Route>
+
+                
 
 
                 {/* 404 Fallback */}

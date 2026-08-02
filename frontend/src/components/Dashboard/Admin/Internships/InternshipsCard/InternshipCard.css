@@ -1,0 +1,92 @@
+.allInternshipsCard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--surface);
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+
+#allInternshipsImg{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 1rem;
+}
+
+#intenshipLogo{
+    width: 200px;
+    height: 100px;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+#intenshipLogo img{
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+#editAndDltBtn{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-left: auto;
+    position: relative;
+}
+
+#editAndDltBtn #editBtn{
+    background: transparent;
+    color: var(--muted);
+}
+
+#editAndDltBtn #editBtn svg:hover{
+    transform: scale(1.1);
+}
+
+#editAndDltBtn #dltBtn{
+    background: transparent;
+    color: var(--danger);
+    transition: all 0.3s ease-in;
+}
+
+#editAndDltBtn #dltBtn svg{
+    filter: drop-shadow(0 0 20px var(--danger));
+}
+
+#editAndDltBtn #dltBtn svg:hover{
+    transform: scale(1.1);
+}
+
+#allInternshipsContent{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 1rem;
+}
+
+#titleAndDesc h3{
+    color: var(--neon);
+    margin: 0.3rem 0;
+}
+#titleAndDesc p{
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+#totalLessionAndTaskcount{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#totalLessionAndTaskcount p{
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+#totalLessionAndTaskcount p span{
+    color: var(--golden);
+}

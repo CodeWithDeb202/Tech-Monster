@@ -12,8 +12,6 @@ function App() {
   useEffect(() => {
 
     const checkServer = async () => {
-
-      // already maintenance page re achhi
       if (window.location.pathname === "/503") {
         return;
       }
