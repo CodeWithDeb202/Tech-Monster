@@ -44,12 +44,12 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
     ];
 
     const adminLinks = [
-        { name: "Overview", path: "/demo_admin/dashboard", icon: <FiHome /> },
-        { name: "Manage Students", path: "/demo_admin/students", icon: <FiUser /> },
-        { name: "Internships", path: "/demo_admin/internships", icon: <FiBookOpen /> },
-        { name: "Task Approval", path: "/demo_admin/tasks", icon: <FiCheckSquare /> },
-        { name: "Reports", path: "/demo_admin/reports", icon: <FiGrid /> },
-        { name: "Certificate Approval", path: "/demo_admin/certificates", icon: <FiCreditCard /> },
+        { name: "Overview", path: "/admin", icon: <FiHome /> },
+        { name: "Manage Students", path: "/admin/students", icon: <FiUser /> },
+        { name: "Internships", path: "/admin/internships", icon: <FiBookOpen /> },
+        { name: "Task Approval", path: "/admin/tasks", icon: <FiCheckSquare /> },
+        { name: "Reports", path: "/admin/reports", icon: <FiGrid /> },
+        { name: "Certificate Approval", path: "/admin/certificates", icon: <FiCreditCard /> },
     ];
 
     const navLinks = role === 'admin' ? adminLinks : studentLinks;

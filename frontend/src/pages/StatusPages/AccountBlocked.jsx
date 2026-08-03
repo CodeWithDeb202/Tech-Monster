@@ -9,7 +9,7 @@ export default function AccountBlocked() {
       description="Your account has been blocked. Please contact support."
       Icon={Ban}
       primaryText="Contact Support"
-      primaryPath="/student/help&support"
+      primaryPath="#contact"
     />
   );
 }

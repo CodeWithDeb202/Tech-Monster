@@ -17,6 +17,7 @@ import Landing from "../pages/LandingPages/Landing";
 
 import Login from '../pages/Auth/Login';
 import Signup from '../pages/Auth/Signup';
+import AdminLogin from '../pages/Auth/AdminLogin';
 import ForgotPassword from '../pages/Auth/ForgotPassword';
 import ResetPassword from '../pages/Auth/ResetPassword';
 
@@ -64,6 +65,7 @@ function AppRoutes() {
                 {/* Public Routes */}
                 <Route path='/' element={<Landing />} />
                 <Route path='/login' element={<Login />} />
+                <Route path='/admin_login' element={<AdminLogin />} />
                 <Route path='/signup' element={<Signup />} />
                 <Route path='/forgot-password' element={<ForgotPassword />} />
                 <Route path="/verify-signup-otp" element={<VerifySignupOTP />} />
@@ -117,15 +119,15 @@ function AppRoutes() {
                         </ProtectedRoute>
                     }
                 >
-                    <Route path='/demo_admin/dashboard' element={<Overview />} />
-                    <Route path='/demo_admin/students' element={<Students />} />
-                    <Route path='/demo_admin/internships' element={<Internships />} />
-                    <Route path='/demo_admin/internships-form' element={<InternshipsForm />} />
+                    <Route index element={<Overview />} />
+                    <Route path='students' element={<Students />} />
+                    <Route path='internships' element={<Internships />} />
+                    <Route path='internships-form' element={<InternshipsForm />} />
 
-                    <Route path='/demo_admin/tasks' element={<TaskApproval />} />
-                    <Route path='/demo_admin/reports' element={<Reports />} />
-                    <Route path='/demo_admin/certificates' element={<CertificateApproval />} />
-                    <Route path='/demo_admin/settings' element={<StudentSetting />} />
+                    <Route path='tasks' element={<TaskApproval />} />
+                    <Route path='reports' element={<Reports />} />
+                    <Route path='certificates' element={<CertificateApproval />} />
+                    <Route path='settings' element={<StudentSetting />} />
                 </Route>
 
                 

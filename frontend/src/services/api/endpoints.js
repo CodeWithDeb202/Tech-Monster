@@ -18,6 +18,8 @@ export const API = {
 
     COMPLETE_PROFILE: "/auth/profile",
 
+    ADMIN_LOGIN: "/auth/admin/login",
+
   },
 
   STUDENT: {
@@ -44,7 +46,13 @@ export const API = {
     IMAGE: "/profile/profile-image"
   },
   DASHBOARD: {
-    STUDENT: "/dashboard/student"
-  }
+    STUDENT: "/dashboard/student",
+    ADMIN: "/dashboard/admin"
+  },
 
+  SERVER: {
+
+    STATUS: "/server/status"
+
+  },
 };

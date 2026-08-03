@@ -1,0 +1,123 @@
+.serverStatus {
+
+    background: #171b29;
+
+    padding: 22px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(0, 255, 255, .15);
+
+}
+
+.serverStatus h2 {
+
+    color: white;
+
+    margin-bottom: 20px;
+
+}
+
+.statusItem {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+}
+
+.statusItem:last-child {
+
+    border: none;
+
+}
+
+.statusLeft {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: white;
+
+}
+
+.statusLeft svg {
+
+    font-size: 24px;
+
+    color: cyan;
+
+}
+
+.statusRight {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+.statusRight small {
+
+    color: #d8d8d8;
+
+}
+
+.dot {
+
+    width: 10px;
+
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: #00ff66;
+
+    box-shadow:
+
+        0 0 10px #00ff66,
+
+        0 0 20px #00ff66;
+
+    animation: pulse 1.5s infinite;
+
+}
+
+@keyframes pulse {
+
+    0% {
+
+        transform: scale(.8);
+
+        opacity: .6;
+
+    }
+
+    50% {
+
+        transform: scale(1.2);
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform: scale(.8);
+
+        opacity: .6;
+
+    }
+
+}

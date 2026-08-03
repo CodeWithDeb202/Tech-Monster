@@ -24,7 +24,7 @@ api.interceptors.request.use(
 
     (config) => {
 
-        const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken") || localStorage.getItem("adminAccessToken");
 
         if (token) {
 
@@ -61,7 +61,10 @@ api.interceptors.response.use(
             case 401:
 
                 localStorage.removeItem("accessToken");
+                localStorage.removeItem("adminAccessToken");
+
                 localStorage.removeItem("user");
+                localStorage.removeItem("admin");
 
                 window.location.href = "/session-expired";
 

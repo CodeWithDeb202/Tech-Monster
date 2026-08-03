@@ -1,46 +1,87 @@
-import './RecentUpdates.css';
-// import { useState } from 'react';
+import "./RecentUpdates.css";
 
-export default function RecentUpdates() {
+import { HiUserAdd } from "react-icons/hi";
 
-    const updates = [
-        {
-            title: "username1",
-            description: "What is doing on my website",
-        },
-        {
-            title: "username2",
-            description: "What is doing on my website",
-        },
-        {
-            title: "username3",
-            description: "What is doing on my website",
-        },
-        {
-            title: "username4",
-            description: "What is doing on my website",
-        }
-    ]
+export default function RecentUpdates({ students = [] }) {
 
     return (
-        <>
-            <div id="recentUpdates">
-                <h1>Recent Updates :</h1>
-                <div id="recentNotification">
-                    {updates.map((update, index) => (
-                        <div className="recentNotificationList">
-                            <div className='recentSerielNum'>
-                                <p>{index + 1}</p>
-                            </div>
-                            <div className='recentNotificationContent'>
-                                <h3>{update.title}</h3>
-                                <p>{update.description}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+
+        <div id="recentUpdates">
+
+            <div className="recentHeader">
+
+                <h2>Recent Updates</h2>
+
             </div>
 
-        </>
-    )
+            <div id="recentNotification">
+
+                {
+
+                    students.length === 0 ?
+
+                        <p className="emptyData">
+
+                            No Recent Activity
+
+                        </p>
+
+                        :
+
+                        students.map((student) => (
+
+                            <div
+
+                                className="recentNotificationList"
+
+                                key={student._id}
+
+                            >
+
+                                <div className="recentAvatar">
+
+                                    <img
+
+                                        src={student.avatar}
+
+                                        alt={student.firstName}
+
+                                    />
+
+                                </div>
+
+                                <div className="recentNotificationContent">
+
+                                    <h4>
+
+                                        {student.firstName} {student.lastName}
+
+                                    </h4>
+
+                                    <p>
+
+                                        Joined TechMonster
+
+                                    </p>
+
+                                </div>
+
+                                <div className="recentIcon">
+
+                                    <HiUserAdd />
+
+                                </div>
+
+                            </div>
+
+                        ))
+
+                }
+
+            </div>
+
+        </div>
+
+    );
+
 }

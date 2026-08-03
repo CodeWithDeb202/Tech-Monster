@@ -14,7 +14,7 @@ export const logout = () => {
 };
 
 export const forgotPassword = (email) => {
-  return api.post(API.AUTH.FORGOT_PASSWORD,  email);
+  return api.post(API.AUTH.FORGOT_PASSWORD, email);
 };
 
 export const verifyOtp = (data) => {
@@ -27,4 +27,8 @@ export const resendOtp = async (data) => {
 
 export const resetPassword = (data) => {
   return api.post(API.AUTH.RESET_PASSWORD, data);
+};
+
+export const adminLogin = (data) => {
+  return api.post(API.AUTH.ADMIN_LOGIN, data);
 };

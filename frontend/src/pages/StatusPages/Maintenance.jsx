@@ -12,15 +12,10 @@ export default function Maintenance() {
       // Health check
       await api.get("/health");
 
-      // Server up achhi
       navigate("/");
 
     } catch (err) {
-
-      // Jadi ebe bhi maintenance re achhi
       if (err.response?.status === 503) {
-        // Kichhi kariba darkar nahi.
-        // User 503 page re hi rahiba.
         return;
       }
 

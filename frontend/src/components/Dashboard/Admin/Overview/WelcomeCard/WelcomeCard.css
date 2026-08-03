@@ -1,0 +1,167 @@
+.welcomeCard {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    border-radius: 22px;
+
+    background: linear-gradient(135deg, #0f172a, #112240);
+
+    border: 1px solid rgba(0, 255, 255, .18);
+
+    overflow: hidden;
+
+    position: relative;
+
+}
+
+.welcomeCard::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 280px;
+
+    height: 280px;
+
+    background: rgba(0, 255, 255, .08);
+
+    border-radius: 50%;
+
+    right: -120px;
+
+    top: -120px;
+
+}
+
+.welcomeLeft {
+
+    z-index: 2;
+
+}
+
+.welcomeLeft h1 {
+
+    color: white;
+
+    font-size: 2rem;
+
+    margin-bottom: 10px;
+
+}
+
+.welcomeLeft p {
+
+    color: #bdbdbd;
+
+    margin-bottom: 10px;
+
+}
+
+.welcomeLeft span {
+
+    color: cyan;
+
+    font-size: 14px;
+
+}
+
+.welcomeRight {
+
+    display: flex;
+
+    gap: 20px;
+
+    z-index: 2;
+
+}
+
+.miniCard {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 18px;
+
+    background: rgba(255, 255, 255, .05);
+
+    border-radius: 15px;
+
+    min-width: 170px;
+
+    transition: .35s;
+
+}
+
+.miniCard:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow: 0 0 20px rgba(0, 255, 255, .2);
+
+}
+
+.miniCard svg {
+
+    font-size: 34px;
+
+    color: cyan;
+
+}
+
+.miniCard h3 {
+
+    color: white;
+
+    margin-bottom: 4px;
+
+}
+
+.miniCard p {
+
+    color: #bdbdbd;
+
+    font-size: 14px;
+
+}
+
+@media(max-width:900px) {
+
+    .welcomeCard {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+    .welcomeRight {
+
+        width: 100%;
+
+        flex-wrap: wrap;
+
+    }
+
+    .miniCard {
+
+        flex: 1;
+
+        min-width: 220px;
+
+    }
+
+}

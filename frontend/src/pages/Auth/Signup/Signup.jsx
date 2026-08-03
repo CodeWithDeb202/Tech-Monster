@@ -1,14 +1,14 @@
 import "./Signup.css";
 
 import { Link, useNavigate } from "react-router-dom";
-
 import { motion } from "framer-motion";
-
 import { useState } from "react";
-
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { toast } from "react-toastify";
+import { HashLoader } from "react-spinners";
+
 
 import AuthLayout from "../../../layouts/AuthLayout";
 
@@ -25,6 +25,7 @@ import { signupSchema } from "../../../validations/auth/signupSchema";
 
 
 function Signup() {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const {
@@ -50,49 +51,73 @@ function Signup() {
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const username = watch("username") || "";
-  const email = watch("email")  || "";
-  const password = watch("password")  || "";
-  const confirmPassword = watch("confirmPassword")  || "";
+  const email = watch("email") || "";
+  const password = watch("password") || "";
+  const confirmPassword = watch("confirmPassword") || "";
 
 
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
 
-    setError("")
+    setError("");
+    setLoading(true);
 
     try {
 
       await signupService(data);
 
-      navigate("/verify-signup-otp", {
+      toast.success("OTP sent to your Gmail account.");
 
-        state: {
+      setTimeout(() => {
 
-          email: data.email
+        navigate("/verify-signup-otp", {
+          state: {
+            email: data.email
+          }
+        });
 
-        }
+      }, 1200);
 
-      });
-
-    }
-
-    catch (err) {
+    } catch (err) {
 
       setError(
-
         err.response?.data?.message ||
-
         "Sign up failed"
-
       );
+
+    } finally {
+
+      setLoading(false);
 
     }
 
-  }
+  };
 
   return (
     <>
+
+      {
+        loading && (
+
+          <div className="loading-overlay">
+
+            <HashLoader
+              color="#2563eb"
+              size={70}
+              speedMultiplier={1.2}
+            />
+
+            <h3>Creating your account...</h3>
+
+            <p>
+              Sending OTP to your Gmail...
+            </p>
+
+          </div>
+
+        )
+      }
       <AuthLayout
         title="Create Account"
         subtitle="Join Tech Monster Pvt. Ltd."
@@ -149,7 +174,13 @@ function Signup() {
           </label>
           <p id="terms-error">{errors.terms?.message}</p>
 
-          <Button type="submit" fullWidth>Create Account</Button>
+          <Button
+            type="submit"
+            fullWidth
+            disabled={loading}
+          >
+            {loading ? "Creating Account..." : "Create Account"}
+          </Button>
 
           <p id="login-link">
             Already have an account?

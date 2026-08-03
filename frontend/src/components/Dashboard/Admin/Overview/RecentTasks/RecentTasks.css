@@ -1,0 +1,139 @@
+.recentTasks {
+
+    background: #171b29;
+
+    padding: 24px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(0, 255, 255, .15);
+
+}
+
+.recentTasks h2 {
+
+    color: white;
+
+    margin-bottom: 20px;
+
+}
+
+.taskCard {
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 15px;
+
+    margin-bottom: 15px;
+
+    background: #20263a;
+
+    border-radius: 15px;
+
+    transition: .3s;
+
+}
+
+.taskCard:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 0 20px rgba(0, 255, 255, .15);
+
+}
+
+.taskCard img {
+
+    width: 55px;
+
+    height: 55px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+}
+
+.taskInfo {
+
+    flex: 1;
+
+    margin-left: 15px;
+
+}
+
+.taskInfo h3 {
+
+    color: white;
+
+    margin-bottom: 6px;
+
+    font-size: 17px;
+
+}
+
+.taskInfo p {
+
+    color: #ddd;
+
+    font-size: 14px;
+
+}
+
+.taskInfo small {
+
+    color: #8b8b8b;
+
+}
+
+.taskRight {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 8px;
+
+}
+
+.taskRight span {
+
+    background: #00bcd4;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    color: white;
+
+    font-size: 13px;
+
+}
+
+.late {
+
+    color: #ff5252;
+
+    font-weight: bold;
+
+}
+
+.today {
+
+    color: #ffd600;
+
+    font-weight: bold;
+
+}
+
+.upcoming {
+
+    color: #00e676;
+
+    font-weight: bold;
+
+}

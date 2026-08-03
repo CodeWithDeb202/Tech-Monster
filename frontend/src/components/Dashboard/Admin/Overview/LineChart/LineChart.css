@@ -1,0 +1,33 @@
+#adminChart {
+
+    margin-top: 30px;
+
+    background: #1b1b28;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    transition: .35s;
+
+}
+
+#adminChart:hover {
+
+    box-shadow: 0 0 30px rgba(0, 255, 255, .15);
+
+}
+
+.chartHeader {
+
+    margin-bottom: 20px;
+
+}
+
+.chartHeader h2 {
+
+    color: white;
+
+}

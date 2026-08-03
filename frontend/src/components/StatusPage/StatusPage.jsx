@@ -2,6 +2,8 @@ import "./StatusPage.css";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+import useAuth from "../../hooks/useAuth";
+
 function StatusPage({
     code,
     title,
@@ -12,7 +14,17 @@ function StatusPage({
     primaryPath = "/",
     onPrimaryClick,
 }) {
+
+    const auth = useAuth();
+
+    if (!auth) {
+        return <h1>Auth Context NULL</h1>;
+    }
+
+    // const { user, isAuthenticated } = useAuth();
     const navigate = useNavigate();
+
+
 
     return (
         <section className="status-page">
@@ -53,11 +65,34 @@ function StatusPage({
                     <button
                         className="primary-btn"
                         onClick={() => {
+
                             if (onPrimaryClick) {
                                 onPrimaryClick();
-                            } else {
-                                navigate(primaryPath);
+                                return;
                             }
+
+                            if (isAuthenticated) {
+
+                                if (user?.role === "admin") {
+
+                                    navigate("/admin");
+
+                                } else if (user?.role === "student") {
+
+                                    navigate("/student");
+
+                                } else {
+
+                                    navigate(primaryPath);
+
+                                }
+
+                            } else {
+
+                                navigate(primaryPath);
+
+                            }
+
                         }}
                     >
                         {primaryText}

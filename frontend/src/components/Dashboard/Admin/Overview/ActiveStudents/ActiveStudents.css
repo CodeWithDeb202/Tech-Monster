@@ -1,4 +1,4 @@
-#activeStudents{
+/* #activeStudents{
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -30,4 +30,86 @@
     gap: 1rem;
     margin: 1rem 0;
 }
+ */
 
+
+
+#activeStudents {
+    margin-top: 30px;
+}
+
+#activeStudents h2 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+#activeStudentCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.activeStudentCard {
+    display: flex;
+    gap: 18px;
+    padding: 20px;
+    border-radius: 18px;
+    background: #1d1d2c;
+    border: 1px solid rgba(255, 255, 255, .08);
+    transition: .35s;
+}
+
+.activeStudentCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, .18);
+    border-color: cyan;
+}
+
+.activeStudentCard img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid cyan;
+}
+
+.studentInfo {
+    flex: 1;
+}
+
+.studentInfo h4 {
+    color: white;
+    margin-bottom: 5px;
+}
+
+.studentInfo span {
+    color: #bcbcbc;
+    font-size: 14px;
+}
+
+.progressBar {
+    margin: 12px 0;
+    height: 8px;
+    background: #333;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(90deg,
+            cyan,
+            #00ff95);
+    border-radius: 20px;
+    transition: 1s;
+}
+
+.studentInfo small {
+    color: #999;
+}
+
+.emptyStudent {
+    color: #888;
+    text-align: center;
+    padding: 30px;
+}

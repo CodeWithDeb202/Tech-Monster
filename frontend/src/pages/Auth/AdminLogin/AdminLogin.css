@@ -1,0 +1,12 @@
+.admin-login-form{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.admin-error{
+    color:red;
+    font-size:14px;
+    margin:10px 0;
+    text-align:center;
+}
