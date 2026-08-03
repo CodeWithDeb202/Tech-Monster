@@ -1,5 +1,5 @@
 import express from "express";
-import { signup, login, verifyOTP, resendOTP, forgotPassword, verifyResetOTP, resetPassword, logoutUser } from "../controllers/auth.controller.js";
+import { signup, login, verifyOTP, resendOTP, forgotPassword, verifyResetOTP, resetPassword, logoutUser, adminLogin, } from "../controllers/auth.controller.js";
 import { loginLimiter, registerLimiter, forgotPasswordLimiter, otpLimiter } from "../middleware/rateLimiter.middleware.js";
 import validate from "../middleware/validate.middleware.js";
 import { protect } from "../middleware/auth.middleware.js";
@@ -17,6 +17,7 @@ router.post("/forgot-password", forgotPasswordLimiter, forgotPassword);
 router.post("/verify-reset-otp", verifyResetOTP);
 router.post("/reset-password", resetPassword);
 router.post("/logout", protect, logoutUser);
+router.post("/admin/login", loginLimiter, adminLogin);
 
 
 export default router;

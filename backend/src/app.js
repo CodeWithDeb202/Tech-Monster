@@ -18,6 +18,7 @@ import analyticsRoutes from "./routes/analytics.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 
 import internshipRoutes from "./routes/internship.routes.js";
+import serverRoutes from ".//routes/Server/server.routes.js";
 
 
 import morganMiddleware from "./middleware/logger.middleware.js";
@@ -157,6 +158,11 @@ app.use("/api/search", searchRoutes);
 app.use(
   "/api/internships",
   internshipRoutes
+);
+
+app.use(
+  "/api/server",
+  serverRoutes
 );
 
 

@@ -1,0 +1,109 @@
+import Internship from "../../../models/Internship.js";
+import StudentInternship from "../../../models/StudentInternship.js";
+
+const getAllInternships = async (userId) => {
+
+    const [
+
+        internships,
+
+        enrolledInternships
+
+    ] = await Promise.all([
+
+        Internship.find({
+
+            isPublished: true
+
+        }).sort({
+
+            createdAt: -1
+
+        }),
+
+        StudentInternship.find({
+
+            student: userId
+
+        }).select(
+
+            "internship completedTasks progress status"
+        )
+
+    ]);
+
+    const enrolledMap = new Map();
+
+    enrolledInternships.forEach(item => {
+
+        enrolledMap.set(
+
+            item.internship.toString(),
+
+            {
+
+                completedTasks: item.completedTasks,
+
+                progress: item.progress,
+
+                status: item.status
+
+            }
+
+        );
+
+    });
+
+    return internships.map(item => {
+
+        const enrolled = enrolledMap.get(
+
+            item._id.toString()
+
+        );
+
+        return {
+
+            _id: item._id,
+
+            title: item.title,
+
+            slug: item.slug,
+
+            thumbnail: item.thumbnail,
+
+            description: item.description,
+
+            category: item.category,
+
+            level: item.level,
+
+            duration: item.duration,
+
+            totalTasks: item.totalTasks,
+
+            totalNotes: item.totalNotes,
+
+            certificate: item.certificate,
+
+            badge: item.badge,
+
+            enrolled: !!enrolled,
+
+            progress: enrolled?.progress || 0,
+
+            completedTasks:
+
+                enrolled?.completedTasks || 0,
+
+            status:
+
+                enrolled?.status || "Not Started"
+
+        };
+
+    });
+
+};
+
+export default getAllInternships;

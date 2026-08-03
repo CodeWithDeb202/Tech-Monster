@@ -4,6 +4,9 @@ import Attendance from "../models/Attendance.js";
 import StudentInternship from "../models/StudentInternship.js";
 import UserBadge from "../models/UserBadge.js";
 import Internship from '../models/Internship.js';
+import Certificate from "../models/Certificate.js";
+
+import ActivityLog from "../models/ActivityLog.js";
 
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -369,40 +372,295 @@ export const studentDashboard = asyncHandler(async (req, res) => {
 export const adminDashboard = asyncHandler(async (req, res) => {
 
     const [
-
-        totalUsers,
-
-        totalCompanies,
-
+        totalStudents,
         totalInternships,
-
-        totalApplications
-
+        totalCertificates,
+        totalTasks,
+        totalAttendance,
+        activeStudentsCount,
+        internships
     ] = await Promise.all([
-
-        User.countDocuments(),
-
-        Company.countDocuments(),
-
+        User.countDocuments({ role: "student" }),
         Internship.countDocuments(),
-
-        Application.countDocuments()
-
+        Certificate.countDocuments(),
+        Task.countDocuments(),
+        Attendance.countDocuments(),
+        StudentInternship.countDocuments({
+            status: "In Progress"
+        }),
+        Internship.find()
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select("title category thumbnail duration")
     ]);
 
-    return res.status(200).json({
+    const present = await Attendance.countDocuments({
+        status: "Present"
+    });
+
+    const absent = await Attendance.countDocuments({
+        status: "Absent"
+    });
+
+    const leave = await Attendance.countDocuments({
+        status: "Leave"
+    });
+
+
+    // Recent Students with Avatar and Name
+    const recentStudents = await User.find({
+        role: "student"
+    })
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .select("firstName lastName avatar createdAt");
+
+    // Active Students with Internship Details
+    const activeStudents = await StudentInternship.find({
+        status: "In Progress"
+    })
+        .populate({
+            path: "student",
+            select: "firstName lastName avatar"
+        })
+        .populate({
+            path: "internship",
+            select: "title totalTasks"
+        })
+        .sort({ progress: -1 })
+        .limit(6);
+
+
+    // Weekly Attendance
+
+    const weeklyAttendance = [];
+
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    for (let i = 0; i < 7; i++) {
+
+        const count = await Attendance.countDocuments({
+
+            $expr: {
+                $eq: [
+                    {
+                        $dayOfWeek: "$createdAt"
+                    },
+                    i + 1
+                ]
+            }
+
+        });
+
+        weeklyAttendance.push({
+
+            day: days[i],
+
+            attendance: count
+
+        });
+
+    }
+
+    const topInternships = await Internship.aggregate([
+        {
+            $lookup: {
+                from: "studentinternships",
+                localField: "_id",
+                foreignField: "internship",
+                as: "students"
+            }
+        },
+        {
+            $project: {
+                title: 1,
+                thumbnail: 1,
+                level: 1,
+                totalTasks: 1,
+                isPublished: 1,
+                joinedStudents: {
+                    $size: "$students"
+                }
+            }
+        },
+        {
+            $sort: {
+                joinedStudents: -1
+            }
+        },
+        {
+            $limit: 5
+        }
+    ]);
+
+    const recentTasks = await Task.find()
+        .populate(
+            "assignedTo",
+            "firstName lastName avatar"
+        )
+        .populate(
+            "internship",
+            "title"
+        )
+        .sort({
+            createdAt: -1
+        })
+        .limit(6);
+
+
+    const thisMonthCertificates = await Certificate.countDocuments({
+        issueDate: {
+            $gte: new Date(
+                new Date().getFullYear(),
+                new Date().getMonth(),
+                1
+            )
+        }
+    });
+
+    const recentCertificates = await Certificate.find()
+        .populate(
+            "student",
+            "firstName lastName avatar"
+        )
+        .populate(
+            "internship",
+            "title"
+        )
+        .sort({
+            createdAt: -1
+        })
+        .limit(5);
+
+
+    const recentActivities = await ActivityLog.find()
+        .populate(
+            "user",
+            "firstName lastName avatar"
+        )
+        .sort({
+            createdAt: -1
+        })
+        .limit(8);
+
+    res.status(200).json({
 
         success: true,
 
         dashboard: {
 
-            totalUsers,
+            stats: {
 
-            totalCompanies,
+                totalStudents,
 
-            totalInternships,
+                totalInternships,
 
-            totalApplications
+                activeStudents: activeStudentsCount,
+
+                totalCertificates,
+
+                totalTasks,
+
+                totalAttendance
+
+            },
+
+            attendanceSummary: {
+
+                present,
+
+                absent,
+
+                leave
+
+            },
+
+            recentStudents,
+            activeStudents,
+
+            internships,
+
+            weeklyAttendance,
+            topInternships,
+            recentTasks: recentTasks.map(task => ({
+
+                _id: task._id,
+
+                title: task.title,
+
+                status: task.status,
+
+                dueDate: task.dueDate,
+
+                student: task.assignedTo
+                    ? `${task.assignedTo.firstName} ${task.assignedTo.lastName}`
+                    : "Unknown",
+
+                avatar: task.assignedTo?.avatar,
+
+                internship:
+                    task.internship?.title || ""
+
+            })),
+
+            certificateAnalytics: {
+
+                total: totalCertificates,
+
+                thisMonth: thisMonthCertificates
+
+            },
+
+            recentCertificates: recentCertificates.map(item => ({
+
+                _id: item._id,
+
+                student:
+
+                    item.student ?
+
+                        `${item.student.firstName} ${item.student.lastName}`
+
+                        :
+
+                        "Unknown",
+
+                avatar: item.student?.avatar,
+
+                internship:
+
+                    item.internship?.title,
+
+                certificateNumber:
+
+                    item.certificateNumber,
+
+                issueDate:
+
+                    item.issueDate
+
+            })),
+
+            recentActivities: recentActivities.map(item => ({
+
+                _id: item._id,
+
+                user: item.user
+                    ? `${item.user.firstName} ${item.user.lastName}`
+                    : "System",
+
+                avatar: item.user?.avatar,
+
+                action: item.action,
+
+                module: item.module,
+
+                description: item.description,
+
+                createdAt: item.createdAt
+
+            })),
+
 
         }
 

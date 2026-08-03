@@ -1028,3 +1028,90 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 
 });
+
+
+
+export const adminLogin = asyncHandler(async (req, res) => {
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+
+        throw new AppError(
+            "Email and Password are required",
+            400
+        );
+
+    }
+
+    const admin = await User.findOne({
+        email,
+        role: "admin"
+    }).select("+password");
+
+    if (!admin.isVerified) {
+        throw new AppError("Admin account is not verified", 403);
+    }
+    
+    if (!admin) {
+
+        throw new AppError(
+            "Admin not found",
+            401
+        );
+
+    }
+
+
+    const isMatch = await bcrypt.compare(
+        password,
+        admin.password
+    );
+
+    if (!isMatch) {
+
+        throw new AppError(
+            "Invalid password",
+            401
+        );
+
+    }
+
+    const accessToken = generateToken(admin);
+
+    const refreshToken = generateRefreshToken(admin);
+
+    await RefreshToken.deleteMany({
+        user: admin._id
+    });
+
+    await RefreshToken.create({
+
+        user: admin._id,
+        token: refreshToken,
+        expiresAt: new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000
+        )
+
+    });
+
+    return res.status(200).json({
+
+        success: true,
+
+        accessToken,
+
+        refreshToken,
+
+        user: {
+
+            id: admin._id,
+            username: admin.username,
+            email: admin.email,
+            role: admin.role
+
+        }
+
+    });
+
+});

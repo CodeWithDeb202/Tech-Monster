@@ -27,29 +27,12 @@ const activityLogSchema = new mongoose.Schema(
             type: String,
 
             enum: [
-
                 "Auth",
-
                 "Profile",
-
-                "Company",
-
                 "Internship",
-
-                "Application",
-
-                "Interview",
-
-                "Offer",
-
                 "Certificate",
-
-                "Chat",
-
                 "Notification",
-
                 "Admin"
-
             ],
 
             required: true
@@ -86,6 +69,27 @@ const activityLogSchema = new mongoose.Schema(
             refPath: "targetModel"
 
         },
+        targetModel: {
+
+            type: String,
+
+            enum: [
+
+                "User",
+
+                "Internship",
+
+                "Task",
+
+                "Attendance",
+
+                "Certificate"
+
+            ],
+
+            default: null
+
+        }
 
     },
 

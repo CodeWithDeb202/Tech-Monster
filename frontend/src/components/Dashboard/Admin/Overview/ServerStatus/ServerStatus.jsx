@@ -17,6 +17,7 @@ export default function ServerStatus() {
 
     useEffect(() => {
 
+        // eslint-disable-next-line react-hooks/immutability
         loadStatus();
 
     }, []);

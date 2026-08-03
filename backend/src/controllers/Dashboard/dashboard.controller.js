@@ -1,0 +1,154 @@
+import asyncHandler from "../../utils/asyncHandler.js";
+
+import {
+
+    getUserInfo,
+
+    getStats as getStudentStats,
+
+    getAttendance as getStudentAttendance,
+
+    getWeeklyAnalytics,
+
+    getMyInternships,
+
+    getAllInternships,
+
+    getRecommendedInternships,
+
+    getSuggestedUsers,
+
+    getBadges
+
+} from "../../services/dashboard/StudentDashboard/index.js";
+
+import {
+    getStats as getAdminStats,
+    getAttendance as getAdminAttendance,
+    getWeeklyAttendance,
+    getRecentActivities,
+    getActiveStudents,
+    getTopInternships,
+    getRecentTasks,
+    getCertificates
+} from "../../services/dashboard/AdminDashboard/index.js";
+
+export const studentDashboard = asyncHandler(async (req, res) => {
+
+    const userId = req.user._id;
+
+    const [
+
+        user,
+
+        stats,
+
+        attendance,
+
+        analytics,
+
+        internships,
+
+        allInternships,
+
+        recommendedInternships,
+
+        suggestedUsers,
+
+        badges
+
+    ] = await Promise.all([
+
+        getUserInfo(userId),
+
+        getStudentStats(userId),
+
+        getStudentAttendance(userId),
+
+        getWeeklyAnalytics(userId),
+
+        getMyInternships(userId),
+
+        getAllInternships(userId),
+
+        getRecommendedInternships(userId),
+
+        getSuggestedUsers(userId),
+
+        getBadges(userId)
+
+    ]);
+
+    return res.status(200).json({
+
+        success: true,
+
+        dashboard: {
+
+            user,
+
+            stats,
+
+            attendance,
+
+            analytics,
+
+            internships,
+
+            allInternships,
+
+            recommendedInternships,
+
+            suggestedUsers,
+
+            badges
+
+        }
+
+    });
+
+});
+
+
+
+export const adminDashboard = asyncHandler(async (req, res) => {
+
+    const [
+        stats,
+        attendanceSummary,
+        weeklyAttendance,
+        recentActivities,
+        activeStudents,
+        topInternships,
+        recentTasks,
+        certificateAnalytics
+
+    ] = await Promise.all([
+        getAdminStats(),
+        getAdminAttendance(),
+        getWeeklyAttendance(),
+        getRecentActivities(),
+        getActiveStudents(),
+        getTopInternships(),
+        getRecentTasks(),
+        getCertificates()
+    ]);
+
+    return res.status(200).json({
+
+        success: true,
+
+        dashboard: {
+            stats,
+            attendanceSummary,
+            weeklyAttendance,
+            recentActivities,
+            activeStudents,
+            topInternships,
+            recentTasks,
+            certificateAnalytics
+        }
+
+    });
+
+});
