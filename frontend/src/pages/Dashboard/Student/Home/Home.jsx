@@ -2,6 +2,7 @@ import "./Home.css";
 
 import { useEffect, useState } from "react";
 import api from "../../../../services/api/axios";
+import { API } from '../../../../services/api/endpoints';
 
 import WelcomeCard from "../../../../components/Dashboard/Student/Home/WelcomeCard";
 import ProfileSummary from "../../../../components/Dashboard/Student/Home/ProfileSummary";
@@ -20,7 +21,10 @@ const Home = () => {
   const loadDashboard = async () => {
 
     try {
-      const res = await api.get("/dashboard/student");
+      const res = await api.get(API.DASHBOARD.STUDENT);
+
+      console.log("Data:=", res.data.dashboard);
+      
 
       setDashboard(res.data.dashboard);
 

@@ -55,4 +55,12 @@ export const API = {
     STATUS: "/server/status"
 
   },
+
+  INTERNSHIPS: {
+    BASE: "/internships",
+    BY_ID: (id) => `/internships/${id}`,
+    JOIN: (id) => `/internships/${id}/join`,
+    PROGRESS: (id) => `/internships/${id}/progress`,
+    COMPLETE: (id) => `/internships/${id}/complete`,
+  },
 };

@@ -4,28 +4,54 @@ import StudentInternship from "../models/StudentInternship.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
+import cloudinary from "../config/cloudinary.js";
+import streamifier from "streamifier";
+
+
+
+// Helper function to upload memory buffer to Cloudinary
+const uploadToCloudinary = (fileBuffer) => {
+    return new Promise((resolve, reject) => {
+        let stream = cloudinary.uploader.upload_stream(
+            { folder: "tech_monster_internships" },
+            (error, result) => {
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(error);
+                }
+            }
+        );
+        streamifier.createReadStream(fileBuffer).pipe(stream);
+    });
+};
+
 
 
 // =====================================
 // ADMIN CREATE INTERNSHIP
 // =====================================
 
-export const createInternship = asyncHandler(async(req,res)=>{
+export const createInternship = asyncHandler(async (req, res) => {
 
 
     const {
-
         title,
         slug,
         category,
         level,
         description,
-        thumbnail,
         duration,
         totalTasks,
         totalNotes
+    } = req.body || {};
 
-    } = req.body;
+    // Handle image upload using memory buffer and cloudinary
+    let thumbnail = "";
+    if (req.file) {
+        const cloudinaryResponse = await uploadToCloudinary(req.file.buffer);
+        thumbnail = cloudinaryResponse.secure_url;
+    }
 
 
 
@@ -49,7 +75,7 @@ export const createInternship = asyncHandler(async(req,res)=>{
 
         totalNotes,
 
-        isPublished:true
+        isPublished: true
 
     });
 
@@ -57,9 +83,9 @@ export const createInternship = asyncHandler(async(req,res)=>{
 
     res.status(201).json({
 
-        success:true,
+        success: true,
 
-        message:"Internship created successfully",
+        message: "Internship created successfully",
 
         internship
 
@@ -75,26 +101,26 @@ export const createInternship = asyncHandler(async(req,res)=>{
 // GET ALL INTERNSHIP
 // =====================================
 
-export const getAllInternships = asyncHandler(async(req,res)=>{
+export const getAllInternships = asyncHandler(async (req, res) => {
 
 
     const internships =
-    await Internship.find({
+        await Internship.find({
 
-        isPublished:true
+            isPublished: true
 
-    })
-    .sort({
+        })
+            .sort({
 
-        createdAt:-1
+                createdAt: -1
 
-    });
+            });
 
 
 
     res.status(200).json({
 
-        success:true,
+        success: true,
 
         internships
 
@@ -112,18 +138,17 @@ export const getAllInternships = asyncHandler(async(req,res)=>{
 // GET SINGLE INTERNSHIP
 // =====================================
 
-export const getSingleInternship =
-asyncHandler(async(req,res)=>{
+export const getSingleInternship = asyncHandler(async (req, res) => {
 
 
     const internship =
-    await Internship.findById(
-        req.params.id
-    );
+        await Internship.findById(
+            req.params.id
+        );
 
 
 
-    if(!internship){
+    if (!internship) {
 
         throw new AppError(
             "Internship not found",
@@ -136,7 +161,7 @@ asyncHandler(async(req,res)=>{
 
     res.status(200).json({
 
-        success:true,
+        success: true,
 
         internship
 
@@ -155,18 +180,17 @@ asyncHandler(async(req,res)=>{
 // STUDENT JOIN INTERNSHIP
 // =====================================
 
-export const joinInternship =
-asyncHandler(async(req,res)=>{
+export const joinInternship = asyncHandler(async (req, res) => {
 
 
     const internship =
-    await Internship.findById(
-        req.params.id
-    );
+        await Internship.findById(
+            req.params.id
+        );
 
 
 
-    if(!internship){
+    if (!internship) {
 
         throw new AppError(
             "Internship not found",
@@ -179,17 +203,17 @@ asyncHandler(async(req,res)=>{
 
 
     const alreadyJoined =
-    await StudentInternship.findOne({
+        await StudentInternship.findOne({
 
-        student:req.user._id,
+            student: req.user._id,
 
-        internship:req.params.id
+            internship: req.params.id
 
-    });
+        });
 
 
 
-    if(alreadyJoined){
+    if (alreadyJoined) {
 
         throw new AppError(
 
@@ -205,26 +229,26 @@ asyncHandler(async(req,res)=>{
 
 
     const studentInternship =
-    await StudentInternship.create({
+        await StudentInternship.create({
 
-        student:req.user._id,
+            student: req.user._id,
 
-        internship:req.params.id,
+            internship: req.params.id,
 
-        status:"In Progress",
+            status: "In Progress",
 
-        startedAt:new Date()
+            startedAt: new Date()
 
-    });
+        });
 
 
 
 
     res.status(201).json({
 
-        success:true,
+        success: true,
 
-        message:"Internship joined successfully",
+        message: "Internship joined successfully",
 
         studentInternship
 
@@ -245,32 +269,31 @@ asyncHandler(async(req,res)=>{
 // =====================================
 
 
-export const getMyInternships =
-asyncHandler(async(req,res)=>{
+export const getMyInternships = asyncHandler(async (req, res) => {
 
 
     const internships =
-    await StudentInternship.find({
+        await StudentInternship.find({
 
-        student:req.user._id
+            student: req.user._id
 
-    })
-    .populate(
+        })
+            .populate(
 
-        "internship"
+                "internship"
 
-    )
-    .sort({
+            )
+            .sort({
 
-        createdAt:-1
+                createdAt: -1
 
-    });
+            });
 
 
 
     res.status(200).json({
 
-        success:true,
+        success: true,
 
         internships
 
@@ -292,8 +315,7 @@ asyncHandler(async(req,res)=>{
 // =====================================
 
 
-export const updateInternshipProgress =
-asyncHandler(async(req,res)=>{
+export const updateInternshipProgress = asyncHandler(async (req, res) => {
 
 
     const {
@@ -305,17 +327,17 @@ asyncHandler(async(req,res)=>{
 
 
     const studentInternship =
-    await StudentInternship.findOne({
+        await StudentInternship.findOne({
 
-        student:req.user._id,
+            student: req.user._id,
 
-        internship:req.params.id
+            internship: req.params.id
 
-    });
+        });
 
 
 
-    if(!studentInternship){
+    if (!studentInternship) {
 
         throw new AppError(
 
@@ -332,21 +354,21 @@ asyncHandler(async(req,res)=>{
 
 
     studentInternship.progress =
-    progress;
+        progress;
 
 
 
-    if(progress>=100){
+    if (progress >= 100) {
 
 
-        studentInternship.progress=100;
+        studentInternship.progress = 100;
 
 
-        studentInternship.status="Completed";
+        studentInternship.status = "Completed";
 
 
         studentInternship.completedAt =
-        new Date();
+            new Date();
 
 
     }
@@ -361,9 +383,9 @@ asyncHandler(async(req,res)=>{
 
     res.status(200).json({
 
-        success:true,
+        success: true,
 
-        message:"Progress updated",
+        message: "Progress updated",
 
         studentInternship
 
@@ -383,22 +405,21 @@ asyncHandler(async(req,res)=>{
 // =====================================
 
 
-export const completeInternship =
-asyncHandler(async(req,res)=>{
+export const completeInternship = asyncHandler(async (req, res) => {
 
 
     const studentInternship =
-    await StudentInternship.findOne({
+        await StudentInternship.findOne({
 
-        student:req.user._id,
+            student: req.user._id,
 
-        internship:req.params.id
+            internship: req.params.id
 
-    });
+        });
 
 
 
-    if(!studentInternship){
+    if (!studentInternship) {
 
         throw new AppError(
 
@@ -412,11 +433,11 @@ asyncHandler(async(req,res)=>{
 
 
 
-    studentInternship.status="Completed";
+    studentInternship.status = "Completed";
 
-    studentInternship.progress=100;
+    studentInternship.progress = 100;
 
-    studentInternship.completedAt=new Date();
+    studentInternship.completedAt = new Date();
 
 
 
@@ -427,13 +448,87 @@ asyncHandler(async(req,res)=>{
 
     res.status(200).json({
 
-        success:true,
+        success: true,
 
-        message:"Internship completed",
+        message: "Internship completed",
 
         studentInternship
 
     });
 
 
+});
+
+
+// =====================================
+// ADMIN UPDATE INTERNSHIP
+// =====================================
+export const updateInternship = asyncHandler(async (req, res) => {
+    const { title, slug, category, level, description, duration, totalTasks, totalNotes } = req.body;
+
+    let internship = await Internship.findById(req.params.id);
+    if (!internship) {
+        throw new AppError("Internship not found", 404);
+    }
+
+    // Handle new image upload if provided during update
+    let thumbnail = internship.thumbnail;
+
+    if (req.file) {
+        const cloudinaryResponse = await uploadToCloudinary(req.file.buffer);
+        thumbnail = cloudinaryResponse.secure_url;
+    }
+
+    internship = await Internship.findByIdAndUpdate(
+        req.params.id,
+        {
+            title: title || internship.title,
+            slug: slug || internship.slug,
+            category: category || internship.category,
+            level: level || internship.level,
+            description: description || internship.description,
+            thumbnail: thumbnail,
+            duration: duration || internship.duration,
+            totalTasks:
+                totalTasks !== undefined
+                    ?
+                    totalTasks
+                    :
+                    internship.totalTasks,
+
+
+            totalNotes:
+                totalNotes !== undefined
+                    ?
+                    totalNotes
+                    :
+                    internship.totalNotes,
+        },
+        { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+        success: true,
+        message: "Internship updated successfully",
+        internship,
+    });
+});
+
+// =====================================
+// ADMIN DELETE INTERNSHIP
+// =====================================
+export const deleteInternship = asyncHandler(async (req, res) => {
+    const internship = await Internship.findById(req.params.id);
+    if (!internship) {
+        throw new AppError("Internship not found", 404);
+    }
+
+    await Internship.findByIdAndDelete(req.params.id);
+    // Also remove related student enrollments if needed
+    await StudentInternship.deleteMany({ internship: req.params.id });
+
+    res.status(200).json({
+        success: true,
+        message: "Internship and related enrollments deleted successfully",
+    });
 });

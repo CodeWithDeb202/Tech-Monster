@@ -14,7 +14,7 @@ const StatsCards = ({ stats }) => {
     {
       id: 1,
       title: "Join internships",
-      value: stats?.courses || 0,
+      value: stats?.internships?.total || 0,
       suffix: "",
       icon: HiAcademicCap,
       color: "#00E5FF",
@@ -22,7 +22,7 @@ const StatsCards = ({ stats }) => {
     {
       id: 2,
       title: "Attendance",
-      value: stats?.attendance || 0,
+      value: stats?.attendance?.percentage || 0,
       suffix: "%",
       icon: HiCalendarDays,
       color: "#10B981",
@@ -30,7 +30,7 @@ const StatsCards = ({ stats }) => {
     {
       id: 3,
       title: "Daily Tasks",
-      value: stats?.tasks || 0,
+      value: stats?.tasks?.completed || 0,
       suffix: "",
       icon: HiCheckCircle,
       color: "#F59E0B",

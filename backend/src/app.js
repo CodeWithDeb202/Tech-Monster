@@ -13,7 +13,7 @@ import attendanceRoutes from "./routes/attendance.routes.js";
 import certificateRoutes from "./routes/certificate.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
-import notificationRoutes from "./routes/notification.routes.js";
+import notificationRoutes from "./routes/Notification/notification.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 

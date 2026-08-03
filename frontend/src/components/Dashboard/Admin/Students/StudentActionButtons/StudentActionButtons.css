@@ -1,0 +1,49 @@
+/* src/components/Dashboard/Admin/StudentActionButtons.css */
+
+.studentActionButtons{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+}
+
+.studentActionButtons button{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.3s;
+    font-size:1rem;
+}
+
+.studentActionButtons button:hover{
+    transform:translateY(-3px);
+}
+
+.viewBtn{
+    background:#2563eb;
+    color:#fff;
+}
+
+.editBtn{
+    background:#0891b2;
+    color:#fff;
+}
+
+.notifyBtn{
+    background:#0f766e;
+    color:#fff;
+}
+
+.blockBtn{
+    background:#d97706;
+    color:#fff;
+}
+
+.deleteBtn{
+    background:#dc2626;
+    color:#fff;
+}

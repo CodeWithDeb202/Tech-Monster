@@ -1,0 +1,19 @@
+/* src/pages/Dashboard/Admin/Students/Students.css */
+
+.studentsPage{
+
+    width:100%;
+
+    padding:20px;
+
+}
+
+.studentGrid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
+
+    gap:25px;
+
+}

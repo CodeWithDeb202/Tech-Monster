@@ -14,15 +14,10 @@ function StatusPage({
     primaryPath = "/",
     onPrimaryClick,
 }) {
+    const { user, isAuthenticated } = useAuth() || {};
 
-    const auth = useAuth();
-
-    if (!auth) {
-        return <h1>Auth Context NULL</h1>;
-    }
-
-    // const { user, isAuthenticated } = useAuth();
     const navigate = useNavigate();
+
 
 
 

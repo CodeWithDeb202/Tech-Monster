@@ -15,13 +15,16 @@ import {
 
     updateInternshipProgress,
 
-    completeInternship
+    completeInternship,
+    updateInternship,
+    deleteInternship,
 
 
 } from "../controllers/internship.controller.js";
 
 
 import { protect } from "../middleware/auth.middleware.js";
+import upload from "../middleware/upload.middleware.js";
 
 
 import authorizeRoles from "../middleware/role.middleware.js";
@@ -35,15 +38,27 @@ const router = express.Router();
 // ADMIN
 
 router.post(
-
     "/",
-
     protect,
-
     authorizeRoles("admin"),
-
+    upload.single("img"),
     createInternship
+);
 
+
+router.put(
+    "/:id",
+    protect,
+    authorizeRoles("admin"),
+    upload.single("img"),
+    updateInternship
+);
+
+router.delete(
+    "/:id",
+    protect,
+    authorizeRoles("admin"),
+    deleteInternship
 );
 
 

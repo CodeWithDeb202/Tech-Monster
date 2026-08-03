@@ -1,12 +1,14 @@
 import express from "express";
 
-import {protect} from "../middleware/auth.middleware.js";
+import { protect } from "../middleware/auth.middleware.js";
 
 import authorizeRoles from "../middleware/role.middleware.js";
 
 import {
 
     getDashboardStats,
+
+    getSingleUser,
 
     getAllUsers,
 
@@ -15,6 +17,8 @@ import {
     unblockUser,
 
     deleteUser,
+
+    updateUser,
 
 } from "../controllers/admin.controller.js";
 
@@ -32,6 +36,18 @@ router.get(
 
 );
 
+router.get(
+
+    "/users/:id",
+
+    protect,
+
+    authorizeRoles("admin"),
+
+    getSingleUser
+
+);
+
 
 router.get(
 
@@ -43,6 +59,13 @@ router.get(
 
     getAllUsers
 
+);
+
+router.put(
+    "/users/:id",
+    protect,
+    authorizeRoles("admin"),
+    updateUser
 );
 
 

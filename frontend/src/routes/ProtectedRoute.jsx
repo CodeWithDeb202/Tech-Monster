@@ -8,12 +8,10 @@ function ProtectedRoute({ children, role }) {
 
     if (!isAuthenticated) {
 
-        // Logout pare direct login page
         if (sessionStorage.getItem("logoutSuccess")) {
             return <Navigate to="/login" replace />;
         }
 
-        // Manually protected route access kale
         return (
             <Navigate
                 to="/auth-required"

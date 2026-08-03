@@ -1,38 +1,172 @@
-import './InternshipCard.css';
+import { useNavigate } from "react-router-dom";
+import {
+    FiEdit2,
+    FiTrash2
+} from "react-icons/fi";
+
+import useScrollAnimation from "../../../../../hooks/useScrollAnimation";
+
+import "./InternshipCard.css";
 
 
 
-export default function InternshipCard({ internships }) {
+function SingleInternshipCard({
+    item,
+    onDelete
+}) {
+
+
+    const navigate = useNavigate();
+
+
+    const animation = useScrollAnimation();
+
 
 
     return (
-        <>
-            {internships.map((internship) => (
-                <div className="allInternshipsCard">
-                    <div id="allInternshipsImg">
-                        <div id="intenshipLogo">
-                            <img src={internship.img} alt='student profile image' />
-                        </div>
-                        <div id="editAndDltBtn">
-                            <button id='editBtn'>{internship.editBtn}</button>
-                            <button id='dltBtn'>{internship.dltBtn}</button>
-                        </div>
-                    </div>
 
-                    <div id='allInternshipsContent'>
-                        <div id="titleAndDesc">
-                            <h3>{internship.title}</h3>
-                            <p>{internship.description}</p>
-                        </div>
-                        <div id="totalLessionAndTaskcount">
-                            <p>Duration : <span>{internship.duration}</span></p>
-                            <p>Total Lession : {internship.totalLession}</p>
-                            <p>Total Tasks : {internship.totalTasks}</p>
-                        </div>
-                    </div>
+        <div
+
+            ref={animation.ref}
+
+            className={`
+                allInternshipsCard
+                ${animation.className}
+            `}
+
+        >
+
+
+
+            <div className="cardImage">
+
+
+                <img
+
+                    src={item.thumbnail}
+
+                    alt={item.title}
+
+                />
+
+
+
+                <div className="cardActions">
+
+
+                    <button
+
+                        onClick={() =>
+                            navigate(
+                                "/admin/internships-form",
+                                {
+                                    state: {
+                                        internshipData: item
+                                    }
+                                }
+                            )
+                        }
+
+                    >
+
+                        <FiEdit2 />
+
+                    </button>
+
+
+
+
+                    <button
+
+                        onClick={() =>
+                            onDelete(item._id)
+                        }
+
+                    >
+
+                        <FiTrash2 />
+
+                    </button>
+
+
                 </div>
-            ))}
+
+
+            </div>
+
+
+
+
+            <h3>
+                {item.title}
+            </h3>
+
+
+
+            <p>
+                {item.description}
+            </p>
+
+
+
+            <div className="meta">
+
+
+                <span>
+                    Level : {item.level}
+                </span>
+
+
+
+                <span>
+                    Tasks : {item.totalTasks}
+                </span>
+
+
+
+            </div>
+
+
+
+        </div>
+
+    )
+
+}
+
+
+
+
+
+export default function InternshipCard({
+    internships,
+    onDelete
+}) {
+
+
+    return (
+
+        <>
+
+            {
+                internships.map(item => (
+
+                    <SingleInternshipCard
+
+                        key={item._id}
+
+                        item={item}
+
+                        onDelete={onDelete}
+
+                    />
+
+                ))
+            }
+
 
         </>
+
     )
+
 }

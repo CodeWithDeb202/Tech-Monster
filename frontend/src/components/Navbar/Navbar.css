@@ -250,13 +250,3 @@
         text-shadow: 0 0 20px var(--neon) !important;
     }
 }
-
-/* Laptop */
-@media (min-width: 992px) and (max-width: 1199px) {
-
-}
-
-/* Desktop */
-@media (min-width: 1200px) {
-
-}

@@ -18,7 +18,7 @@ export default function AccountForm({ initialEmail, onSubmitForm }) {
     middleName: "",
     lastName: "",
 
-    email: initialEmail || loginUser?.email || "",
+    email: loginUser?.email || "",
 
     gender: "",
     phone: "",

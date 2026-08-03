@@ -18,6 +18,7 @@ export default function Account() {
 
   useEffect(() => {
 
+    // eslint-disable-next-line react-hooks/immutability
     loadProfile();
 
   }, []);
@@ -69,8 +70,6 @@ export default function Account() {
           :
 
           <AccountForm
-
-            initialEmail={userData?.email}
 
             onSubmitForm={(data) => {
 

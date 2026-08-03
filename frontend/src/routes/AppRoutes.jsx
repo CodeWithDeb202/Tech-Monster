@@ -47,6 +47,7 @@ import Message from '../components/Dashboard/common/Message';
 // Admin Dashboard
 import Overview from '../pages/Dashboard/Admin/Overview';
 import Students from '../pages/Dashboard/Admin/Students';
+import StudentDetails from "../pages/Dashboard/Admin/Students/StudentDetails";
 import Reports from '../pages/Dashboard/Admin/Reports';
 import Internships from '../pages/Dashboard/Admin/Internships';
 import TaskApproval from '../pages/Dashboard/Admin/TasksApproval';
@@ -121,6 +122,7 @@ function AppRoutes() {
                 >
                     <Route index element={<Overview />} />
                     <Route path='students' element={<Students />} />
+                    <Route path="students/:id" element={<StudentDetails />} />
                     <Route path='internships' element={<Internships />} />
                     <Route path='internships-form' element={<InternshipsForm />} />
 

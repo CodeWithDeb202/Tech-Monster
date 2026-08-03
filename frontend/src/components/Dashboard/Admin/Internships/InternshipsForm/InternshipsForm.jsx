@@ -1,19 +1,47 @@
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
+import api from "../../../../../services/api/axios";
+import { API } from "../../../../../services/api/endpoints";
+
+import { toast } from "react-toastify";
+
 import './InternshipsForm.css';
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-
-import {FiArrowLeft} from 'react-icons/fi'
-
 export default function InternshipsForm() {
-    const {formData, setFormData} = useState({
-        img: '',
+    const navigate = useNavigate();
+    const location = useLocation();
+    const editData = location.state?.internshipData;
+    const [preview, setPreview] = useState("");
+
+    const [formData, setFormData] = useState({
         title: '',
+        slug: '',
+        category: '',
+        level: '',
         description: '',
         duration: '',
-        totalLession: 0,
-        totalTasks: 0,
-    })
+        totalTasks: '',
+        totalNotes: '',
+    });
+    const [imageFile, setImageFile] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+
+    useEffect(() => {
+        if (editData) {
+            setFormData({
+                title: editData.title || '',
+                slug: editData.slug || '',
+                category: editData.category || '',
+                level: editData.level || '',
+                description: editData.description || '',
+                duration: editData.duration || '',
+                totalTasks: editData.totalTasks || '',
+                totalNotes: editData.totalNotes || '',
+            });
+            setIsEditMode(true);
+        }
+    }, [editData]);
 
     const handleInputChange = (e) => {
         setFormData({
@@ -22,51 +50,180 @@ export default function InternshipsForm() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleFileChange = (e) => {
+
+
+        const file = e.target.files[0];
+
+
+        setImageFile(file);
+
+
+        setPreview(
+            URL.createObjectURL(file)
+        );
+
+
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Add successfully");
-    }
-    return(
-        <>
+        const data = new FormData();
+        data.append('title', formData.title);
+        data.append('slug', formData.slug);
+        data.append('category', formData.category);
+        data.append('level', formData.level);
+        data.append('description', formData.description);
+        data.append('duration', formData.duration);
+        data.append('totalTasks', formData.totalTasks);
+        data.append('totalNotes', formData.totalNotes);
 
-            <div id="internshipsForm">
-                <div id="backOption">
-                    <Link to={'/demo_admin/internships'}>
-                        <FiArrowLeft />
-                    </Link>
+        if (imageFile) {
+            data.append('img', imageFile); // 'img' matches multer middleware upload.single('img')
+        }
 
-                    <h1>Intenrship Add Form</h1>
-                </div>
-                <form onSubmit={handleSubmit} >
-                    <div id="formGroup">
-                        <label htmlFor="img">Choose a internships logo</label>
-                        <input type="file" name='img' id='img' onChange={handleInputChange}/>
-                    </div>
-                    <div id="formGroup">
-                        <label htmlFor="title">Title</label>
-                        <input type="text" name='title' id='title' placeholder='Enter Title' onChange={handleInputChange} />
-                    </div>
-                    <div id="formGroup">
-                        <label htmlFor="description">Description</label>
-                        <input type="text" name='description' id='description' placeholder='Enter description' onChange={handleInputChange}/>
-                    </div>
-                    <div id="formGroup">
-                        <label htmlFor="duration">Duration</label>
-                        <input type="text" name='duration' id='duration' placeholder='Enter duration' onChange={handleInputChange}/>
-                    </div>
-                    <div id="formGroup">
-                        <label htmlFor="totalLession">Total Lession</label>
-                        <input type="number" name='totalLession' id='totalLession' placeholder='Enter totalLession' onChange={handleInputChange} />
-                    </div>
-                    <div id="formGroup">
-                        <label htmlFor="totalTasks">Total Tasks</label>
-                        <input type="number" name='totalTasks' id='totalTasks' placeholder='Enter totalTasks' onChange={handleInputChange} />
-                    </div>
+        try {
+            let response;
+            if (isEditMode) {
+                const id = editData._id || editData.id;
+                // PUT request for update
+                response = await api.put(API.INTERNSHIPS.BY_ID(id), data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            } else {
+                // POST request for create
+                response = await api.post(API.INTERNSHIPS.BASE, data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            }
 
-                    <button type='submit'>Add Internships</button>
-                </form>
+            if (response.data.success) {
+                toast.success(
+                    isEditMode
+                        ?
+                        "Internship updated successfully"
+                        :
+                        "Internship created successfully"
+                );
+                navigate('/admin/internships');
+            }
+        } catch (error) {
+            console.error("Error submitting internship:", error);
+            toast.error(
+                error.response?.data?.message
+                ||
+                "Something went wrong"
+            );
+        }
+    };
+
+
+
+    return (
+        <div id="internshipsForm" className="fade-in-section">
+            <div id="backOption">
+                <Link to={'/admin/internships'}>
+                    <FiArrowLeft />
+                </Link>
+                <h1>{isEditMode ? "Edit Internship Form" : "Internship Add Form"}</h1>
             </div>
-        </>
-    )
+
+            <form onSubmit={handleSubmit} className="styled-form">
+                <div id="formGroup">
+                    <label htmlFor="img">Choose an internship logo</label>
+                    <input type="file" name='img' id='img' onChange={handleFileChange} />
+                    {
+                        preview &&
+
+                        <img
+
+                            src={preview}
+
+                            className="image-preview"
+
+                        />
+
+                    }
+                </div>
+                <div id="formGroup">
+                    <label htmlFor="title">Title</label>
+                    <input type="text" name='title' id='title' value={formData.title} placeholder='Enter Title' onChange={handleInputChange} required />
+                </div>
+                <div id="formGroup">
+                    <label htmlFor="description">Description</label>
+                    <input type="text" name='description' id='description' value={formData.description} placeholder='Enter description' onChange={handleInputChange} required />
+                </div>
+                <div id="formGroup">
+                    <label htmlFor="duration">Duration</label>
+                    <input type="text" name='duration' id='duration' value={formData.duration} placeholder='Enter duration (e.g., 3 Months)' onChange={handleInputChange} required />
+                </div>
+                <div id="formGroup">
+                    <label>Slug</label>
+
+                    <input
+                        type="text"
+                        name="slug"
+                        value={formData.slug}
+                        placeholder="Enter slug"
+                        onChange={handleInputChange}
+                        required
+                    />
+
+                </div>
+
+                <div id="formGroup">
+
+                    <label>Category</label>
+
+                    <input
+                        type="text"
+                        name="category"
+                        value={formData.category}
+                        placeholder="Enter category"
+                        onChange={handleInputChange}
+                        required
+                    />
+
+                </div>
+
+                <div id="formGroup">
+
+                    <label>Level</label>
+
+                    <select
+                        name="level"
+                        value={formData.level}
+                        onChange={handleInputChange}
+                        required
+                    >
+
+                        <option value="">Select Level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+
+                    </select>
+
+                </div>
+
+                <div id="formGroup">
+                    <label htmlFor="totalNotes">Total Notes</label>
+                    <input type="number" name='totalNotes' id='totalNotes' value={formData.totalNotes} placeholder='Enter total notes' onChange={handleInputChange} required />
+                </div>
+                <div id="formGroup">
+                    <label htmlFor="totalTasks">Total Tasks</label>
+                    <input type="number" name='totalTasks' id='totalTasks' value={formData.totalTasks} placeholder='Enter total tasks' onChange={handleInputChange} required />
+                </div>
+
+                <button type='submit' className="submit-btn">
+                    {isEditMode ? "Update Internship" : "Add Internships"}
+                </button>
+            </form>
+        </div>
+    );
 }
