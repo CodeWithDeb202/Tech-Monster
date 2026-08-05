@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import './CertificateView.css';
+import { toast } from 'react-toastify';
 
 export default function CertificateView({ courseType, userName }) {
   const [paymentDone, setPaymentDone] = useState(false);
@@ -55,7 +56,7 @@ export default function CertificateView({ courseType, userName }) {
             <h2 className="cert-name">{userName}</h2>
             <p>for successfully completing the rigorous curriculum in <strong>{courseType}</strong>.</p>
           </div>
-          <button className="download-btn" onClick={() => alert('Certificate downloaded successfully as PDF!')}>
+          <button className="download-btn" onClick={() => toast.success('Certificate downloaded successfully as PDF!')}>
             Download Certificate (PDF)
           </button>
         </div>

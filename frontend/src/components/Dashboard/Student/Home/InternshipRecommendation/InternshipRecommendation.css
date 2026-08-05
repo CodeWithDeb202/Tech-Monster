@@ -93,10 +93,10 @@
 ===================================*/
 
 .course-slider {
-    display: flex;
+    display:flex;
     gap: 25px;
     overflow-x: auto;
-    padding: 1.5rem;
+    padding: 2rem;
     scroll-behavior: smooth;
 }
 
@@ -108,10 +108,11 @@
         Course Card
 ===================================*/
 
-.course-card {
-    min-width: 340px;
+#course-card {
+    flex:0 0 350px;
+    width:350px;
     background: rgba(10, 18, 32, .92);
-    border-radius: 22px;
+    border-radius: 1.5rem;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, .08);
     transition: .45s;
@@ -120,7 +121,7 @@
     backdrop-filter: blur(15px);
 }
 
-.course-card:hover {
+#course-card:hover {
     border-color: #00E5FF;
     box-shadow:
         0 20px 40px rgba(0, 0, 0, .45),
@@ -129,7 +130,7 @@
 
 /* Glow */
 
-.course-card::before {
+#course-card::before {
     content: "";
     position: absolute;
     width: 220px;
@@ -143,7 +144,7 @@
     transition: .45s;
 }
 
-.course-card:hover::before {
+#course-card:hover::before {
     opacity: 1;
 }
 
@@ -165,7 +166,7 @@
 
 }
 
-.course-card:hover img {
+#course-card:hover img {
     transform: scale(1.2);
 }
 
@@ -174,26 +175,19 @@
 ===================================*/
 
 .course-content {
-
-    padding: 22px;
-
+    padding: 1rem;
 }
 
 .course-category {
 
     display: inline-block;
-
     padding: 6px 14px;
-
-    border-radius: 999px;
-
+    border-radius: 5rem;
     background: rgba(0, 229, 255, .12);
-
     color: #00E5FF;
-
     font-size: 13px;
-
-    margin-bottom: 18px;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
 
 }
 

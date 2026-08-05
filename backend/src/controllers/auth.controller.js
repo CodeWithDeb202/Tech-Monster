@@ -16,6 +16,8 @@ import AppError from "../utils/AppError.js";
 
 export const signup = asyncHandler(async (req, res) => {
 
+    
+
 
     const { username, email, password } = req.body;
 

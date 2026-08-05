@@ -2,6 +2,8 @@ import StudentInternship from "../../../models/StudentInternship.js";
 
 const getMyInternships = async (userId) => {
 
+    console.log("Dashboard User ID:", userId);
+
     const internships = await StudentInternship.find({
 
         student: userId
@@ -31,6 +33,8 @@ const getMyInternships = async (userId) => {
 
         });
 
+    console.log("Found Internships:", internships);
+
     return internships
 
         .filter(item => item.internship)
@@ -45,6 +49,11 @@ const getMyInternships = async (userId) => {
 
                 0
 
+            );
+
+            const remainingNotes = Math.max(
+                (item.internship.totalNotes || 0) - item.completedNotes,
+                0
             );
 
             return {
@@ -70,6 +79,7 @@ const getMyInternships = async (userId) => {
                 completedTasks: item.completedTasks,
 
                 remainingTasks,
+                remainingNotes,
 
                 progress: item.progress,
 

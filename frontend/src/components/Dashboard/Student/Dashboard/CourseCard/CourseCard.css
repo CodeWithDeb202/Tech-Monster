@@ -7,7 +7,6 @@
     border: 1px solid rgba(255, 255, 255, .08);
     cursor: pointer;
     transition: .35s;
-    transform-style: preserve-3d;
 }
 
 .course-card:hover {
@@ -56,27 +55,16 @@
 }
 
 .course-overlay {
-
     position: absolute;
-
     left: 0;
-
     bottom: 0;
-
     width: 100%;
-
     height: 100%;
-
     padding: 28px;
-
     display: flex;
-
     flex-direction: column;
-
     justify-content: center;
-
     background:
-
         linear-gradient(180deg,
 
             rgba(2, 20, 33, .96),
@@ -84,6 +72,7 @@
             rgba(0, 12, 24, .98));
 
     backdrop-filter: blur(15px);
+    border-radius: 1rem;
 
 }
 

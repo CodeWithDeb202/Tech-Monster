@@ -19,6 +19,11 @@ const studentInternshipSchema = new mongoose.Schema({
         default: 0
     },
 
+    completedNotes: {
+        type: Number,
+        default: 0
+    },
+
     progress: {
         type: Number,
         default: 0

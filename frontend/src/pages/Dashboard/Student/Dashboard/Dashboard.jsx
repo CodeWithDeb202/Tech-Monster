@@ -11,63 +11,26 @@ import { API } from "../../../../services/api/endpoints";
 function Dashboard() {
     const [dashboard, setDashboard] = useState(null);
 
+    const loadDashboard = async () => {
+        try {
+            const { data } = await api.get(API.DASHBOARD.STUDENT);
+
+            console.log("studentdashboard")
+            console.log("data:= ", data.dashboard?.internships)
+            setDashboard(data.dashboard);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
-
-        const loadDashboard = async () => {
-
-            try {
-
-                const { data } = await api.get(API.DASHBOARD.STUDENT);
-
-                setDashboard(data.dashboard);
-
-            } catch (err) {
-
-                console.log("Error:", err);
-                console.log("Response:", err.response);
-                console.log("Status:", err.response?.status);
-                console.log("Data:", err.response?.data);
-
-            }
-
-        };
-
         loadDashboard();
-
     }, []);
 
-    const [position, setPosition] = useState({
-        x: 0,
-        y: 0,
-    });
-
-    useEffect(() => {
-
-        const move = (e) => {
-
-            setPosition({
-                x: e.clientX,
-                y: e.clientY,
-            });
-
-        };
-
-        window.addEventListener("mousemove", move);
-
-        return () => window.removeEventListener("mousemove", move);
-
-    }, []);
 
     return (
 
         <div className="dashboard-page">
-            <div
-                className="mouse-light"
-                style={{
-                    left: position.x,
-                    top: position.y,
-                }}
-            />
 
             <DashboardHeader />
             <ContinueLearning
@@ -75,8 +38,9 @@ function Dashboard() {
             />
             <AllInternship
                 internships={
-                    dashboard?.allInternship || []
+                    dashboard?.allInternships || []
                 }
+                refreshDashboard={loadDashboard}
             />
 
         </div>

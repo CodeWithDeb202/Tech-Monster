@@ -4,7 +4,8 @@ import "./AllInternship.css";
 
 
 
-const AllInternship = ({internships}) => {
+const AllInternship = ({ internships, refreshDashboard }) => {
+
   return (
     <section className="all-courses">
 
@@ -31,7 +32,10 @@ const AllInternship = ({internships}) => {
               duration: .5
             }}
           >
-            <CourseCard internship={internship} />
+            <CourseCard
+              internship={internship}
+              refreshDashboard={refreshDashboard}
+            />
           </motion.div>
         ))}
 

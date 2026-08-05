@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import './SettingsSection.css';
+import { toast } from 'react-toastify';
 
 export default function SettingsSection() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function SettingsSection() {
 
   const handlePasswordChange = (e) => {
     e.preventDefault();
-    alert('Password updated successfully!');
+    toast.success('Password updated successfully!');
     setPasswords({ oldPassword: '', newPassword: '' });
   };
 

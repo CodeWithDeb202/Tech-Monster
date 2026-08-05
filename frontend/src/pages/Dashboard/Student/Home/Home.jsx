@@ -22,7 +22,7 @@ const Home = () => {
     try {
       const res = await api.get(API.DASHBOARD.STUDENT);
 
-      console.log("Data:=", res.data.dashboard);
+      console.log("Home:Data=", res.data.dashboard);
       
 
       setDashboard(res.data.dashboard);

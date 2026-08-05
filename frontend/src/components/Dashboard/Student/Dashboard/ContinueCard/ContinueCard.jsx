@@ -1,4 +1,4 @@
-import {  motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import "./ContinueCard.css";
@@ -72,7 +72,9 @@ const ContinueCard = ({ internship }) => {
 
           </div>
 
-          <small>{internship?.lessonsLeft || '0'} Lessons Left</small>
+          <small>{internship.remainingTasks} Tasks Left</small>
+
+          <small>{internship.remainingNotes} Lession left</small>
 
           <button>
 

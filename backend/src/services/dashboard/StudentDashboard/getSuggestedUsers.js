@@ -25,6 +25,7 @@ const getSuggestedUsers = async (userId) => {
         })
 
         .limit(4);
+    console.log(users);
 
     return users.map(user => ({
 

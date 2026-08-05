@@ -64,7 +64,7 @@ const InternshipRecommendation = ({ internships = [] }) => {
 
               key={internship._id || index}
 
-              className="course-card"
+              id="course-card"
 
               initial={{
                 opacity:0,
@@ -111,6 +111,11 @@ const InternshipRecommendation = ({ internships = [] }) => {
                   {internship.category}
 
                 </span>
+                <span className="course-category">
+
+                  {internship.level}
+
+                </span>
 
                 <h3>
 
@@ -124,13 +129,13 @@ const InternshipRecommendation = ({ internships = [] }) => {
 
                     <HiStar />
 
-                    {internship.rating}
+                    {internship.rating || 0}
 
                   </span>
 
                   <span>
 
-                    {internship.lessons} lessons
+                    {internship.totalNotes} lessons
 
                   </span>
 

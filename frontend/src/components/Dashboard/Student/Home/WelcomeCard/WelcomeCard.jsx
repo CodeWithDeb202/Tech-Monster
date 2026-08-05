@@ -79,7 +79,7 @@ const WelcomeCard = ({ username, stats, streak }) => {
         >
           <HiAcademicCap />
           <div>
-            <h2>{stats?.courses || '0'}</h2>
+            <h2>{stats?.internships.total || '0'}</h2>
             <span>Join internships</span>
           </div>
         </motion.div>

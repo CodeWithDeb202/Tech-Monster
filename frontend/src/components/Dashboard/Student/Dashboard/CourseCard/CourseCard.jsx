@@ -2,9 +2,32 @@ import { motion } from "framer-motion";
 import { Clock3, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import "./CourseCard.css";
+import {toast} from 'react-toastify';
 
-const CourseCard = ({ internship }) => {
+import api from "../../../../../services/api/axios";
+import { API } from "../../../../../services/api/endpoints";
+
+const CourseCard = ({ internship, refreshDashboard }) => {
   const [hover, setHover] = useState(false);
+
+  const handleJoin = async () => {
+    try {
+
+      await api.post(
+        API.INTERNSHIPS.JOIN(internship._id)
+      );
+
+      await refreshDashboard();
+
+    } catch (err) {
+
+      toast.error(
+        err.response?.data?.message ||
+        "Unable to join internship"
+      );
+
+    }
+  };
 
   return (
     <motion.div
@@ -69,6 +92,7 @@ const CourseCard = ({ internship }) => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.96 }}
+          onClick={handleJoin}
         >
           Enroll Now
           <ArrowRight size={18} />

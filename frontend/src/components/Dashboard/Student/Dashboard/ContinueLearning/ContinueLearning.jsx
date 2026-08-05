@@ -18,29 +18,32 @@ const ContinueLearning = ({ internships }) => {
 
       </motion.div>
 
-      <div className="continue-grid">
-
-        {internships.map((internship, index) => (
-
-          <motion.div
-            key={internship._id}
-            initial={{ opacity: 0, y: 80 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-
-            transition={{
-              duration: 0.5,
-              delay: index * 0.1,
-            }}
-          >
-
-            <ContinueCard internship={internship} />
-
-          </motion.div>
-
-        ))}
-
-      </div>
+      {internships.length === 0 ? (
+        <div className="empty-internship">
+          <h3>No Internship Joined Yet</h3>
+          <p>
+            You haven't joined any internship yet. Explore available
+            internships below and start your learning journey.
+          </p>
+        </div>
+      ) : (
+        <div className="continue-grid">
+          {internships.map((internship, index) => (
+            <motion.div
+              key={internship._id}
+              initial={{ opacity: 0, y: 80 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+              }}
+            >
+              <ContinueCard internship={internship} />
+            </motion.div>
+          ))}
+        </div>
+      )}
 
     </section>
   );

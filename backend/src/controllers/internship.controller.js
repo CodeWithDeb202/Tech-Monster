@@ -227,19 +227,22 @@ export const joinInternship = asyncHandler(async (req, res) => {
 
 
 
+    console.log("Joining User:", req.user._id);
 
-    const studentInternship =
-        await StudentInternship.create({
+    const studentInternship = await StudentInternship.create({
 
-            student: req.user._id,
+        student: req.user._id,
 
-            internship: req.params.id,
+        internship: req.params.id,
 
-            status: "In Progress",
+        status: "In Progress",
 
-            startedAt: new Date()
+        startedAt: new Date()
 
-        });
+    });
+
+    const data = await StudentInternship.find();
+    console.log("Student internshipss",data);
 
 
 
@@ -272,22 +275,21 @@ export const joinInternship = asyncHandler(async (req, res) => {
 export const getMyInternships = asyncHandler(async (req, res) => {
 
 
-    const internships =
-        await StudentInternship.find({
+    const internships = await StudentInternship.find({
 
-            student: req.user._id
+        student: req.user._id
 
-        })
-            .populate(
+    })
+        .populate(
 
-                "internship"
+            "internship"
 
-            )
-            .sort({
+        )
+        .sort({
 
-                createdAt: -1
+            createdAt: -1
 
-            });
+        });
 
 
 
