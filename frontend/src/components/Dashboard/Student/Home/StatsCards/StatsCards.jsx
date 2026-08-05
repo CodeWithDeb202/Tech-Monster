@@ -30,7 +30,7 @@ const StatsCards = ({ stats }) => {
     {
       id: 3,
       title: "Daily Tasks",
-      value: stats?.tasks?.completed || 0,
+      value: stats?.tasks?.approved || 0,
       suffix: "",
       icon: HiCheckCircle,
       color: "#F59E0B",

@@ -14,8 +14,7 @@ import LearningAnalytics from "../../../../components/Dashboard/Student/Home/Lea
 
 
 const Home = () => {
-
-  // Dummy Data
+  
   const [dashboard, setDashboard] = useState(null);
 
   const loadDashboard = async () => {

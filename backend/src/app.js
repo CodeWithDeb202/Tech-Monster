@@ -17,6 +17,7 @@ import notificationRoutes from "./routes/Notification/notification.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 
+import adminTaskRoutes from "./routes/Admin/adminTask.routes.js";
 import internshipRoutes from "./routes/internship.routes.js";
 import serverRoutes from ".//routes/Server/server.routes.js";
 
@@ -146,6 +147,7 @@ app.use("/api/messages", messageRoutes);
 
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/admin/tasks", adminTaskRoutes);
 
 app.use("/api/notifications", notificationRoutes);
 

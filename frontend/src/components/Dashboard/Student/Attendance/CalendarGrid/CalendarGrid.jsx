@@ -1,27 +1,34 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import './CalendarGrid.css';
 
 export default function CalendarGrid({ attendanceData }) {
   const dateObj = new Date();
+  const today = new Date().getDate();
   const currentMonthName = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
-  
+
   const daysInMonth = new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate();
   const firstDayIndex = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1).getDay();
 
   const daysArray = [];
-  
+
   for (let i = 0; i < firstDayIndex; i++) {
     daysArray.push({ type: 'empty' });
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
-    const status = attendanceData[day] || 'pending'; 
+
+    let status = attendanceData[day];
+
+    if (!status) {
+
+      status = day < today ? "absent" : "pending";
+
+    }
     daysArray.push({ type: 'day', day, status });
   }
 
   return (
-    <motion.div 
+    <motion.div
       className="calendar-container"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -43,10 +50,23 @@ export default function CalendarGrid({ attendanceData }) {
             return <div key={index} className="day-cell empty" />;
           }
 
-          let statusClass = '';
-          if (item.status === 'present') statusClass = 'present';
-          if (item.status === 'absent') statusClass = 'absent';
+          let statusClass = "";
 
+          if (item.status === "present") {
+
+            statusClass = "present";
+
+          }
+          else if (item.status === "absent") {
+
+            statusClass = "absent";
+
+          }
+          else if (item.day === today) {
+
+            statusClass = "today";
+
+          }
           return (
             <motion.div
               key={index}

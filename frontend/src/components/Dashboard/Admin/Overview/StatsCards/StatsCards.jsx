@@ -23,32 +23,32 @@ export default function StatsCards({ stats }) {
 
         {
             icon: <HiFolder />,
-            title: "Internships",
-            value: stats.totalInternships
+            title: "Active Internships",
+            value: stats.activeInternships
         },
 
         {
             icon: <HiFire />,
-            title: "Active Students",
-            value: stats.activeStudents
+            title: "Pending Review",
+            value: stats.submittedTasks
         },
 
         {
             icon: <HiBadgeCheck />,
-            title: "Certificates",
-            value: stats.totalCertificates
+            title: "Approved Tasks",
+            value: stats.approvedTasks
         },
 
         {
             icon: <HiClipboardList />,
-            title: "Tasks",
-            value: stats.totalTasks
+            title: "Incorrect Tasks",
+            value: stats.incorrectTasks
         },
 
         {
             icon: <HiCalendar />,
-            title: "Attendance",
-            value: stats.totalAttendance
+            title: "Certificates",
+            value: stats.totalCertificates
         }
 
     ];

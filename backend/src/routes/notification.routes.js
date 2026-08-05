@@ -12,7 +12,7 @@ import {
 
     deleteNotification
 
-} from "../controllers/notification.controller.js";
+} from "../controllers/Notification/notification.controller.js";
 
 const router = express.Router();
 

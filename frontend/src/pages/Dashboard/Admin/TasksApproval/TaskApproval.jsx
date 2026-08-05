@@ -1,12 +1,35 @@
-import ApprovedTasks from '../../../../components/Dashboard/Admin/TasksApproval/Approvedtasks';
-import PendingTaskApprove from '../../../../components/Dashboard/Admin/TasksApproval/PendingTaskApprove';
-import './TaskApproval.css';
+import { useState } from "react";
+
+import ApprovedTasks from "../../../../components/Dashboard/Admin/TasksApproval/ApprovedTasks";
+import PendingTaskApprove from "../../../../components/Dashboard/Admin/TasksApproval/PendingTaskApprove";
+
+import "./TaskApproval.css";
 
 export default function TaskApproval() {
-    return(
+
+    const [refresh, setRefresh] = useState(0);
+
+    const reload = () => {
+
+        setRefresh(prev => prev + 1);
+
+    };
+
+    return (
         <>
-            <PendingTaskApprove />
-            <ApprovedTasks />
+            <PendingTaskApprove
+
+                refresh={refresh}
+
+            />
+
+            <ApprovedTasks
+
+                refresh={refresh}
+
+            />
+
         </>
-    )
+    );
+
 }

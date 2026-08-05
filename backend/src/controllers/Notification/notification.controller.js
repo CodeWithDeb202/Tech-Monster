@@ -128,3 +128,27 @@ export const deleteNotification = asyncHandler(async (req, res) => {
     });
 
 });
+
+export const markAllAsRead = asyncHandler(async (req, res) => {
+
+    await Notification.updateMany(
+
+        {
+            user: req.user._id,
+            isRead: false
+        },
+
+        {
+            isRead: true
+        }
+
+    );
+
+    res.status(200).json({
+
+        success: true,
+        message: "All notifications marked as read"
+
+    });
+
+});

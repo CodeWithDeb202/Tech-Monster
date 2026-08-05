@@ -38,6 +38,20 @@ export const API = {
 
     INTERNSHIPS: "/admin/internships",
 
+    TASKS: {
+
+      PENDING: "/admin/tasks/pending",
+
+      APPROVED: "/admin/tasks/approved",
+
+      DETAILS: (id) => `/admin/tasks/${id}`,
+
+      APPROVE: (id) => `/admin/tasks/${id}/approve`,
+
+      REJECT: (id) => `/admin/tasks/${id}/reject`
+
+    }
+
   },
 
   PROFILE: {
@@ -62,5 +76,15 @@ export const API = {
     JOIN: (id) => `/internships/${id}/join`,
     PROGRESS: (id) => `/internships/${id}/progress`,
     COMPLETE: (id) => `/internships/${id}/complete`,
+  },
+
+  MESSAGE: {
+
+    BASE: "/messages",
+
+    USERS: "/messages/users",
+    
+    SEARCH: "/messages/search"
+
   },
 };

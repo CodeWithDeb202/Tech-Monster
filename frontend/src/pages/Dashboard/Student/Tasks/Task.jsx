@@ -1,6 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { motion } from "framer-motion";
+
 import { useNavigate } from "react-router-dom";
+
+import {
+
+  getMyTasks
+
+} from "../../../../services/api/adminTask.service";
 
 import CourseTaskCard from "../../../../components/Dashboard/Student/Tasks/CourseTaskCard";
 import WeekAccordion from "../../../../components/Dashboard/Student/Tasks/WeekAccordion";
@@ -8,77 +16,47 @@ import DailyTaskCard from "../../../../components/Dashboard/Student/Tasks/DailyT
 
 import "./Task.css";
 
-const courses = [
-  {
-    id: 1,
-    courseName: "React Full Stack",
-    duration: 12,
-    progress: 35,
-
-    weeks: [
-      {
-        id: 1,
-        title: "Week 1",
-        progress: 100,
-        completed: true,
-        locked: false,
-
-        tasks: [
-          {
-            id: 1,
-            day: 1,
-            title: "HTML Revision",
-            progress: 100,
-            completed: true,
-            expire: "Completed"
-          },
-          {
-            id: 2,
-            day: 2,
-            title: "CSS Practice",
-            progress: 70,
-            completed: false,
-            expire: "1 Day Left"
-          }
-        ]
-      },
-
-      {
-        id: 2,
-        title: "Week 2",
-        progress: 0,
-        completed: false,
-        locked: false,
-
-        tasks: [
-          {
-            id: 3,
-            day: 1,
-            title: "JavaScript Variables",
-            progress: 0,
-            completed: false,
-            expire: "2 Days Left"
-          }
-        ]
-      },
-
-      {
-        id: 3,
-        title: "Week 3",
-        progress: 0,
-        completed: false,
-        locked: true,
-        tasks: []
-      }
-    ]
-  }
-];
-
 export default function Task() {
 
   const [openCourse, setOpenCourse] = useState(null);
   const [openWeek, setOpenWeek] = useState(null);
   const navigate = useNavigate();
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    loadTasks();
+
+  }, []);
+
+  const loadTasks = async () => {
+
+    try {
+
+      const res = await getMyTasks();
+
+      setTasks(
+
+        res.tasks || []
+
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
+  };
 
   return (
 
@@ -98,25 +76,37 @@ export default function Task() {
 
       {
 
-        courses.map((course) => (
+        tasks.map((task) => (
 
-          <div key={course.id}>
+          <div key={task._id}>
 
             <CourseTaskCard
 
-              courseName={course.courseName}
+              courseName={task.internship?.title}
 
-              duration={course.duration}
+              duration={task.internship?.duration}
 
-              progress={course.progress}
+              progress={task.reviewStatus === "Approved"
 
-              expanded={openCourse === course.id}
+                ? 100
+
+                : task.reviewStatus === "Rejected"
+
+                  ? 50
+
+                  : task.status === "Completed"
+
+                    ? 80
+
+                    : 0}
+
+              expanded={openCourse === task.internship?._id}
 
               onToggle={() =>
                 setOpenCourse(
-                  openCourse === course.id
+                  openCourse === task.internship?._id
                     ? null
-                    : course.id
+                    : task.internship?._id
                 )
               }
 
@@ -124,7 +114,7 @@ export default function Task() {
 
             {
 
-              openCourse === course.id && (
+              openCourse === task.internship?._id && (
 
                 <motion.div
 
@@ -182,7 +172,15 @@ export default function Task() {
 
                               expireIn={task.expire}
 
-                              onClick={() => navigate(`/student/tasks/${task.id}`)}
+                              onClick={() =>
+
+                                navigate(
+
+                                  `/student/tasks/${task._id}`
+
+                                )
+
+                              }
 
                             />
 

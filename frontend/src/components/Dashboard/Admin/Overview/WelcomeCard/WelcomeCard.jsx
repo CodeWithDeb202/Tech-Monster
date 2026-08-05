@@ -73,13 +73,13 @@ export default function WelcomeCard({ stats }) {
 
                         <h3>
 
-                            {stats.totalInternships}
+                            {stats.activeInternships}
 
                         </h3>
 
                         <p>
 
-                            Internships
+                            Active Internships
 
                         </p>
 
@@ -95,13 +95,13 @@ export default function WelcomeCard({ stats }) {
 
                         <h3>
 
-                            {stats.totalAttendance}
+                            {stats.submittedTasks}
 
                         </h3>
 
                         <p>
 
-                            Attendance
+                            Pending Reviews
 
                         </p>
 

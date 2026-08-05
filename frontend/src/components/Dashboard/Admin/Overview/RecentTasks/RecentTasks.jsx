@@ -6,51 +6,35 @@ export default function RecentTasks({
 
 }) {
 
-    const getBadge = (date) => {
+    const getBadge = (status) => {
 
-        const today = new Date();
+        switch (status) {
 
-        const due = new Date(date);
+            case "Submitted":
+                return {
+                    text: "Pending Review",
+                    className: "today"
+                };
 
-        const diff = Math.ceil(
+            case "Approved":
+                return {
+                    text: "Approved",
+                    className: "upcoming"
+                };
 
-            (due - today) /
+            case "Incorrect":
+                return {
+                    text: "Rejected",
+                    className: "late"
+                };
 
-            (1000 * 60 * 60 * 24)
-
-        );
-
-        if (diff < 0) {
-
-            return {
-
-                text: "Late",
-
-                className: "late"
-
-            };
-
-        }
-
-        if (diff === 0) {
-
-            return {
-
-                text: "Today",
-
-                className: "today"
-
-            };
+            default:
+                return {
+                    text: status,
+                    className: "today"
+                };
 
         }
-
-        return {
-
-            text: "Upcoming",
-
-            className: "upcoming"
-
-        };
 
     };
 
@@ -68,7 +52,7 @@ export default function RecentTasks({
 
                 tasks.map(task => {
 
-                    const badge = getBadge(task.dueDate);
+                    const badge = getBadge(task.status);
 
                     return (
 
@@ -81,11 +65,8 @@ export default function RecentTasks({
                         >
 
                             <img
-
-                                src={task.avatar}
-
-                                alt="student"
-
+                                src={task.avatar || "/default-avatar.png"}
+                                alt={task.student}
                             />
 
                             <div className="taskInfo">
@@ -102,9 +83,15 @@ export default function RecentTasks({
 
                                 </p>
 
+                                <small className={badge.className}>
+
+                                    {badge.text}
+
+                                </small>
+
                                 <small>
 
-                                    {task.internship}
+                                    {new Date(task.submittedAt).toLocaleDateString()}
 
                                 </small>
 

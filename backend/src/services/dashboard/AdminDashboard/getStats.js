@@ -14,7 +14,7 @@ const getStats = async () => {
 
         totalInternships,
 
-        publishedInternships,
+        activeInternships,
 
         activeStudents,
 
@@ -24,9 +24,11 @@ const getStats = async () => {
 
         totalTasks,
 
-        pendingTasks,
+        submittedTasks,
 
-        completedTasks
+        approvedTasks,
+
+        incorrectTasks
 
     ] = await Promise.all([
 
@@ -41,7 +43,7 @@ const getStats = async () => {
         Internship.countDocuments(),
 
         Internship.countDocuments({
-            isPublished: true
+            status: "Active"
         }),
 
         StudentInternship.countDocuments({
@@ -57,11 +59,15 @@ const getStats = async () => {
         Task.countDocuments(),
 
         Task.countDocuments({
-            status: "Pending"
+            status: "Submitted"
         }),
 
         Task.countDocuments({
-            status: "Completed"
+            status: "Approved"
+        }),
+
+        Task.countDocuments({
+            status: "Incorrect"
         })
 
     ]);
@@ -74,7 +80,7 @@ const getStats = async () => {
 
         totalInternships,
 
-        publishedInternships,
+        activeInternships,
 
         activeStudents,
 
@@ -84,9 +90,11 @@ const getStats = async () => {
 
         totalTasks,
 
-        pendingTasks,
+        submittedTasks,
 
-        completedTasks
+        approvedTasks,
+
+        incorrectTasks
 
     };
 

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+
+import { submitTask, getSingleTask } from "../../../../../services/api/adminTask.service";
 import {
     FaClock,
     FaPaperPlane,
@@ -11,34 +14,16 @@ import CodeEditor from "../CodeEditor";
 
 import "./DailyTask.css";
 
-const questions = [
-    {
-        id: 1,
-        title: "Question 1",
-        question:
-            "Write a JavaScript function to reverse a string."
-    },
-    {
-        id: 2,
-        title: "Question 2",
-        question:
-            "Explain the difference between let, const and var."
-    },
-    {
-        id: 3,
-        title: "Question 3",
-        question:
-            "Create a function that checks whether a number is prime."
-    }
-];
-
 export default function DailyTask() {
     const { taskId } = useParams();
 
-    console.log(taskId);
 
     const [answer, setAnswer] = useState("");
     const [code, setCode] = useState("");
+    const [githubLink, setGithubLink] = useState("");
+    const [liveLink, setLiveLink] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [task, setTask] = useState(null);
 
     const [timeLeft, setTimeLeft] = useState({
         days: 2,
@@ -49,78 +34,101 @@ export default function DailyTask() {
 
     useEffect(() => {
 
-        const timer = setInterval(() => {
+        loadTask();
 
-            setTimeLeft(prev => {
+    }, [taskId]);
 
-                let { days, hours, minutes, seconds } = prev;
+    const loadTask = async () => {
 
-                if (seconds > 0) {
+        try {
 
-                    seconds--;
+            const res = await getSingleTask(taskId);
+
+            setTask(res.task);
+
+            setCode(
+
+                res.task.code || ""
+
+            );
+
+            setAnswer(
+
+                res.task.answer || ""
+
+            );
+
+            setGithubLink(
+
+                res.task.githubLink || ""
+
+            );
+
+            setLiveLink(
+
+                res.task.liveLink || ""
+
+            );
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+
+    const handleSubmit = async () => {
+
+        try {
+
+            setLoading(true);
+
+            await submitTask(
+
+                taskId,
+
+                {
+
+                    code,
+
+                    answer,
+
+                    githubLink,
+
+                    liveLink
 
                 }
 
-                else {
+            );
 
-                    seconds = 59;
+            toast.success(
 
-                    if (minutes > 0) {
+                "Task Submitted Successfully"
 
-                        minutes--;
+            );
 
-                    }
+        }
 
-                    else {
+        catch (error) {
 
-                        minutes = 59;
+            toast.error(
 
-                        if (hours > 0) {
+                error.response?.data?.message ||
 
-                            hours--;
+                "Submission Failed"
 
-                        }
+            );
 
-                        else {
+        }
 
-                            hours = 23;
+        finally {
 
-                            if (days > 0) {
+            setLoading(false);
 
-                                days--;
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-                return { days, hours, minutes, seconds };
-
-            });
-
-        }, 1000);
-
-        return () => clearInterval(timer);
-
-    }, []);
-
-    const handleSubmit = () => {
-
-        const payload = {
-
-            code,
-
-            answer,
-
-        };
-
-        console.log(payload);
-
-        // Later API call
-        // axios.post("/api/task/submit", payload);
+        }
 
     };
 
@@ -138,13 +146,17 @@ export default function DailyTask() {
 
             <div className="daily-header">
 
-                <div>
+                <h1>
 
-                    <h1>React Full Stack</h1>
+                    {task?.internship?.title}
 
-                    <p>Week 1 • Day 1 Task</p>
+                </h1>
 
-                </div>
+                <p>
+
+                    {task?.title}
+
+                </p>
 
                 <div className="timer-box">
 
@@ -167,31 +179,31 @@ export default function DailyTask() {
             </div>
 
             <div className="questions">
+                <motion.div
 
-                {
+                    className="question-card"
 
-                    questions.map((item) => (
+                    whileHover={{
 
-                        <motion.div
+                        y: -5
 
-                            key={item.id}
+                    }}
 
-                            className="question-card"
+                >
 
-                            whileHover={{ y: -4 }}
+                    <h2>
 
-                        >
+                        {task?.title}
 
-                            <h2>{item.title}</h2>
+                    </h2>
 
-                            <p>{item.question}</p>
+                    <p>
 
-                        </motion.div>
+                        {task?.description}
 
-                    ))
+                    </p>
 
-                }
-
+                </motion.div>
             </div>
 
             <div className="answer-section">
@@ -204,6 +216,38 @@ export default function DailyTask() {
                     onChange={(value) => setCode(value || "")}
                 />
 
+                <input
+
+                    type="text"
+
+                    placeholder="Github Repository Link"
+
+                    value={githubLink}
+
+                    onChange={(e) =>
+
+                        setGithubLink(e.target.value)
+
+                    }
+
+                />
+
+                <input
+
+                    type="text"
+
+                    placeholder="Live Project Link"
+
+                    value={liveLink}
+
+                    onChange={(e) =>
+
+                        setLiveLink(e.target.value)
+
+                    }
+
+                />
+
                 <h2 style={{ marginTop: "25px" }}>
                     Answer Explanation
                 </h2>
@@ -214,9 +258,34 @@ export default function DailyTask() {
                     onChange={(e) => setAnswer(e.target.value)}
                 />
 
-                <button onClick={handleSubmit}>
-                    <FaPaperPlane />
-                    Submit Answer
+                <button
+
+                    onClick={handleSubmit}
+
+                    disabled={loading}
+
+                >
+
+                    {
+
+                        loading
+
+                            ?
+
+                            "Submitting..."
+
+                            :
+
+                            <>
+
+                                <FaPaperPlane />
+
+                                Submit Answer
+
+                            </>
+
+                    }
+
                 </button>
 
             </div>
@@ -227,7 +296,15 @@ export default function DailyTask() {
 
                 <p>
 
-                    After submission your answer will be sent to the Admin for review.
+                    Review Status :
+
+                    {" "}
+
+                    {
+
+                        task?.reviewStatus
+
+                    }
 
                 </p>
 

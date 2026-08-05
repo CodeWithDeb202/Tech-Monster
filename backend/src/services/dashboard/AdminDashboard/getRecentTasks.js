@@ -2,28 +2,35 @@ import Task from "../../../models/Task.js";
 
 const getRecentTasks = async () => {
 
-    const tasks = await Task.find()
+    const tasks = await Task.find({
+
+        status: "Submitted"
+
+    })
 
         .populate(
+
             "assignedTo",
+
             "firstName lastName avatar"
+
         )
 
         .populate(
-            "assignedBy",
-            "firstName lastName"
-        )
 
-        .populate(
             "internship",
-            "title category"
+
+            "title"
+
         )
 
         .sort({
-            createdAt: -1
+
+            submittedAt: -1
+
         })
 
-        .limit(10);
+        .limit(5);
 
     return tasks.map(task => ({
 
@@ -31,33 +38,17 @@ const getRecentTasks = async () => {
 
         title: task.title,
 
-        description: task.description,
+        student:
 
-        status: task.status,
+            `${task.assignedTo.firstName} ${task.assignedTo.lastName}`,
 
-        dueDate: task.dueDate,
+        avatar: task.assignedTo.avatar,
 
-        createdAt: task.createdAt,
+        internship: task.internship?.title,
 
-        student: task.assignedTo
-            ? {
-                _id: task.assignedTo._id,
-                fullName: `${task.assignedTo.firstName} ${task.assignedTo.lastName}`,
-                avatar: task.assignedTo.avatar
-            }
-            : null,
+        submittedAt: task.submittedAt,
 
-        assignedBy: task.assignedBy
-            ? `${task.assignedBy.firstName} ${task.assignedBy.lastName}`
-            : "Admin",
-
-        internship: task.internship
-            ? {
-                _id: task.internship._id,
-                title: task.internship.title,
-                category: task.internship.category
-            }
-            : null
+        status: task.status
 
     }));
 

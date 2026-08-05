@@ -1,26 +1,22 @@
 import Message from "../models/Message.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
 
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 import logActivity from "../utils/logActivity.js";
 
-import User from "../models/User.js";
-
 import {
-
     getIO,
-
     getOnlineUsers
-
 } from "../socket/socket.js";
 
 
-export const sendMessage = asyncHandler(async (req, res) => {
+// ==========================================================
+// Send Message
+// ==========================================================
 
-    // ==========================================================
-    // Request Body
-    // ==========================================================
+export const sendMessage = asyncHandler(async (req, res) => {
 
     const {
 
@@ -28,22 +24,17 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
         message,
 
-        file
+        file,
+
+        replyTo
 
     } = req.body;
-
-    // ==========================================================
-    // Validation
-    // ==========================================================
 
     if (!receiver) {
 
         throw new AppError(
-
             "Receiver is required.",
-
             400
-
         );
 
     }
@@ -51,60 +42,31 @@ export const sendMessage = asyncHandler(async (req, res) => {
     if (!message && !file) {
 
         throw new AppError(
-
-            "Message or file is required.",
-
+            "Message or File is required.",
             400
-
         );
 
     }
 
-    // ==========================================================
-    // Receiver Exists
-    // ==========================================================
-
-    const receiverUser = await User.findById(
-
-        receiver
-
-    );
+    const receiverUser = await User.findById(receiver);
 
     if (!receiverUser) {
 
         throw new AppError(
-
             "Receiver not found.",
-
             404
-
         );
 
     }
 
-    // ==========================================================
-    // Prevent Self Message
-    // ==========================================================
-
-    if (
-
-        receiver === req.user._id.toString()
-
-    ) {
+    if (receiver === req.user._id.toString()) {
 
         throw new AppError(
-
-            "You cannot send a message to yourself.",
-
+            "You cannot message yourself.",
             400
-
         );
 
     }
-
-    // ==========================================================
-    // Create Message
-    // ==========================================================
 
     const newMessage = await Message.create({
 
@@ -116,27 +78,41 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
         file,
 
+        replyTo,
+
         seen: false
 
     });
 
-    // ==========================================================
-    // Populate Sender
-    // ==========================================================
-
     await newMessage.populate(
-
         "sender",
-
         "firstName lastName profileImage"
-
     );
 
-    // ==========================================================
-    // Notification
-    // ==========================================================
+    await newMessage.populate(
+        "receiver",
+        "firstName lastName profileImage"
+    );
 
-    await Notification.create({
+    await newMessage.populate({
+
+        path: "replyTo",
+
+        populate: {
+
+            path: "sender",
+
+            select: "firstName lastName profileImage"
+
+        }
+
+    });
+
+    // ==========================
+    // Notification
+    // ==========================
+
+    const notification = await Notification.create({
 
         user: receiver,
 
@@ -148,39 +124,35 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
     });
 
-    // ==========================================================
-    // Socket.IO Real-time
-    // ==========================================================
+    const onlineUsers = getOnlineUsers();
 
-    const receiverSocketId = getOnlineUsers().get(
-
+    const receiverSocketId = onlineUsers.get(
         receiver.toString()
-
     );
 
-    if (
+    if (receiverSocketId) {
 
-        receiverSocketId
+        newMessage.delivered = true;
 
-    ) {
+        await newMessage.save();
 
-        getIO()
+        getIO().to(receiverSocketId).emit(
 
-            .to(receiverSocketId)
+            "receiveMessage",
 
-            .emit(
+            newMessage
 
-                "receiveMessage",
+        );
 
-                newMessage
+        getIO().to(receiverSocketId).emit(
 
-            );
+            "newNotification",
+
+            notification
+
+        );
 
     }
-
-    // ==========================================================
-    // Activity Log
-    // ==========================================================
 
     await logActivity(
 
@@ -196,10 +168,6 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
     );
 
-    // ==========================================================
-    // Response
-    // ==========================================================
-
     return res.status(201).json({
 
         success: true,
@@ -212,75 +180,14 @@ export const sendMessage = asyncHandler(async (req, res) => {
 
 });
 
-/* ==========================================================
 
-Future Improvements
-
--------------------------------------------------------------
-
-1. Typing Indicator
-
-2. Read Receipt
-
-3. Delivered Status
-
-4. Message Reactions
-
-5. Edit Message
-
-6. Delete Message
-
-7. Reply Message
-
-8. Forward Message
-
-9. Pin Message
-
-10. Search Messages
-
-11. Voice Message
-
-12. Video Message
-
-13. Emoji Support
-
-14. GIF Support
-
-15. File Preview
-
-16. Image Compression
-
-17. Message Encryption
-
-18. Push Notification
-
-19. Offline Queue
-
-20. Redis Pub/Sub
-
-21. WebRTC Calling
-
-22. Group Chat
-
-23. AI Smart Reply
-
-24. Spam Detection
-
-25. Profanity Filter
-
-26. Audit Logs
-
-========================================================== */
-
+// ==========================================================
+// Get Conversation
+// ==========================================================
 
 export const getMessages = asyncHandler(async (req, res) => {
 
-
-    const {
-
-        userId
-
-    } = req.params;
+    const { userId } = req.params;
 
     const messages = await Message.find({
 
@@ -306,6 +213,477 @@ export const getMessages = asyncHandler(async (req, res) => {
 
     })
 
+        .populate(
+            "sender",
+            "firstName lastName profileImage"
+        )
+
+        .populate(
+            "receiver",
+            "firstName lastName profileImage"
+        )
+
+        .populate({
+
+            path: "replyTo",
+
+            populate: {
+
+                path: "sender",
+
+                select: "firstName lastName profileImage"
+
+            }
+
+        })
+
+        .sort({
+
+            createdAt: 1
+
+        });
+
+    const filteredMessages = messages.filter(
+
+        msg =>
+
+            !msg.deletedFor.some(
+
+                user =>
+
+                    user.toString() ===
+
+                    req.user._id.toString()
+
+            )
+
+    );
+
+    return res.status(200).json({
+
+        success: true,
+
+        messages: filteredMessages
+
+    });
+
+});
+
+
+// ==========================================================
+// Chat Users List with Last Message + Unread Count
+// ==========================================================
+
+export const getChatUsers = asyncHandler(async (req, res) => {
+
+    const users = await User.find({
+
+        _id: {
+
+            $ne: req.user._id
+
+        },
+
+        isBlocked: false
+
+    })
+
+        .select(
+
+            "firstName lastName email profileImage role"
+
+        )
+
+        .sort({
+
+            firstName: 1
+
+        });
+
+    const chatUsers = await Promise.all(
+
+        users.map(async (user) => {
+
+            // Last Message
+
+            const lastMessage = await Message.findOne({
+
+                $or: [
+
+                    {
+
+                        sender: req.user._id,
+
+                        receiver: user._id
+
+                    },
+
+                    {
+
+                        sender: user._id,
+
+                        receiver: req.user._id
+
+                    }
+
+                ]
+
+            })
+
+                .sort({
+
+                    createdAt: -1
+
+                });
+
+            // Unread Count
+
+            const unreadCount = await Message.countDocuments({
+
+                sender: user._id,
+
+                receiver: req.user._id,
+
+                seen: false
+
+            });
+
+            return {
+
+                _id: user._id,
+
+                firstName: user.firstName,
+
+                lastName: user.lastName,
+
+                email: user.email,
+
+                role: user.role,
+
+                profileImage: user.profileImage,
+
+                unreadCount,
+
+                lastMessage: lastMessage
+
+                    ? {
+
+                        text:
+
+                            lastMessage.message ||
+
+                            "📎 Attachment",
+
+                        createdAt:
+
+                            lastMessage.createdAt
+
+                    }
+
+                    : null
+
+            };
+
+        })
+
+    );
+
+    return res.status(200).json({
+
+        success: true,
+
+        users: chatUsers
+
+    });
+
+});
+
+
+// ==========================================================
+// Mark Messages Seen
+// ==========================================================
+
+export const markAsSeen = asyncHandler(async (req, res) => {
+
+    const { userId } = req.params;
+
+    await Message.updateMany(
+
+        {
+
+            sender: userId,
+
+            receiver: req.user._id,
+
+            seen: false
+
+        },
+
+        {
+
+            seen: true,
+
+            delivered: true
+
+        }
+
+    );
+
+    const senderSocketId = getOnlineUsers().get(
+
+        userId.toString()
+
+    );
+
+    if (senderSocketId) {
+
+        getIO().to(senderSocketId).emit(
+
+            "messagesSeen",
+
+            {
+
+                by: req.user._id
+
+            }
+
+        );
+
+    }
+
+    return res.status(200).json({
+
+        success: true
+
+    });
+
+});
+
+
+// ==========================================================
+// Delete For Me
+// ==========================================================
+
+export const deleteForMe = asyncHandler(async (req, res) => {
+
+    const { id } = req.params;
+
+    const message = await Message.findById(id);
+
+    if (!message) {
+
+        throw new AppError(
+
+            "Message not found",
+
+            404
+
+        );
+
+    }
+
+    const alreadyDeleted = message.deletedFor.some(
+
+        user =>
+
+            user.toString() ===
+
+            req.user._id.toString()
+
+    );
+
+    if (!alreadyDeleted) {
+
+        message.deletedFor.push(
+
+            req.user._id
+
+        );
+
+        await message.save();
+
+    }
+
+    return res.status(200).json({
+
+        success: true,
+
+        message: "Message deleted for you."
+
+    });
+
+});
+
+
+// ==========================================================
+// Delete For Everyone
+// ==========================================================
+
+export const deleteForEveryone = asyncHandler(async (req, res) => {
+
+    const { id } = req.params;
+
+    const message = await Message.findById(id);
+
+    if (!message) {
+
+        throw new AppError(
+
+            "Message not found",
+
+            404
+
+        );
+
+    }
+
+    if (
+
+        message.sender.toString() !==
+
+        req.user._id.toString()
+
+    ) {
+
+        throw new AppError(
+
+            "Only sender can delete for everyone.",
+
+            403
+
+        );
+
+    }
+
+    message.message = "";
+
+    message.file = "";
+
+    message.isDeleted = true;
+
+    await message.save();
+
+    const receiverSocketId = getOnlineUsers().get(
+
+        message.receiver.toString()
+
+    );
+
+    if (receiverSocketId) {
+
+        getIO()
+
+            .to(receiverSocketId)
+
+            .emit(
+
+                "messageDeleted",
+
+                {
+
+                    messageId: message._id
+
+                }
+
+            );
+
+    }
+
+    return res.status(200).json({
+
+        success: true,
+
+        message: "Message deleted for everyone."
+
+    });
+
+});
+
+
+// ==========================================================
+// Search Messages
+// ==========================================================
+
+export const searchMessages = asyncHandler(async (req, res) => {
+
+    const { userId } = req.params;
+
+    const { keyword } = req.query;
+
+    if (!keyword) {
+
+        return res.status(200).json({
+
+            success: true,
+
+            messages: []
+
+        });
+
+    }
+
+    const messages = await Message.find({
+
+        $or: [
+
+            {
+
+                sender: req.user._id,
+
+                receiver: userId
+
+            },
+
+            {
+
+                sender: userId,
+
+                receiver: req.user._id
+
+            }
+
+        ],
+
+        message: {
+
+            $regex: keyword,
+
+            $options: "i"
+
+        }
+
+    })
+
+        .populate(
+
+            "sender",
+
+            "firstName lastName profileImage"
+
+        )
+
+        .populate(
+
+            "receiver",
+
+            "firstName lastName profileImage"
+
+        )
+
+        .populate({
+
+            path: "replyTo",
+
+            populate: {
+
+                path: "sender",
+
+                select: "firstName lastName profileImage"
+
+            }
+
+        })
+
         .sort({
 
             createdAt: 1
@@ -320,55 +698,136 @@ export const getMessages = asyncHandler(async (req, res) => {
 
     });
 
-    return res.status(500).json({
-
-        success: false,
-
-        message: "Internal Server Error"
-
-    });
-
-
 });
 
 
-export const markAsSeen = asyncHandler(async (req, res) => {
+// ==========================================================
+// Shared Media & Files
+// ==========================================================
 
-    await Message.updateMany(
+export const getSharedFiles = asyncHandler(async (req, res) => {
 
-        {
+    const { userId } = req.params;
 
-            sender: req.params.userId,
+    const files = await Message.find({
 
-            receiver: req.user._id,
+        $or: [
 
-            seen: false
+            {
+                sender: req.user._id,
+                receiver: userId
+            },
 
-        },
+            {
+                sender: userId,
+                receiver: req.user._id
+            }
 
-        {
+        ],
 
-            seen: true
+        file: {
+
+            $ne: ""
 
         }
 
-    );
+    })
+
+    .populate(
+        "sender",
+        "firstName lastName profileImage"
+    )
+
+    .sort({
+
+        createdAt: -1
+
+    });
 
     return res.status(200).json({
 
         success: true,
 
-        message: "Messages marked as seen"
+        files
 
     });
 
-    console.log(error);
+});
 
-    return res.status(500).json({
 
-        success: false,
+// ==========================================================
+// Get Messages with Pagination
+// ==========================================================
 
-        message: "Internal Server Error"
+export const getMessagesPaginated = asyncHandler(async (req, res) => {
+
+    const { userId } = req.params;
+
+    const page = Number(req.query.page) || 1;
+
+    const limit = 20;
+
+    const skip = (page - 1) * limit;
+
+    const messages = await Message.find({
+
+        $or: [
+
+            {
+                sender: req.user._id,
+                receiver: userId
+            },
+
+            {
+                sender: userId,
+                receiver: req.user._id
+            }
+
+        ]
+
+    })
+
+        .populate(
+            "sender",
+            "firstName lastName profileImage"
+        )
+
+        .populate(
+            "receiver",
+            "firstName lastName profileImage"
+        )
+
+        .populate({
+
+            path: "replyTo",
+
+            populate: {
+
+                path: "sender",
+
+                select: "firstName lastName profileImage"
+
+            }
+
+        })
+
+        .sort({
+
+            createdAt: -1
+
+        })
+
+        .skip(skip)
+
+        .limit(limit);
+
+    res.status(200).json({
+
+        success: true,
+
+        messages: messages.reverse(),
+
+        hasMore: messages.length === limit
 
     });
 

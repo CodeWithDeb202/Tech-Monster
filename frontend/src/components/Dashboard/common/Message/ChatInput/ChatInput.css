@@ -1,0 +1,108 @@
+.chatInputContainer {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 15px;
+
+    background: #111827;
+
+    border-top: 1px solid #202020;
+    position: relative;
+
+}
+
+.chatIconBtn {
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 22px;
+
+    background: #1f2937;
+
+    color: white;
+
+    transition: .3s;
+
+}
+
+.chatIconBtn:hover {
+
+    background: #2563eb;
+
+}
+
+.chatTextInput {
+
+    flex: 1;
+
+    height: 45px;
+
+    border: none;
+
+    outline: none;
+
+    border-radius: 25px;
+
+    padding: 0 18px;
+
+    background: #1f2937;
+
+    color: white;
+
+    font-size: 15px;
+
+}
+
+.sendBtn {
+
+    width: 48px;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 22px;
+
+    transition: .3s;
+
+}
+
+.sendBtn:hover {
+
+    transform: scale(1.08);
+
+    background: #1d4ed8;
+
+}
+
+.emojiPicker {
+
+    position: absolute;
+
+    bottom: 70px;
+
+    left: 10px;
+
+    z-index: 1000;
+
+}

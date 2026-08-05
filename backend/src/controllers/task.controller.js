@@ -4,6 +4,10 @@ import Certificate from "../models/Certificate.js";
 import Badge from "../models/Badges.js";
 import UserBadge from "../models/UserBadge.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
+import Internship from "../models/Internship.js";
+
+import { getIO } from "../socket/socket.js";
 
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
@@ -52,6 +56,20 @@ export const createTask = asyncHandler(async (req, res) => {
 
     });
 
+    await logActivity(
+
+        req,
+
+        req.user._id,
+
+        "CREATE_TASK",
+
+        "Task",
+
+        `Created task: ${task.title}`
+
+    );
+
 
 
     res.status(201).json({
@@ -76,40 +94,45 @@ export const createTask = asyncHandler(async (req, res) => {
 // =====================================
 
 
-export const getMyTasks =
-    asyncHandler(async (req, res) => {
+export const getMyTasks = asyncHandler(async (req, res) => {
 
+    const tasks = await Task.find({
 
-        const tasks =
-            await Task.find({
+        assignedTo: req.user._id
 
-                assignedTo: req.user._id
+    })
 
-            })
+        .populate(
 
-                .populate(
-                    "assignedBy",
-                    "firstName lastName email"
-                )
+            "assignedBy",
 
-                .sort({
+            "firstName lastName email"
 
-                    createdAt: -1
+        )
 
-                });
+        .populate(
 
+            "internship",
 
+            "title duration level"
 
-        res.status(200).json({
+        )
 
-            success: true,
+        .sort({
 
-            tasks
+            createdAt: -1
 
         });
 
+    res.status(200).json({
+
+        success: true,
+
+        tasks
 
     });
+
+});
 
 
 
@@ -121,195 +144,116 @@ export const getMyTasks =
 // =====================================
 
 
-export const updateTaskStatus =
-    asyncHandler(async (req, res) => {
+// =====================================
+// SUBMIT TASK
+// =====================================
 
+export const updateTaskStatus = asyncHandler(async (req, res) => {
 
-        const { status } = req.body;
+    const {
+        code,
+        answer,
+        githubLink,
+        liveLink
+    } = req.body;
 
+    const task = await Task.findById(req.params.id);
 
+    if (!task) {
+        throw new AppError("Task not found", 404);
+    }
 
-        const task =
-            await Task.findById(req.params.id);
+    if (task.assignedTo.toString() !== req.user._id.toString()) {
+        throw new AppError("Unauthorized", 403);
+    }
 
+    // Already approved
+    if (task.reviewStatus === "Approved") {
+        throw new AppError(
+            "Task already approved",
+            400
+        );
+    }
 
+    task.code = code || "";
 
-        if (!task) {
+    task.answer = answer || "";
 
-            throw new AppError(
-                "Task not found",
-                404
-            );
+    task.githubLink = githubLink || "";
 
-        }
+    task.liveLink = liveLink || "";
 
+    task.status = "Completed";
 
+    task.reviewStatus = "Pending";
 
+    task.submittedAt = new Date();
 
-        if (
-            task.assignedTo.toString()
-            !==
-            req.user._id.toString()
+    await task.save();
 
-        ) {
+    await logActivity(
 
-            throw new AppError(
-                "Unauthorized",
-                403
-            );
+        req,
 
-        }
+        req.user._id,
 
+        "SUBMIT_TASK",
 
+        "Task",
 
-        task.status = status;
+        `Submitted task: ${task.title}`
 
+    );
 
-        await task.save();
+    const io = getIO();
 
+    io.emit("taskSubmitted", {
 
+        taskId: task._id,
 
+        student: req.user._id,
 
+        title: task.title,
 
-        // ===============================
-        // Internship Progress Update
-        // ===============================
+        status: task.status
 
+    });
 
-        if (
-            status === "Completed"
-            &&
-            task.internship
-        ) {
+    // ==========================
+    // Notify Admin
+    // ==========================
 
+    const admins = await User.find({
+        role: "admin"
+    });
 
+    for (const admin of admins) {
 
-            const studentInternship =
-                await StudentInternship.findOne({
+        await Notification.create({
 
-                    student: req.user._id,
+            user: admin._id,
 
-                    internship: task.internship
+            title: "Task Approval",
 
-                });
+            message: `${req.user.firstName} ${req.user.lastName} submitted "${task.title}" for approval.`,
 
-
-
-
-            if (studentInternship) {
-
-
-
-                const totalTasks =
-                    await Task.countDocuments({
-
-                        internship: task.internship,
-
-                        assignedTo: req.user._id
-
-                    });
-
-
-
-                const completedTasks =
-                    await Task.countDocuments({
-
-                        internship: task.internship,
-
-                        assignedTo: req.user._id,
-
-                        status: "Completed"
-
-                    });
-
-
-
-
-                const progress =
-                    totalTasks === 0
-                        ?
-                        0
-                        :
-                        Math.round(
-                            (completedTasks / totalTasks) * 100
-                        );
-
-
-
-
-                studentInternship.completedTasks =
-                    completedTasks;
-
-
-                studentInternship.progress =
-                    progress;
-
-
-
-
-
-
-                if (progress >= 100) {
-
-
-
-                    studentInternship.status = "Completed";
-
-                    studentInternship.completedAt =
-                        new Date();
-
-
-
-
-                    await createCertificate(
-
-                        req.user._id,
-
-                        task.internship
-
-                    );
-
-
-
-                    await giveCompletionBadge(
-
-                        req.user._id
-
-                    );
-
-
-
-                }
-
-
-
-                await studentInternship.save();
-
-
-
-            }
-
-
-
-        }
-
-
-
-
-
-        res.status(200).json({
-
-            success: true,
-
-            message: "Task status updated",
-
-            task
+            type: "system"
 
         });
 
+    }
 
+    return res.status(200).json({
+
+        success: true,
+
+        message: "Task submitted successfully. Waiting for admin approval.",
+
+        task
 
     });
+
+});
 
 
 
@@ -335,6 +279,20 @@ export const updateTask = asyncHandler(async (req, res) => {
 
     await task.save();
 
+    await logActivity(
+
+        req,
+
+        req.user._id,
+
+        "UPDATE_TASK",
+
+        "Task",
+
+        `Updated task: ${task.title}`
+
+    );
+
     res.status(200).json({
         success: true,
         message: "Task updated successfully",
@@ -352,42 +310,55 @@ export const updateTask = asyncHandler(async (req, res) => {
 // =====================================
 
 
-export const deleteTask =
-    asyncHandler(async (req, res) => {
+export const deleteTask = asyncHandler(async (req, res) => {
 
 
-        const task =
-            await Task.findById(req.params.id);
-
-
-
-        if (!task) {
-
-            throw new AppError(
-                "Task not found",
-                404
-            );
-
-        }
+    const task =
+        await Task.findById(req.params.id);
 
 
 
-        await Task.findByIdAndDelete(
-            req.params.id
+    if (!task) {
+
+        throw new AppError(
+            "Task not found",
+            404
         );
 
+    }
+
+    await logActivity(
+
+        req,
+
+        req.user._id,
+
+        "DELETE_TASK",
+
+        "Task",
+
+        `Deleted task: ${task.title}`
+
+    );
 
 
-        res.status(200).json({
 
-            success: true,
+    await Task.findByIdAndDelete(
+        req.params.id
+    );
 
-            message: "Task deleted"
 
-        });
 
+    res.status(200).json({
+
+        success: true,
+
+        message: "Task deleted"
 
     });
+
+
+});
 
 
 
@@ -400,48 +371,47 @@ export const deleteTask =
 // =====================================
 
 
-const createCertificate =
-    async (student, internship) => {
+const createCertificate = async (student, internship) => {
 
 
-        const existing =
-            await Certificate.findOne({
+    const existing =
+        await Certificate.findOne({
 
-                student,
+            student,
 
-                internship
+            internship
 
-            });
-
-
-
-        if (existing) {
-
-            return;
-
-        }
+        });
 
 
 
+    if (existing) {
 
-        const certificate =
-            await Certificate.create({
+        return;
 
-                student,
-
-                internship,
-
-                certificateNumber:
-                    "TM-" + Date.now()
-
-            });
+    }
 
 
 
-        return certificate;
+
+    const certificate =
+        await Certificate.create({
+
+            student,
+
+            internship,
+
+            certificateNumber:
+                "TM-" + Date.now()
+
+        });
 
 
-    };
+
+    return certificate;
+
+
+};
 
 
 
@@ -454,50 +424,28 @@ const createCertificate =
 // =====================================
 
 
-const giveCompletionBadge =
-    async (userId) => {
+const giveCompletionBadge = async (userId) => {
+
+    const badge =
+        await Badge.findOne({
+
+            title: "Internship Completed"
+
+        });
 
 
 
-        const badge =
-            await Badge.findOne({
+    if (!badge) {
 
-                title: "Internship Completed"
+        return;
 
-            });
-
-
-
-        if (!badge) {
-
-            return;
-
-        }
-
-
-
-
-        const already =
-            await UserBadge.findOne({
-
-                user: userId,
-
-                badge: badge._id
-
-            });
-
-
-
-        if (already) {
-
-            return;
-
-        }
+    }
 
 
 
 
-        await UserBadge.create({
+    const already =
+        await UserBadge.findOne({
 
             user: userId,
 
@@ -507,4 +455,314 @@ const giveCompletionBadge =
 
 
 
-    };
+    if (already) {
+
+        return;
+
+    }
+
+
+
+
+    await UserBadge.create({
+
+        user: userId,
+
+        badge: badge._id
+
+    });
+
+
+
+};
+
+
+// =====================================
+// GET PENDING TASKS
+// =====================================
+
+export const getPendingTasks = asyncHandler(async (req, res) => {
+
+    const tasks = await Task.find({
+
+        reviewStatus: "Pending",
+
+        status: "Completed"
+
+    })
+
+        .populate(
+
+            "assignedTo",
+
+            "firstName lastName username email avatar"
+
+        )
+
+        .populate(
+
+            "internship",
+
+            "title"
+
+        )
+
+        .sort({
+
+            submittedAt: -1
+
+        });
+
+    res.status(200).json({
+
+        success: true,
+
+        tasks
+
+    });
+
+});
+
+
+// =====================================
+// GET TASK DETAILS
+// =====================================
+
+export const getTaskDetails = asyncHandler(async (req, res) => {
+
+    const task = await Task.findById(
+
+        req.params.id
+
+    )
+
+        .populate(
+
+            "assignedTo",
+
+            "firstName lastName username email avatar github linkedin"
+
+        )
+
+        .populate(
+
+            "internship",
+
+            "title"
+
+        );
+
+    if (!task) {
+
+        throw new AppError(
+
+            "Task not found",
+
+            404
+
+        );
+
+    }
+
+    res.status(200).json({
+
+        success: true,
+
+        task
+
+    });
+
+});
+
+
+// =====================================
+// APPROVE TASK
+// =====================================
+
+export const approveTask = asyncHandler(async (req, res) => {
+
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+
+        throw new AppError(
+            "Task not found",
+            404
+        );
+
+    }
+
+    task.reviewStatus = "Approved";
+
+    task.reviewComment =
+        req.body.comment || "";
+
+    task.reviewedBy =
+        req.user._id;
+
+    task.reviewedAt =
+        new Date();
+
+    await task.save();
+
+    await logActivity(
+
+        req,
+
+        req.user._id,
+
+        "APPROVE_TASK",
+
+        "Task",
+
+        `Approved task: ${task.title}`
+
+    );
+
+    await Notification.create({
+
+        user: task.assignedTo,
+
+        title: "Task Approved ✅",
+
+        message:
+            `"${task.title}" has been approved by Admin.`,
+
+        type: "system"
+
+    });
+
+    res.status(200).json({
+
+        success: true,
+
+        message: "Task approved successfully",
+
+        task
+
+    });
+
+});
+
+// =====================================
+// REJECT TASK
+// =====================================
+
+export const rejectTask = asyncHandler(async (req, res) => {
+
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+
+        throw new AppError(
+            "Task not found",
+            404
+        );
+
+    }
+
+    task.reviewStatus = "Rejected";
+
+    task.reviewComment =
+        req.body.comment || "";
+
+    task.reviewedBy =
+        req.user._id;
+
+    task.reviewedAt =
+        new Date();
+
+    await task.save();
+
+    await logActivity(
+
+        req,
+
+        req.user._id,
+
+        "REJECT_TASK",
+
+        "Task",
+
+        `Rejected task: ${task.title}`
+
+    );
+
+    await Notification.create({
+
+        user: task.assignedTo,
+
+        title: "Task Review ❌",
+
+        message:
+            req.body.comment ||
+            `"${task.title}" requires correction. Please update and submit again.`,
+
+        type: "system"
+
+    });
+
+    res.status(200).json({
+
+        success: true,
+
+        message: "Task rejected successfully",
+
+        task
+
+    });
+
+});
+
+
+// =====================================
+// GET SINGLE TASK
+// =====================================
+
+export const getSingleTask = asyncHandler(async (req, res) => {
+
+    const task = await Task.findOne({
+
+        _id: req.params.id,
+
+        assignedTo: req.user._id
+
+    })
+
+        .populate(
+
+            "internship",
+
+            "title duration level"
+
+        )
+
+        .populate(
+
+            "assignedBy",
+
+            "firstName lastName"
+
+        );
+
+    if (!task) {
+
+        throw new AppError(
+
+            "Task not found",
+
+            404
+
+        );
+
+    }
+
+    res.status(200).json({
+
+        success: true,
+
+        task
+
+    });
+
+});

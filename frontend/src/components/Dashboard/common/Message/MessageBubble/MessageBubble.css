@@ -1,0 +1,231 @@
+.messageRow {
+
+    display: flex;
+
+    margin: 8px 0;
+
+}
+
+.messageRow.mine {
+
+    justify-content: flex-end;
+
+}
+
+.messageRow.other {
+
+    justify-content: flex-start;
+
+}
+
+.messageBubble {
+
+    max-width: 70%;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    word-break: break-word;
+    position: relative;
+
+}
+
+.mine .messageBubble {
+
+    background: #2563eb;
+
+    color: white;
+
+    border-bottom-right-radius: 4px;
+
+}
+
+.other .messageBubble {
+
+    background: #1f2937;
+
+    color: white;
+
+    border-bottom-left-radius: 4px;
+
+}
+
+.messageBubble p {
+
+    margin: 0;
+
+    line-height: 1.5;
+
+}
+
+.chatImage {
+
+    margin-top: 8px;
+
+    width: 250px;
+
+    border-radius: 10px;
+
+    display: block;
+
+}
+
+.chatFile {
+
+    display: inline-block;
+
+    margin-top: 8px;
+
+    color: #00e5ff;
+
+    text-decoration: none;
+
+}
+
+.chatFile:hover {
+
+    text-decoration: underline;
+
+}
+
+.messageFooter {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 6px;
+
+    font-size: 12px;
+
+    opacity: .8;
+
+}
+
+.sent {
+
+    color: #bdbdbd;
+
+}
+
+.delivered {
+
+    color: #bdbdbd;
+
+}
+
+.seen {
+
+    color: #2196f3;
+
+    font-weight: bold;
+
+}
+
+
+.msgMenuBtn {
+
+    position: absolute;
+
+    top: 6px;
+
+    right: 6px;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+}
+
+.msgMenu {
+
+    position: absolute;
+
+    top: 28px;
+
+    right: 0;
+
+    width: 170px;
+
+    background: #fff;
+
+    border-radius: 8px;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .15);
+
+    overflow: hidden;
+
+    z-index: 999;
+
+}
+
+.msgMenu button {
+
+    width: 100%;
+
+    padding: 10px;
+
+    border: none;
+
+    background: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+}
+
+.msgMenu button:hover {
+
+    background: #f4f4f4;
+
+}
+
+.deletedMessage {
+
+    color: gray;
+
+    font-style: italic;
+
+}
+
+.replyBox {
+
+    background: #f3f8ff;
+
+    border-left: 4px solid #2196f3;
+
+    padding: 8px;
+
+    margin-bottom: 8px;
+
+    border-radius: 6px;
+
+}
+
+.replyBox strong {
+
+    color: #1976d2;
+
+    display: block;
+
+    margin-bottom: 3px;
+
+}
+
+.replyBox p {
+
+    font-size: 13px;
+
+    color: #555;
+
+}

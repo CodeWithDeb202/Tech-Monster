@@ -1,20 +1,52 @@
 import mongoose from "mongoose";
 
 const taskSchema = new mongoose.Schema(
-
     {
-
         title: {
-
             type: String,
-
             required: true,
-
             trim: true
-
         },
 
         description: {
+            type: String,
+            default: ""
+        },
+
+        assignedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
+
+        assignedTo: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
+
+        internship: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Internship",
+            required: true
+        },
+
+        dueDate: {
+            type: Date,
+            required: true
+        },
+
+        priority: {
+            type: String,
+            enum: ["Low", "Medium", "High"],
+            default: "Medium"
+        },
+
+        // ==========================
+        // STUDENT SUBMISSION
+        // ==========================
+
+        code: {
 
             type: String,
 
@@ -22,93 +54,154 @@ const taskSchema = new mongoose.Schema(
 
         },
 
-        assignedBy: {
-
-            type: mongoose.Schema.Types.ObjectId,
-
-            ref: "User",
-
-            required: true
-
-        },
-
-        assignedTo: {
-
-            type: mongoose.Schema.Types.ObjectId,
-
-            ref: "User",
-
-            required: true
-
-        },
-
-        internship: {
-
-            type: mongoose.Schema.Types.ObjectId,
-
-            ref: "Internship"
-
-        },
-
-        status: {
+        answer: {
 
             type: String,
 
-            enum: [
-
-                "Pending",
-
-                "In Progress",
-
-                "Completed"
-
-            ],
-
-            default: "Pending"
+            default: ""
 
         },
 
-        dueDate: {
+        githubLink: {
+
+            type: String,
+
+            default: ""
+
+        },
+
+        liveLink: {
+
+            type: String,
+
+            default: ""
+
+        },
+
+        submittedAt: {
 
             type: Date,
 
-            required: true
+            default: null
 
         },
-        priority: {
+
+        // ==========================
+        // ADMIN REVIEW
+        // ==========================
+
+        reviewStatus: {
 
             type: String,
 
             enum: [
 
-                "Low",
+                "Not Submitted",
 
-                "Medium",
+                "Pending",
 
-                "High"
+                "Approved",
+
+                "Rejected"
 
             ],
 
-            default: "Medium"
+            default: "Not Submitted"
 
+        },
+
+        reviewComment: {
+
+            type: String,
+
+            default: ""
+
+        },
+
+        reviewedBy: {
+
+            type: mongoose.Schema.Types.ObjectId,
+
+            ref: "User",
+
+            default: null
+
+        },
+
+        reviewedAt: {
+
+            type: Date,
+
+            default: null
+
+        },
+
+        // ==========================
+        // Student Progress
+        // ==========================
+
+        status: {
+            type: String,
+            enum: [
+                "Pending",
+                "In Progress",
+                "Submitted",
+                "Approved",
+                "Incorrect"
+            ],
+            default: "Pending"
+        },
+
+        // ==========================
+        // Student Submission
+        // ==========================
+
+        code: {
+            type: String,
+            default: ""
+        },
+
+        answer: {
+            type: String,
+            default: ""
+        },
+
+        githubLink: {
+            type: String,
+            default: ""
+        },
+
+        liveLink: {
+            type: String,
+            default: ""
+        },
+
+        submittedAt: {
+            type: Date
+        },
+
+        // ==========================
+        // Admin Review
+        // ==========================
+
+        reviewedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+
+        reviewedAt: {
+            type: Date
+        },
+
+        adminComment: {
+            type: String,
+            default: ""
         }
 
     },
-
     {
-
         timestamps: true
-
     }
-
 );
 
-const Task = mongoose.model(
-
-    "Task",
-
-    taskSchema
-
-);
-
-export default Task;
+export default mongoose.model("Task", taskSchema);

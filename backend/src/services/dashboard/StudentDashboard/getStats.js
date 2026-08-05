@@ -73,21 +73,27 @@ const getStats = async (userId) => {
 
     const totalTasks = tasks.length;
 
-    const completedTasks = tasks.filter(
+    const approvedTasks = tasks.filter(
 
-        task => task.status === "Completed"
+        task => task.status === "Approved"
+
+    ).length;
+
+    const submittedTasks = tasks.filter(
+
+        task => task.status === "Submitted"
+
+    ).length;
+
+    const incorrectTasks = tasks.filter(
+
+        task => task.status === "Incorrect"
 
     ).length;
 
     const pendingTasks = tasks.filter(
 
         task => task.status === "Pending"
-
-    ).length;
-
-    const inProgressTasks = tasks.filter(
-
-        task => task.status === "In Progress"
 
     ).length;
 
@@ -99,7 +105,7 @@ const getStats = async (userId) => {
 
             : Math.round(
 
-                (completedTasks / totalTasks) * 100
+                (approvedTasks / totalTasks) * 100
 
             );
 
@@ -167,11 +173,13 @@ const getStats = async (userId) => {
 
             total: totalTasks,
 
-            completed: completedTasks,
+            approved: approvedTasks,
+
+            submitted: submittedTasks,
+
+            incorrect: incorrectTasks,
 
             pending: pendingTasks,
-
-            inProgress: inProgressTasks,
 
             progress: taskProgress
 

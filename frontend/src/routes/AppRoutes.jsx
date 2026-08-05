@@ -42,7 +42,7 @@ import StudentSetting from '../pages/Dashboard/Student/Setting';
 
 
 import Notification from '../components/Dashboard/common/Notification';
-import Message from '../components/Dashboard/common/Message';
+import Message from '../pages/Dashboard/Common/Message';
 
 // Admin Dashboard
 import Overview from '../pages/Dashboard/Admin/Overview';
@@ -51,8 +51,10 @@ import StudentDetails from "../pages/Dashboard/Admin/Students/StudentDetails";
 import Reports from '../pages/Dashboard/Admin/Reports';
 import Internships from '../pages/Dashboard/Admin/Internships';
 import TaskApproval from '../pages/Dashboard/Admin/TasksApproval';
+import TaskApprovalDetails from "../pages/Dashboard/Admin/TasksApproval/TaskApprovalDetails";
 import CertificateApproval from '../pages/Dashboard/Admin/CertificateApproval';
 import InternshipsForm from '../components/Dashboard/Admin/Internships/InternshipsForm';
+
 
 
 
@@ -127,12 +129,19 @@ function AppRoutes() {
                     <Route path='internships-form' element={<InternshipsForm />} />
 
                     <Route path='tasks' element={<TaskApproval />} />
+                    <Route
+
+                        path="tasks/:id"
+
+                        element={<TaskApprovalDetails />}
+
+                    />
                     <Route path='reports' element={<Reports />} />
                     <Route path='certificates' element={<CertificateApproval />} />
                     <Route path='settings' element={<StudentSetting />} />
                 </Route>
 
-                
+
 
 
                 {/* 404 Fallback */}

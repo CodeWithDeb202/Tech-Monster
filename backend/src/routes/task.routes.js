@@ -13,7 +13,16 @@ import {
 
     deleteTask,
 
-    updateTaskStatus
+    updateTaskStatus,
+
+    getPendingTasks,
+
+    getTaskDetails,
+
+    approveTask,
+
+    rejectTask,
+    getSingleTask,
 
 } from "../controllers/task.controller.js";
 
@@ -42,6 +51,18 @@ router.get(
     authorizeRoles("student"),
 
     getMyTasks
+
+);
+
+router.get(
+
+    "/my-tasks/:id",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    getSingleTask
 
 );
 
@@ -81,6 +102,59 @@ router.patch(
     authorizeRoles("student"),
 
     updateTaskStatus
+
+);
+
+
+// ======================================
+// ADMIN TASK REVIEW
+// ======================================
+
+router.get(
+
+    "/pending",
+
+    protect,
+
+    authorizeRoles("admin"),
+
+    getPendingTasks
+
+);
+
+router.get(
+
+    "/details/:id",
+
+    protect,
+
+    authorizeRoles("admin"),
+
+    getTaskDetails
+
+);
+
+router.patch(
+
+    "/approve/:id",
+
+    protect,
+
+    authorizeRoles("admin"),
+
+    approveTask
+
+);
+
+router.patch(
+
+    "/reject/:id",
+
+    protect,
+
+    authorizeRoles("admin"),
+
+    rejectTask
 
 );
 
