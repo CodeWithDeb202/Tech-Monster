@@ -1,7 +1,7 @@
 import "./AdminLogin.css";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 
@@ -110,6 +110,13 @@ function AdminLogin() {
                 >
                     Login as Admin
                 </Button>
+
+                <p id="user-login-link">
+                    User login !
+                    <Link to="/login">
+                        Login
+                    </Link>
+                </p>
 
             </motion.form>
 
