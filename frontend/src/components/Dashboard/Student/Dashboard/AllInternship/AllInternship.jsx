@@ -4,7 +4,8 @@ import "./AllInternship.css";
 
 
 
-const AllInternship = ({ internships, refreshDashboard }) => {
+const AllInternship = ({ internships = [], refreshDashboard }) => {
+  const allCount = Array.isArray(internships) ? internships.length : 0;
 
   return (
     <section className="all-courses">
@@ -15,7 +16,7 @@ const AllInternship = ({ internships, refreshDashboard }) => {
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
       >
-        <h2>All Internships</h2>
+        <h2>All Internships ({allCount})</h2>
         <p>Explore every available Internships</p>
       </motion.div>
 

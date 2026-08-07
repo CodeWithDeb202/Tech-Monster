@@ -2,7 +2,9 @@ import { motion } from "framer-motion";
 import ContinueCard from "../ContinueCard/ContinueCard";
 import "./ContinueLearning.css";
 
-const ContinueLearning = ({ internships }) => {
+const ContinueLearning = ({ internships = [] }) => {
+  const joinedCount = Array.isArray(internships) ? internships.length : 0;
+
   return (
     <section className="continue-learning">
 
@@ -12,7 +14,7 @@ const ContinueLearning = ({ internships }) => {
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
       >
-        <h2>Continue Learning</h2>
+        <h2>Continue Learning ({joinedCount})</h2>
 
         <p>Your joined internships</p>
 

@@ -4,9 +4,7 @@ import { motion } from "framer-motion";
 
 import "./Lessions.css";
 
-import {
-    saveLessonState
-} from "../../../../utils/lessonStorage";
+import {saveLessonState} from "../../../../utils/lessonStorage";
 
 import { toast } from "react-toastify";
 import api from "../../../../services/api/axios";
@@ -104,7 +102,7 @@ export default function Lessions() {
         localStorage.setItem("readingMode", readingMode);
     }, [readingMode]);
 
-// Resolve a course slug when the URL does not provide one.
+    // Resolve a course slug when the URL does not provide one.
     // Priority: (1) enrolled internship from "my internships",
     // (2) first available published internship.
     const resolveCourseSlug = async () => {
@@ -117,7 +115,7 @@ export default function Lessions() {
                 myList[0]?.internship?.slug ||
                 myList[0]?.slug;
 
-if (enrolledSlug) {
+            if (enrolledSlug) {
                 return normalizeSlug(enrolledSlug);
             }
         } catch {
