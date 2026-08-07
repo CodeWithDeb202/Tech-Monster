@@ -1,0 +1,83 @@
+/* ==========================================
+   CIRCULAR PROGRESS
+========================================== */
+
+#circle-progress {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .35s;
+}
+
+#circle-progress:hover {
+    transform: translateY(-4px);
+}
+
+/* ==========================================
+   SVG
+========================================== */
+
+#circle-progress svg {
+    transform: rotate(-90deg);
+    overflow: visible;
+}
+
+#circle-bg {
+    fill: transparent;
+    stroke: rgba(255, 255, 255, .08);
+}
+
+#circle-bar {
+    fill: transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, .45));
+}
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+#circle-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#circle-content h2 {
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+#circle-content p {
+    color: var(--neon);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+#circle-content span {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.7rem;
+}
+
+/* ==========================================
+   GLOW
+========================================== */
+
+#circle-progress::before {
+    content: "";
+    position: absolute;
+    width: 165px;
+    height: 165px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, .12), transparent 70%);
+    z-index: -1;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */

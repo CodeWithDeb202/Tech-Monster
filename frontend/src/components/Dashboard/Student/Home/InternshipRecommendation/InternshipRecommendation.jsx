@@ -141,13 +141,19 @@ const InternshipRecommendation = ({ internships = [] }) => {
 
                 </div>
 
-                <motion.button
+<motion.button
 
                   whileHover={{
                     x:6
                   }}
 
                   className="continue-btn"
+
+                  onClick={() =>
+                    navigate(
+                      `/student/lessions/${internship.slug || internship._id || "frontend-dev"}`
+                    )
+                  }
 
                 >
 

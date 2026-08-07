@@ -53,10 +53,6 @@ export default function NotificationModal({
 
         } catch (err) {
 
-            console.log(err);
-
-            console.log(err.response);
-
             console.log(err.response?.data);
 
             toast.error(

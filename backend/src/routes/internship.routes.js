@@ -79,6 +79,14 @@ router.get(
 
 router.get(
 
+    "/slug/:slug",
+
+    getSingleInternship
+
+);
+
+router.get(
+
     "/:id",
 
     getSingleInternship

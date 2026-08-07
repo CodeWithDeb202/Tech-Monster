@@ -20,8 +20,6 @@ export const initSocket = (server) => {
 
     io.on("connection", (socket) => {
 
-        console.log("🟢 User Connected:", socket.id);
-
         socket.on(
 
             "join",
@@ -137,12 +135,6 @@ export const initSocket = (server) => {
                         onlineUsers.keys()
 
                     )
-
-                );
-
-                console.log(
-
-                    "🔴 User Disconnected"
 
                 );
 

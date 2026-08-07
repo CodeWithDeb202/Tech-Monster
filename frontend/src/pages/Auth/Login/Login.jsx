@@ -70,7 +70,6 @@ function Login() {
       // Role Based Dashboard Navigation
 
       if (user.role === "student") {
-        console.log("Going....")
         navigate("/student");
       } else if (user.role === "admin") {
         navigate("/admin");

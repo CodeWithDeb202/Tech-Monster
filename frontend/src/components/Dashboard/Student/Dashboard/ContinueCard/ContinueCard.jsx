@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
+import {useNavigate} from 'react-router-dom';
 import "./ContinueCard.css";
 
 const ContinueCard = ({ internship }) => {
+  const navigate = useNavigate();
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -76,12 +78,14 @@ const ContinueCard = ({ internship }) => {
 
           <small>{internship.remainingNotes} Lession left</small>
 
-          <button>
-
+          <button
+            onClick={() => {
+              const slug = internship?.slug || internship?.courseSlug || "frontend-dev";
+              navigate(`/student/lessions/${slug}`);
+            }}
+          >
             Continue
-
             <ArrowRight size={18} />
-
           </button>
 
         </motion.div>

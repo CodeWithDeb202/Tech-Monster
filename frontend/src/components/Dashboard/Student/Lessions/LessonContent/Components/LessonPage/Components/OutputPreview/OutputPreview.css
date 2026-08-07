@@ -1,0 +1,18 @@
+.lesson-output-preview {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.lesson-output-preview h4 {
+  margin: 0 0 0.5rem;
+  color: #6ee7b7;
+}
+
+.lesson-output-preview pre {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--text);
+}

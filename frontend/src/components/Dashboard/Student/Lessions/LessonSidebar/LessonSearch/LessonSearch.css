@@ -1,0 +1,48 @@
+#lesson-search{
+    display:flex;
+    align-items:center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(0,255,255,.12);
+    transition:.3s;
+}
+
+#lesson-search:focus-within{
+    border-color:#00e5ff;
+    box-shadow: 0 0 15px rgba(0,255,255,.18);
+}
+
+#lesson-search input{
+    flex:1;
+    background:none;
+    border:none;
+    outline:none;
+    color: var(--text);
+    font-size: 1rem;
+}
+
+#lesson-search input::placeholder{
+    color: var(--muted);
+}
+
+#search-icon{
+    color: var(--neon) !important;
+}
+
+#lesson-search button{
+    background:none;
+    border:none;
+    cursor:pointer;
+    transition:.3s;
+}
+
+#lesson-search button svg{
+    color: var(--muted);
+}
+
+#lesson-search button:hover svg{
+    color:#ff5555;
+}

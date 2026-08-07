@@ -26,6 +26,6 @@
 
 .dashboard-content {
     flex-grow: 1;
-    padding: 1.7rem;
+    padding: 0.5rem;
     overflow-y: auto;
 }

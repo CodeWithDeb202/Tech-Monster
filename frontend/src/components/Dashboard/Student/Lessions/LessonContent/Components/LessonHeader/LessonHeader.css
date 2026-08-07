@@ -1,0 +1,44 @@
+/* ==========================================
+   HEADER
+========================================== */
+
+.lesson-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#badge_and_circularProgressbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    align-items: center;
+}
+
+#lesson-badge {
+    display: inline-flex;
+    align-items: center;
+    width: 23%;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    background: rgba(0, 255, 255, .08);
+    color: var(--neon);
+    font-size: 14px;
+    border: 1px solid rgba(0, 255, 255, .18);
+}
+
+.lesson-header h1 {
+    color: var(--glow);
+}
+
+.lesson-header p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+#lesson-actions{
+    display:flex;
+    gap: 1rem;
+    justify-content:flex-end;
+}

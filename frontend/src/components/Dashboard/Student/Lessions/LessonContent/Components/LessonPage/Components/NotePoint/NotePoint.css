@@ -1,0 +1,10 @@
+.lesson-note-point {
+  margin: 0.75rem 0 1rem;
+  padding-left: 1.2rem;
+  color: var(--text-secondary, #c7d2e0);
+}
+
+.lesson-note-point li {
+  margin-bottom: 0.45rem;
+  line-height: 1.6;
+}

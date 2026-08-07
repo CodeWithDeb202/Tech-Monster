@@ -127,7 +127,6 @@ function VerifySignupOTP() {
             switch (role) {
 
                 case "student":
-                    console.log("STEP 3");
 
                     navigate("/student", {
 

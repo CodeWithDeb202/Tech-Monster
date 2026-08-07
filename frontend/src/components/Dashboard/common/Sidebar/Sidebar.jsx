@@ -36,6 +36,7 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
     const studentLinks = [
         { name: "Home", path: "/student", icon: <FiHome /> },
         { name: "Dashboard", path: "/student/dashboard", icon: <FiGrid /> },
+        { name: "Lessions", path: "/student/lessions", icon: <FiGrid /> },
         { name: "Daily Task", path: "/student/tasks", icon: <FiCheckSquare /> },
         { name: "Attendance", path: "/student/attendance", icon: <FiCalendar /> },
         { name: "Account", path: "/student/account", icon: <FiUser /> },

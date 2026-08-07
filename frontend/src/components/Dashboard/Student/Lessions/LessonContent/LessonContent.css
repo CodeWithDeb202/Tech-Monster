@@ -1,0 +1,52 @@
+/* ==========================================
+   LESSON CONTENT
+========================================== */
+
+#lesson-content-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.5rem;
+    padding-top: 0;
+    scroll-behavior: smooth;
+}
+
+#lesson-content-wrapper::-webkit-scrollbar {
+    width: 7px;
+}
+
+#lesson-content-wrapper::-webkit-scrollbar-thumb {
+    background: var(--neon);
+    border-radius: 2rem;
+}
+
+#lesson-content-wrapper::-webkit-scrollbar-track {
+    background: var(--dark);
+}
+
+
+
+/* ==========================================
+   GLASS CARD
+========================================== */
+
+.glass-card {
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid rgba(0, 255, 255, .12);
+    border-radius: 18px;
+    backdrop-filter: blur(15px);
+    padding: 26px;
+    transition: .3s;
+}
+
+.glass-card:hover {
+    border-color: rgba(0, 255, 255, .25);
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */

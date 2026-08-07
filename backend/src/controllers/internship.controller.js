@@ -1,3 +1,8 @@
+import mongoose from "mongoose";
+import { readFile } from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import Internship from "../models/Internship.js";
 import StudentInternship from "../models/StudentInternship.js";
 
@@ -8,6 +13,32 @@ import cloudinary from "../config/cloudinary.js";
 import streamifier from "streamifier";
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const coursesDir = path.resolve(__dirname, "../../data/courses");
+
+const readCourseDataFromFile = async (courseSlug) => {
+    if (!courseSlug) return null;
+
+    const filePath = path.join(coursesDir, `${courseSlug}.json`);
+
+    try {
+        const raw = await readFile(filePath, "utf8");
+        return JSON.parse(raw);
+    } catch {
+        return null;
+    }
+};
+
+// Normalize a slug so both "frontend_dev" and "frontend-dev" resolve to the
+// dash-based slug used by the JSON course files and the DB.
+const normalizeSlug = (slug) => {
+    if (!slug) return "";
+    return String(slug)
+        .trim()
+        .toLowerCase()
+        .replace(/_/g, "-");
+};
 
 // Helper function to upload memory buffer to Cloudinary
 const uploadToCloudinary = (fileBuffer) => {
@@ -141,10 +172,30 @@ export const getAllInternships = asyncHandler(async (req, res) => {
 export const getSingleInternship = asyncHandler(async (req, res) => {
 
 
-    const internship =
-        await Internship.findById(
-            req.params.id
-        );
+    const hasSlug = req.params.slug !== undefined;
+    const identifier = hasSlug ? req.params.slug : req.params.id;
+
+    // Normalize the slug so both "frontend_dev" and "frontend-dev" work.
+    const normalizedSlug = normalizeSlug(identifier);
+
+    // Resolve the internship: by slug (case-insensitive / underscore-insensitive)
+    // or by ObjectId when the identifier is a valid Mongo id.
+    let internship = null;
+
+    if (hasSlug) {
+        internship =
+            await Internship.findOne({
+                slug: normalizedSlug
+            });
+    } else {
+        const isValidId =
+            mongoose.isValidObjectId(identifier);
+
+        internship =
+            await (isValidId
+                ? Internship.findById(identifier)
+                : Internship.findOne({ slug: normalizedSlug }));
+    }
 
 
 
@@ -158,12 +209,28 @@ export const getSingleInternship = asyncHandler(async (req, res) => {
     }
 
 
+    // Load the rich course content (modules/lessons) from the JSON data files.
+    // The MongoDB document only stores metadata; the actual lesson body lives
+    // in backend/data/courses/<slug>.json.
+    const courseData = await readCourseDataFromFile(normalizedSlug);
+
+    const payload = {
+        ...internship.toObject(),
+        slug: normalizedSlug,
+        modules: courseData?.modules || []
+    };
+
+    // If the DB has no modules but the JSON file does, merge them through.
+    if ((!internship.modules || internship.modules.length === 0) && courseData) {
+        payload.title = courseData.title || internship.title;
+        payload.category = courseData.category || internship.category;
+    }
 
     res.status(200).json({
 
         success: true,
 
-        internship
+        internship: payload
 
     });
 
@@ -225,10 +292,6 @@ export const joinInternship = asyncHandler(async (req, res) => {
 
     }
 
-
-
-    console.log("Joining User:", req.user._id);
-
     const studentInternship = await StudentInternship.create({
 
         student: req.user._id,
@@ -242,7 +305,6 @@ export const joinInternship = asyncHandler(async (req, res) => {
     });
 
     const data = await StudentInternship.find();
-    console.log("Student internshipss",data);
 
 
 

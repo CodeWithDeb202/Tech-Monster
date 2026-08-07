@@ -1,0 +1,6 @@
+.lesson-subheading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.35rem 0 0.5rem;
+  color: var(--text-muted, #8ba0b6);
+}

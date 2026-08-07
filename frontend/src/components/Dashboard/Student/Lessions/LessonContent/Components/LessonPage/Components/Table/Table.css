@@ -1,0 +1,27 @@
+.lesson-table-wrapper {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.lesson-table-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.lesson-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.lesson-table th,
+.lesson-table td {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: left;
+}
+
+.lesson-table th {
+  background: rgba(255,255,255,0.06);
+}

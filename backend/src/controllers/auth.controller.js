@@ -631,8 +631,6 @@ export const forgotPassword = async (req, res) => {
 
     try {
 
-        console.log("email: ", req.body)
-
         const { email } = req.body;
 
 
@@ -928,7 +926,6 @@ export const resetPassword = async (req, res) => {
 export const logoutUser = async (req, res) => {
 
     try {
-        console.log("req.user =", req.user);
 
         await logActivity(
 

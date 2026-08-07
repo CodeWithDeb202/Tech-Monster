@@ -1,0 +1,6 @@
+.lesson-paragraph {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  margin: 0 0 1rem;
+  color: var(--text-secondary, #c7d2e0);
+}

@@ -1,0 +1,163 @@
+/* =====================================================
+   MODULE CONTAINER
+===================================================== */
+
+#lesson-module {
+    margin-bottom: 0.5rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(0, 255, 255, .08);
+    transition: all .35s ease;
+}
+
+#lesson-module:hover {
+    border-color: rgba(0, 255, 255, .18);
+    box-shadow:
+        0 0 14px rgba(0, 255, 255, .12),
+        0 0 28px rgba(0, 255, 255, .05);
+
+}
+
+
+/* =====================================================
+   MODULE HEADER
+===================================================== */
+
+#module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: .3s;
+    user-select: none;
+}
+
+#module-header:hover {
+    background: rgba(0, 255, 255, .05);
+}
+
+#module-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+#module-title svg {
+    color: var(--neon) !important;
+}
+
+#module-header:hover #module-title svg {
+    filter: drop-shadow(0 0 10px var(--neon));
+}
+
+#module-title h3 {
+    color: var(--text);
+    font-size: 1rem;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+#module-title span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+#module-header svg{
+    color: var(--glow);
+}
+
+
+/* =====================================================
+   LESSON LIST
+===================================================== */
+
+#module-lessons {
+    overflow: hidden;
+    padding: 0 10px 12px;
+}
+
+
+/* =====================================================
+   LESSON ITEM
+===================================================== */
+
+.accordion-lesson {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.5rem 1rem;
+    margin-top: 0.75rem;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: .3s;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, .02);
+}
+
+.accordion-lesson:hover {
+    background: rgba(0, 255, 255, .06);
+    border-color: rgba(0, 255, 255, .15);
+}
+
+
+/* =====================================================
+   ACTIVE LESSON
+===================================================== */
+
+.accordion-lesson.active {
+    background: linear-gradient(90deg,
+            rgba(0, 255, 255, .18),
+            rgba(0, 100, 255, .08));
+
+    border-color: var(--neon);
+    box-shadow: 0 0 12px rgba(0, 255, 255, .18);
+}
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.lesson-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.completed {
+    color: var(--success);
+}
+
+.pending {
+    color: var(--muted);
+}
+
+
+/* =====================================================
+   TEXT
+===================================================== */
+
+#lesson-text {
+
+    flex: 1;
+
+}
+
+#lesson-text h4 {
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+#lesson-text small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */

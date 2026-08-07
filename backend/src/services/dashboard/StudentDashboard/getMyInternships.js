@@ -2,8 +2,6 @@ import StudentInternship from "../../../models/StudentInternship.js";
 
 const getMyInternships = async (userId) => {
 
-    console.log("Dashboard User ID:", userId);
-
     const internships = await StudentInternship.find({
 
         student: userId
@@ -16,6 +14,7 @@ const getMyInternships = async (userId) => {
 
             select: `
                 title
+                slug
                 thumbnail
                 category
                 level
@@ -32,8 +31,6 @@ const getMyInternships = async (userId) => {
             createdAt: -1
 
         });
-
-    console.log("Found Internships:", internships);
 
     return internships
 
@@ -61,6 +58,8 @@ const getMyInternships = async (userId) => {
                 _id: item._id,
 
                 internshipId: item.internship._id,
+
+                slug: item.internship.slug,
 
                 title: item.internship.title,
 

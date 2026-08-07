@@ -1,0 +1,132 @@
+/* ===========================
+   LESSON SIDEBAR
+=========================== */
+
+#lesson-sidebar {
+    width: 340px;
+    min-width: 340px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 255, 255, .15);
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    transition: .35s;
+}
+
+#lesson-sidebar:hover {
+    box-shadow: 0 0 10px var(--neon) ;
+}
+
+
+/* ===========================
+   HEADER
+=========================== */
+
+#lesson-sidebar-header {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--muted);
+}
+#lesson_sidebar_heading_content{
+    margin-left: 1rem;
+}
+#lesson-sidebar-header svg{
+    color: var(--glow);
+    filter: drop-shadow(0 0 10px var(--neon));
+}
+
+#lesson-sidebar-header h2{
+    color: var(--neon);
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px var(--neon);
+}
+
+#lesson-sidebar-header p{
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+
+/* ===========================
+   LESSON LIST
+=========================== */
+
+#lesson-list{
+    flex:1;
+    overflow-y:auto;
+    padding: 0.5rem;
+}
+
+#lesson-list::-webkit-scrollbar{
+    width: 3px;
+}
+
+#lesson-list::-webkit-scrollbar-thumb{
+    background: var(--neon);
+    border-radius: 3rem;
+}
+
+
+
+
+
+/* ===========================
+   FOOTER
+=========================== */
+
+#lesson-sidebar-footer{
+    padding: 0.5rem 1rem;
+    border-top:1px solid rgba(255,255,255,.06);
+}
+
+#lesson-sidebar-footer h4{
+    color: var(--text);
+    margin-bottom: 0.6rem;
+}
+
+
+/* ===========================
+   PROGRESS BAR
+=========================== */
+
+#sidebar-progress{
+    height:8px;
+    overflow:hidden;
+    border-radius:20px;
+    background:#10253b;
+    margin-bottom: 0.5rem
+}
+
+#sidebar-progress-fill{
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(
+        90deg,
+        #00e5ff,
+        #00ff95
+    );
+    transition:.5s;
+}
+
+#lesson-sidebar-footer span{
+    color: var(--muted);
+    font-size: 0.8rem;
+}
+
+#lesson-sidebar-footer small{
+    display:block;
+    margin-top: 0.5rem;
+    color: var(--neon);
+    font-size: 0.8rem;
+    font-weight:600;
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */

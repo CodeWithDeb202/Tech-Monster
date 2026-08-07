@@ -32,6 +32,7 @@ import VerifyResetOTP from '../pages/Auth/VerifyResetOTP';
 // Student Dashboard
 import StudentHome from '../pages/Dashboard/Student/Home';
 import StudentDashboard from '../pages/Dashboard/Student/Dashboard';
+import Lessions from '../pages/Dashboard/Student/Lessions';
 import StudentTask from '../pages/Dashboard/Student/Tasks';
 import DailyTask from '../components/Dashboard/Student/Tasks/DailyTask';
 import StudentAttendance from '../pages/Dashboard/Student/Attendance';
@@ -43,6 +44,7 @@ import StudentSetting from '../pages/Dashboard/Student/Setting';
 
 import Notification from '../components/Dashboard/common/Notification';
 import Message from '../pages/Dashboard/Common/Message';
+import HelpSupport from '../components/Dashboard/common/Help&Supp/HelpSupport';
 
 // Admin Dashboard
 import Overview from '../pages/Dashboard/Admin/Overview';
@@ -101,14 +103,28 @@ function AppRoutes() {
                 >
                     <Route index element={<StudentHome />} />
                     <Route path="dashboard" element={<StudentDashboard />} />
+                    {/* 1. Base Lessions Page */}
+                    <Route path="lessions" element={<Lessions />} />
+
+                    {/* 2. Specific Course/Internship Lessions Page (Dynamic Slug Fix) */}
+                    <Route path="lessions/:slug" element={<Lessions />} />
+                    <Route path="lessions/:courseSlug/:lessonSlug" element={<Lessions />} />
+
+                    {/* 3. Spelling mismatch handler (Jodi 'lessons' use hai thae) */}
+                    <Route path="lessons" element={<Lessions />} />
+                    <Route path="lessons/:slug" element={<Lessions />} />
+                    <Route path="lessons/:courseSlug/:lessonSlug" element={<Lessions />} />
+
+
                     <Route path="tasks" element={<StudentTask />} />
                     <Route path="tasks/:taskId" element={<DailyTask />} />
                     <Route path="attendance" element={<StudentAttendance />} />
                     <Route path="account" element={<StudentAccount />} />
                     <Route path="certificate" element={<StudentCertificate />} />
                     <Route path="settings" element={<StudentSetting />} />
-                    <Route path="notification" element={<Notification />} />
+<Route path="notification" element={<Notification />} />
                     <Route path="message" element={<Message />} />
+                    <Route path="help&support" element={<HelpSupport />} />
                 </Route>
 
 
