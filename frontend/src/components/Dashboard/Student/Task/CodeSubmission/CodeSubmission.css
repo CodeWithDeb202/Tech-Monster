@@ -1,0 +1,91 @@
+.code-submission {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(0, 234, 255, 0.12);
+    border-radius: 1.25rem;
+    padding: 1.4rem;
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.code-submission-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.code-submission-title svg {
+    color: var(--neon);
+}
+
+.code-submission-title h3 {
+    color: var(--text);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.code-submission-title span {
+    color: var(--muted);
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+.code-submission-editor {
+    width: 100%;
+    min-height: 200px;
+    background: #010409;
+    border: 1px solid rgba(0, 234, 255, 0.2);
+    border-radius: 0.8rem;
+    color: var(--text);
+    font-family: "Fira Code", "Courier New", monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding: 1rem;
+    resize: vertical;
+    outline: none;
+    transition: 0.25s;
+}
+
+.code-submission-editor:focus {
+    border-color: var(--neon);
+    box-shadow: 0 0 14px rgba(0, 234, 255, 0.2);
+}
+
+.code-submission-editor::placeholder {
+    color: rgba(203, 213, 225, 0.35);
+}
+
+.code-submission-guideline {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin: 0;
+}
+
+.code-submission-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(90deg, var(--glow), var(--neon));
+    color: var(--dark);
+    font-weight: 700;
+    border: none;
+    padding: 0.8rem 1.25rem;
+    border-radius: 0.7rem;
+    cursor: pointer;
+    transition: 0.3s;
+    align-self: flex-start;
+}
+
+.code-submission-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+    box-shadow: 0 0 16px rgba(0, 234, 255, 0.45);
+}
+
+.code-submission-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

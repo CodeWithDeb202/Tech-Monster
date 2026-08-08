@@ -16,6 +16,8 @@ import {
     updateInternshipProgress,
 
     completeInternship,
+    completeLesson,
+    getCompletedLessons,
     updateInternship,
     deleteInternship,
 
@@ -97,6 +99,34 @@ router.get(
 
 
 // STUDENT
+
+
+router.post(
+
+    "/slug/:slug/complete-lesson",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    completeLesson
+
+);
+
+
+
+router.get(
+
+    "/slug/:slug/completed-lessons",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    getCompletedLessons
+
+);
+
 
 
 router.post(

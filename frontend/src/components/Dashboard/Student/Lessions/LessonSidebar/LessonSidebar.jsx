@@ -13,7 +13,9 @@ export default function LessonSidebar({
     setSearch,
     filteredLessons,
     progress,
-    completedLessons
+    completedLessons,
+    courseSlug,
+    approvedModuleIds = new Set()
 }) {
 
     console.log("FilterModule", filteredLessons)
@@ -47,15 +49,18 @@ export default function LessonSidebar({
 
                 {
 
-                    filteredLessons.map((lesson) => (
+                    filteredLessons.map((lesson, moduleIndex) => (
                         console.log("lesson: sidebar", lesson),
 
-                        <LessonAccordion
+<LessonAccordion
                             lesson={lesson}
                             key={lesson.id}
                             module={lesson.sections}
                             activeLesson={activeLesson}
                             setActiveLesson={setActiveLesson}
+                            courseSlug={courseSlug}
+                            approvedModuleIds={approvedModuleIds}
+                            moduleNumber={moduleIndex + 1}
                         />
 
                     ))

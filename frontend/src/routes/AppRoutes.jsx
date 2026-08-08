@@ -34,7 +34,6 @@ import StudentHome from '../pages/Dashboard/Student/Home';
 import StudentDashboard from '../pages/Dashboard/Student/Dashboard';
 import Lessions from '../pages/Dashboard/Student/Lessions';
 import StudentTask from '../pages/Dashboard/Student/Tasks';
-import DailyTask from '../components/Dashboard/Student/Tasks/DailyTask';
 import StudentAttendance from '../pages/Dashboard/Student/Attendance';
 import StudentAccount from '../pages/Dashboard/Student/Account';
 import StudentCertificate from '../pages/Dashboard/Student/Certificate';
@@ -117,12 +116,11 @@ function AppRoutes() {
 
 
                     <Route path="tasks" element={<StudentTask />} />
-                    <Route path="tasks/:taskId" element={<DailyTask />} />
                     <Route path="attendance" element={<StudentAttendance />} />
                     <Route path="account" element={<StudentAccount />} />
                     <Route path="certificate" element={<StudentCertificate />} />
                     <Route path="settings" element={<StudentSetting />} />
-<Route path="notification" element={<Notification />} />
+                    <Route path="notification" element={<Notification />} />
                     <Route path="message" element={<Message />} />
                     <Route path="help&support" element={<HelpSupport />} />
                 </Route>

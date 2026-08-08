@@ -12,6 +12,14 @@
     padding: 1rem;
     z-index: 0;
     overflow: hidden;
+    min-width: 0;
+    transition: width 0.35s ease, flex-basis 0.35s ease;
+}
+
+/* Smoothly expand the main area when the sidebar collapses */
+.dashboardContainer.sidebar-collapsed .dashboard-main {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 

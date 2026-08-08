@@ -1,7 +1,5 @@
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useRef } from "react";
-
-import { toast } from "react-toastify";
+import { motion } from "framer-motion";
+import { useRef, useEffect } from "react";
 
 import LessonNavbar from './Components/lessonNavbar';
 
@@ -15,35 +13,55 @@ export default function LessonContent({
     handleComplete,
     readingMode,
     setReadingMode,
+    onScrollProgress,
+    readPercent = 0,
+    completed = false,
+    contentRef
 }) {
-     const contentRef = useRef(null);
+     const innerRef = useRef(null);
 
-    const { scrollYProgress } = useScroll({
-        container: contentRef
-    });
+     // Use the forwarded ref from the parent when provided, otherwise fall back
+     // to the internal one.
+     const contentRefFinal = contentRef || innerRef;
 
-    const completedRef = useRef(false);
+    // Attach a native scroll listener for precise scroll-percent tracking.
+    useEffect(() => {
+        const el = contentRefFinal.current;
+        if (!el) return;
 
-    useMotionValueEvent(scrollYProgress, "change", (latest) => {
+        const handleScroll = () => {
+            const scrollable =
+                el.scrollHeight - el.clientHeight;
 
-        if (latest >= .99 && !completedRef.current) {
+            const percent = scrollable <= 0
+                ? 100
+                : Math.min(100, Math.max(0, Math.round((el.scrollTop / scrollable) * 100)));
 
-            completedRef.current = true;
+            if (typeof onScrollProgress === "function") {
+                onScrollProgress(percent);
+            }
 
-            handleComplete();
+            // Auto-complete only when the user has actually read the full lesson.
+            // (The success toast is handled inside handleComplete in the parent.)
+            if (percent >= 98 && !completed) {
+                handleComplete();
+            }
+        };
 
-            toast.success("Lesson Completed 🎉");
+        el.addEventListener("scroll", handleScroll, { passive: true });
 
-        }
+        return () => {
+            el.removeEventListener("scroll", handleScroll);
+        };
+    }, [contentRefFinal, onScrollProgress, handleComplete, completed]);
 
-    });
-
-
+    // Show 100% for already-completed lessons, otherwise the live read percent.
+    const displayPercent = completed ? 100 : readPercent;
 
     return (
         <motion.div
             id="lesson-content-wrapper"
-            ref={contentRef}
+            ref={contentRefFinal}
             initial={{ opacity: 0, x: 25 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
@@ -55,7 +73,7 @@ export default function LessonContent({
             <LessonNavbar 
                 readingMode={readingMode}
                 setReadingMode={setReadingMode}
-                scrollYProgress={scrollYProgress}
+                readPercent={displayPercent}
             />
 
             {/* Lesson Header */}

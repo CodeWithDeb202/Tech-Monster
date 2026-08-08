@@ -32,7 +32,7 @@ export const API = {
 
   },
 
-  ADMIN: {
+ADMIN: {
 
     USERS: "/admin/users",
 
@@ -49,6 +49,20 @@ export const API = {
       APPROVE: (id) => `/admin/tasks/${id}/approve`,
 
       REJECT: (id) => `/admin/tasks/${id}/reject`
+
+    },
+
+    SUBMISSIONS: {
+
+      BASE: "/admin/submissions",
+
+      DETAILS: (id) => `/admin/submissions/${id}`,
+
+      APPROVE: (id) => `/admin/submissions/${id}/approve`,
+
+      REJECT: (id) => `/admin/submissions/${id}/reject`,
+
+      EXTEND: (id) => `/admin/submissions/${id}/extend`
 
     }
 
@@ -70,12 +84,20 @@ export const API = {
 
   },
 
-  INTERNSHIPS: {
+INTERNSHIPS: {
     BASE: "/internships",
     BY_ID: (id) => `/internships/${id}`,
     JOIN: (id) => `/internships/${id}/join`,
     PROGRESS: (id) => `/internships/${id}/progress`,
     COMPLETE: (id) => `/internships/${id}/complete`,
+    COMPLETE_LESSON: (slug) => `/internships/slug/${slug}/complete-lesson`,
+    COMPLETED_LESSONS: (slug) => `/internships/slug/${slug}/completed-lessons`,
+  },
+
+  SUBMISSIONS: {
+    BASE: "/submissions",
+    MY: "/submissions/my",
+    COURSE: (courseSlug) => `/submissions/course/${courseSlug}`,
   },
 
   MESSAGE: {

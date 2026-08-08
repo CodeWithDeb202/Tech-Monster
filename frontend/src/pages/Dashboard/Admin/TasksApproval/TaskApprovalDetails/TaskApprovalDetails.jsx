@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
 import {
-    getTaskDetails,
-    approveTask,
-    rejectTask
+    getSubmissionDetails,
+    approveSubmission,
+    rejectSubmission,
+    extendSubmissionDeadline
 } from "../../../../../services/api/adminTask.service";
 
 import "./TaskApprovalDetails.css";
@@ -21,6 +22,7 @@ export default function TaskApprovalDetails() {
     const [task, setTask] = useState(null);
 
     const [comment, setComment] = useState("");
+    const [extending, setExtending] = useState(false);
 
     useEffect(() => {
 
@@ -32,9 +34,9 @@ export default function TaskApprovalDetails() {
 
         try {
 
-            const res = await getTaskDetails(id);
+            const res = await getSubmissionDetails(id);
 
-            setTask(res.task);
+            setTask(res.submission);
 
         } catch (err) {
 
@@ -52,7 +54,7 @@ export default function TaskApprovalDetails() {
 
         try {
 
-            await approveTask(id, comment);
+            await approveSubmission(id, comment);
 
             toast.success("Task Approved");
 
@@ -80,7 +82,7 @@ export default function TaskApprovalDetails() {
 
         try {
 
-            await rejectTask(id, comment);
+            await rejectSubmission(id, comment);
 
             toast.success("Task Rejected");
 
@@ -97,6 +99,36 @@ export default function TaskApprovalDetails() {
                 "Something went wrong"
 
             );
+
+        }
+
+    };
+
+    const handleExtendDeadline = async () => {
+
+        try {
+
+            setExtending(true);
+
+            const res = await extendSubmissionDeadline(id, 48);
+
+            setTask(res.submission);
+
+            toast.success("Deadline extended by 48 hours");
+
+        } catch (err) {
+
+            toast.error(
+
+                err.response?.data?.message ||
+
+                "Could not extend deadline"
+
+            );
+
+        } finally {
+
+            setExtending(false);
 
         }
 
@@ -140,142 +172,104 @@ export default function TaskApprovalDetails() {
 
                 </h1>
 
-                <div className="detailRow">
-
+<div className="detailRow">
                     <span>Student</span>
-
                     <p>
-
-                        {task.assignedTo.firstName}{" "}
-
-                        {task.assignedTo.lastName}
-
+                        {task.student?.firstName || task.assignedTo?.firstName}{" "}
+                        {task.student?.lastName || task.assignedTo?.lastName}
                     </p>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Username</span>
-
                     <p>
-
-                        {task.assignedTo.username}
-
+                        {task.student?.username || task.assignedTo?.username}
                     </p>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Email</span>
-
                     <p>
-
-                        {task.assignedTo.email}
-
+                        {task.student?.email || task.assignedTo?.email}
                     </p>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Internship</span>
-
                     <p>
-
-                        {task.internship.title}
-
+                        {task.internship?.title || task.courseSlug || "—"}
                     </p>
-
                 </div>
-
                 <div className="detailRow">
-
+                    <span>Module</span>
+                    <p>
+                        {task.moduleTitle || task.moduleId || "—"}
+                    </p>
+                </div>
+                <div className="detailRow">
                     <span>Task</span>
-
                     <p>
-
-                        {task.title}
-
+                        {task.taskTitle || task.title || "—"}
                     </p>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Description</span>
-
                     <p>
-
-                        {task.description}
-
+                        {task.problemStatement || task.description || "—"}
                     </p>
-
                 </div>
-
                 <div className="detailRow">
-
+                    <span>Status</span>
+                    <p>
+                        {task.status || "pending"}
+                    </p>
+                </div>
+                <div className="detailRow">
+                    <span>Unlocked At</span>
+                    <p>
+                        {task.unlockedAt ? new Date(task.unlockedAt).toLocaleString() : "-"}
+                    </p>
+                </div>
+                <div className="detailRow">
+                    <span>Expires At</span>
+                    <p>
+                        {task.expiresAt ? new Date(task.expiresAt).toLocaleString() : "-"}
+                    </p>
+                </div>
+                <div className="detailRow">
+                    <span>Expired At</span>
+                    <p>
+                        {task.expiredAt ? new Date(task.expiredAt).toLocaleString() : "-"}
+                    </p>
+                </div>
+                <div className="detailRow">
                     <span>Github</span>
-
                     <a
-
                         href={task.githubLink}
-
                         target="_blank"
-
                         rel="noreferrer"
-
                     >
-
                         {task.githubLink || "-"}
-
                     </a>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Live</span>
-
                     <a
-
                         href={task.liveLink}
-
                         target="_blank"
-
                         rel="noreferrer"
-
                     >
-
                         {task.liveLink || "-"}
-
                     </a>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Answer</span>
-
                     <pre>
-
                         {task.answer || "-"}
-
                     </pre>
-
                 </div>
-
                 <div className="detailRow">
-
                     <span>Code</span>
-
                     <pre>
-
                         {task.code || "-"}
-
                     </pre>
-
                 </div>
 
                 <textarea
@@ -339,6 +333,32 @@ export default function TaskApprovalDetails() {
                     >
 
                         Incorrect
+
+                    </motion.button>
+
+                    <motion.button
+
+                        whileHover={{
+
+                            scale: 1.05
+
+                        }}
+
+                        whileTap={{
+
+                            scale: .95
+
+                        }}
+
+                        className="extendBtn"
+
+                        onClick={handleExtendDeadline}
+
+                        disabled={extending}
+
+                    >
+
+                        {extending ? "Extending..." : "Extend Deadline"}
 
                     </motion.button>
 

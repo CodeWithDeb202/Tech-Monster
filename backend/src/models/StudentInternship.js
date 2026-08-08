@@ -24,6 +24,11 @@ const studentInternshipSchema = new mongoose.Schema({
         default: 0
     },
 
+    completedLessons: {
+        type: [String],
+        default: []
+    },
+
     progress: {
         type: Number,
         default: 0
@@ -60,3 +65,4 @@ export default mongoose.model(
     "StudentInternship",
     studentInternshipSchema
 );
+

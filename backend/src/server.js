@@ -12,6 +12,7 @@ import http from "http";
 import { initSocket } from "./socket/socket.js";
 
 import refreshTokenCleanup from "./jobs/refreshTokenCleanup.job.js";
+import submissionDeadlineJob from "./jobs/submissionDeadline.job.js";
 
 const PORT = process.env.PORT || 8000;
 
@@ -28,6 +29,7 @@ const startServer = async () => {
         initSocket(server);
 
         refreshTokenCleanup();
+        submissionDeadlineJob();
 
         server.listen(PORT, () => {
 

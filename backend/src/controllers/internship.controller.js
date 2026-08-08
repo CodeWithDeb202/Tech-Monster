@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 
 import Internship from "../models/Internship.js";
 import StudentInternship from "../models/StudentInternship.js";
+import Submission from "../models/Submission.js";
+import { emitToUser } from "../socket/socket.js";
 
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
@@ -16,6 +18,7 @@ import streamifier from "streamifier";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const coursesDir = path.resolve(__dirname, "../../data/courses");
+const TASK_DEADLINE_MS = 48 * 60 * 60 * 1000;
 
 const readCourseDataFromFile = async (courseSlug) => {
     if (!courseSlug) return null;
@@ -38,6 +41,96 @@ const normalizeSlug = (slug) => {
         .trim()
         .toLowerCase()
         .replace(/_/g, "-");
+};
+
+const getOrderedCourseTasks = (courseData, courseSlug) => {
+    if (!Array.isArray(courseData?.modules)) return [];
+
+    return courseData.modules.flatMap((module) => {
+        const moduleId = module.moduleId || "";
+        const seen = new Set();
+        const tasks = [];
+
+        (module.lessons || []).forEach((lesson) => {
+            (lesson.tasks || []).forEach((task) => {
+                const taskId = task.taskId || "";
+                if (!taskId || seen.has(taskId)) return;
+                seen.add(taskId);
+
+                tasks.push({
+                    courseSlug,
+                    moduleId,
+                    moduleTitle: module.moduleTitle || "",
+                    lessonId: lesson.lessonId || "",
+                    taskId,
+                    taskTitle: task.title || "Task",
+                    problemStatement: task.problemStatement || ""
+                });
+            });
+        });
+
+        return tasks;
+    });
+};
+
+const unlockFirstEligibleLessonTask = async ({
+    student,
+    internship,
+    courseSlug,
+    lessonId,
+    courseData
+}) => {
+    const orderedTasks = getOrderedCourseTasks(courseData, courseSlug);
+    const targetIndex = orderedTasks.findIndex((task) => task.lessonId === lessonId);
+
+    if (targetIndex < 0) return null;
+
+    const targetTask = orderedTasks[targetIndex];
+    const existing = await Submission.findOne({
+        student,
+        courseSlug,
+        moduleId: targetTask.moduleId,
+        lessonId: targetTask.lessonId,
+        taskId: targetTask.taskId
+    });
+
+    if (existing) return existing;
+
+    const previousTask = orderedTasks[targetIndex - 1];
+    if (previousTask) {
+        const previousSubmission = await Submission.findOne({
+            student,
+            courseSlug,
+            moduleId: previousTask.moduleId,
+            taskId: previousTask.taskId,
+            status: "approved"
+        });
+
+        if (!previousSubmission) return null;
+    }
+
+    const unlockedAt = new Date();
+    const submission = await Submission.create({
+        student,
+        internship,
+        courseSlug,
+        moduleId: targetTask.moduleId,
+        moduleTitle: targetTask.moduleTitle,
+        lessonId: targetTask.lessonId,
+        taskId: targetTask.taskId,
+        taskTitle: targetTask.taskTitle,
+        problemStatement: targetTask.problemStatement,
+        status: "unlocked",
+        unlockedAt,
+        expiresAt: new Date(unlockedAt.getTime() + TASK_DEADLINE_MS)
+    });
+
+    emitToUser(student, "taskUnlocked", {
+        submission,
+        taskKey: `${submission.moduleId}_${submission.taskId}`
+    });
+
+    return submission;
 };
 
 // Helper function to upload memory buffer to Cloudinary
@@ -511,12 +604,208 @@ export const completeInternship = asyncHandler(async (req, res) => {
 
 
     res.status(200).json({
+        success: true,
+        message: "Internship completed",
+        studentInternship
+    });
+
+
+});
+
+
+// =====================================
+// COMPLETE A SINGLE LESSON
+// =====================================
+
+
+export const completeLesson = asyncHandler(async (req, res) => {
+
+
+    const { slug } = req.params;
+
+    const { lessonId } = req.body || {};
+
+    if (!lessonId) {
+
+        throw new AppError(
+            "lessonId is required",
+            400
+        );
+
+    }
+
+
+    const normalizedSlug = normalizeSlug(slug);
+
+
+    // Resolve the internship by slug.
+    const internship = await Internship.findOne({
+        slug: normalizedSlug
+    });
+
+
+    // If the internship does not exist, return 404.
+    if (!internship) {
+
+        throw new AppError(
+            "Internship not found",
+            404
+        );
+
+    }
+
+
+    // Find the student's enrollment.
+    const studentInternship = await StudentInternship.findOne({
+
+        student: req.user._id,
+
+        internship: internship._id
+
+    });
+
+
+    // If the student is not enrolled, we return a 200 with the current
+    // (empty) completed list so the frontend axios interceptor does not
+    // redirect to /404. The frontend still caches locally.
+    if (!studentInternship) {
+
+        return res.status(200).json({
+
+            success: true,
+
+            message: "Enrollment not found; progress stored locally only",
+
+            completedLessons: []
+
+        });
+
+    }
+
+
+    // Deduplicate the lesson id.
+    const alreadyCompleted =
+        Array.isArray(studentInternship.completedLessons) &&
+        studentInternship.completedLessons.includes(lessonId);
+
+
+    if (!alreadyCompleted) {
+
+        studentInternship.completedLessons.push(lessonId);
+
+    }
+
+
+    // Compute the total number of lessons from the course JSON file.
+    const courseData = await readCourseDataFromFile(normalizedSlug);
+
+    const unlockedSubmission = !alreadyCompleted
+        ? await unlockFirstEligibleLessonTask({
+            student: req.user._id,
+            internship: internship._id,
+            courseSlug: normalizedSlug,
+            lessonId,
+            courseData
+        })
+        : null;
+
+    const totalLessons = (courseData?.modules || []).reduce(
+        (sum, module) => sum + (module.lessons?.length || 0),
+        0
+    );
+
+
+    const completedCount = studentInternship.completedLessons.length;
+
+    const progress = totalLessons > 0
+        ? Math.min(100, Math.round((completedCount / totalLessons) * 100))
+        : studentInternship.progress;
+
+
+    studentInternship.progress = progress;
+
+    studentInternship.status = "In Progress";
+
+    if (progress >= 100) {
+
+        studentInternship.status = "Completed";
+
+        studentInternship.completedAt = new Date();
+
+    }
+
+
+    await studentInternship.save();
+
+
+    res.status(200).json({
 
         success: true,
 
-        message: "Internship completed",
+        message: alreadyCompleted ? "Lesson already completed" : "Lesson completed",
 
-        studentInternship
+        completedLessons: studentInternship.completedLessons,
+
+        progress,
+
+        unlockedSubmission
+
+    });
+
+
+});
+
+
+
+
+// =====================================
+// GET COMPLETED LESSONS FOR A COURSE
+// =====================================
+
+
+export const getCompletedLessons = asyncHandler(async (req, res) => {
+
+
+    const { slug } = req.params;
+
+    const normalizedSlug = normalizeSlug(slug);
+
+
+    const internship = await Internship.findOne({
+        slug: normalizedSlug
+    });
+
+
+    // If the internship does not exist, return 404.
+    if (!internship) {
+
+        throw new AppError(
+            "Internship not found",
+            404
+        );
+
+    }
+
+
+    const studentInternship = await StudentInternship.findOne({
+
+        student: req.user._id,
+
+        internship: internship._id
+
+    });
+
+
+    // If not enrolled, return an empty list (200) so the frontend does not
+    // get redirected to /404 by the axios interceptor.
+    const completedLessons = studentInternship?.completedLessons || [];
+
+
+    res.status(200).json({
+
+        success: true,
+
+        completedLessons
 
     });
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getPendingTasks } from "../../../../../services/api/adminTask.service";
+import { getPendingTasks, getAllSubmissions } from "../../../../../services/api/adminTask.service";
 import { socket } from "../../../../../socket/socket";
 
 import "./PendingTaskApprove.css";
@@ -40,13 +40,26 @@ export default function PendingTaskApprove({ refresh }) {
 
         try {
 
-            const res = await getPendingTasks();
+            // Pending submissions plus expired tasks that may need extension.
+            const [pendingRes, expiredRes] = await Promise.all([
+                getAllSubmissions("pending"),
+                getAllSubmissions("expired")
+            ]);
 
-            setTasks(res.tasks || []);
+            setTasks([
+                ...(pendingRes.submissions || []),
+                ...(expiredRes.submissions || [])
+            ]);
 
         } catch (error) {
 
-            console.log(error);
+            // Fall back to legacy pending tasks if the new endpoint fails.
+            try {
+                const legacy = await getPendingTasks();
+                setTasks(legacy.tasks || []);
+            } catch {
+                console.log(error);
+            }
 
         } finally {
 
@@ -104,8 +117,7 @@ export default function PendingTaskApprove({ refresh }) {
 
                 }
 
-                {
-
+{
                     tasks.map((task, index) => (
 
                         <div
@@ -142,13 +154,13 @@ export default function PendingTaskApprove({ refresh }) {
 
                                     {
 
-                                        task.assignedTo?.firstName
+                                        task.student?.firstName || task.assignedTo?.firstName
 
                                     }{" "}
 
                                     {
 
-                                        task.assignedTo?.lastName
+                                        task.student?.lastName || task.assignedTo?.lastName
 
                                     }
 
@@ -162,7 +174,7 @@ export default function PendingTaskApprove({ refresh }) {
 
                                     {
 
-                                        task.internship?.title
+                                        task.internship?.title || task.courseSlug || "—"
 
                                     }
 
@@ -176,18 +188,23 @@ export default function PendingTaskApprove({ refresh }) {
 
                                     {
 
-                                        task.title
+                                        task.taskTitle || task.title || "—"
 
                                     }
 
                                 </p>
+
+                                {task.status === "expired" && (
+                                    <p className="expiredTaskLabel">
+                                        Expired - extension required
+                                    </p>
+                                )}
 
                             </div>
 
                         </div>
 
                     ))
-
                 }
 
             </div>

@@ -1,15 +1,12 @@
 import { motion } from "framer-motion";
 import { Clock3, ArrowRight } from "lucide-react";
-import { useState } from "react";
 import "./CourseCard.css";
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import api from "../../../../../services/api/axios";
 import { API } from "../../../../../services/api/endpoints";
 
-const CourseCard = ({ internship, refreshDashboard }) => {
-  const [hover, setHover] = useState(false);
-
+const CourseCard = ({ internship, refreshDashboard, index }) => {
   const handleJoin = async () => {
     try {
 
@@ -18,6 +15,8 @@ const CourseCard = ({ internship, refreshDashboard }) => {
       );
 
       await refreshDashboard();
+
+      toast.success("Internship joined successfully");
 
     } catch (err) {
 
@@ -31,62 +30,44 @@ const CourseCard = ({ internship, refreshDashboard }) => {
 
   return (
     <motion.div
-      className="course-card"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      whileHover={{
-        y: -10,
-        rotateX: 6,
-        rotateY: -6,
-        scale: 1.02,
-      }}
+      id="allIntenrship-student-side-card"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
-        type: "spring",
-        stiffness: 220,
-        damping: 18,
+        duration: 0.4,
+        delay: index * 0.2,
       }}
     >
       {/* Top Banner */}
-      <div className="course-banner">
-        <div className="course-tag">
-          {internship?.enrolled ? "Enrolled" : "New"}
-        </div>
+      <div id="allIntenrship-student-side-card-banner">
+        <img src={internship?.thumbnail} alt={internship?.title} />
+      </div>
+      <div id="allIntenrship-student-side-card-banner-text" className={internship?.enrolled ? "enrolled" : ""}>
+        {internship?.enrolled ? "Enrolled" : "New"}
       </div>
 
       {/* Title */}
-      <div className="course-info">
-        <h3>{internship?.title}</h3>
-      </div>
-
-      {/* Hover Overlay */}
-      <motion.div
-        className="course-overlay"
-        initial={{ y: "100%" }}
-        animate={{
-          y: hover ? "0%" : "100%",
-        }}
-        transition={{ duration: 0.35 }}
-      >
+      <div id="internships-info">
         <h3>{internship?.title}</h3>
 
         <p>{internship?.description}</p>
-        <p>{internship?.level}</p>
+        <p>Level : <span>{internship?.level}</span></p>
 
-        <div className="course-meta">
-          <span>
+        <div id="internships-meta">
+          <p>
             Total Tasks : &nbsp;
-            {internship?.totalTasks}
-          </span>
+            <span>{internship?.totalTasks}</span>
+          </p>
 
-          <span>
+          <p>
             Total Notes : &nbsp;
-            {internship?.totalNotes}
-          </span>
+            <span>{internship?.totalNotes}</span>
+          </p>
 
-          <span>
+          <p>
             <Clock3 size={15} />
-            {internship?.duration} days
-          </span>
+            <span> {internship?.duration}</span>
+          </p>
         </div>
 
         <motion.button
@@ -97,7 +78,7 @@ const CourseCard = ({ internship, refreshDashboard }) => {
           Enroll Now
           <ArrowRight size={18} />
         </motion.button>
-      </motion.div>
+      </div>
     </motion.div>
   );
 };

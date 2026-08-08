@@ -4,10 +4,14 @@ import { useNavigate } from "react-router-dom";
 import Loader from "./components/Common/Loader";
 import AppRoutes from "./routes/AppRoutes";
 import api from "./services/api/axios";
+import usePageTitle from "./hooks/usePageTitle";
 
 function App() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+
+  // Dynamically update the browser tab title on every route change.
+  usePageTitle();
 
   useEffect(() => {
 

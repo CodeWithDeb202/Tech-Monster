@@ -12,7 +12,8 @@
     overflow-x: hidden;
     padding-right: 0.5rem;
     padding-top: 0;
-    scroll-behavior: smooth;
+    /* Instant scroll reset when switching lessons (no smooth animation). */
+    scroll-behavior: auto !important;
 }
 
 #lesson-content-wrapper::-webkit-scrollbar {

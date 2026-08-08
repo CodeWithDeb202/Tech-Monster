@@ -1,10 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import CertificateView from '../../../../components/Dashboard/Student/Certificate/CertificateView';
 import './Certificate.css';
 
 export default function Certificate() {
   const [courseType] = useState('Full Stack Web Development (React & Node)');
   const [userName] = useState('Debabrata');
+  const navigate = useNavigate();
+
+  // Route guard: the certificate is only accessible once ALL internship
+  // tasks have been approved. Otherwise redirect to the tasks page.
+  useEffect(() => {
+    const readAllCompleted = () => {
+      try {
+        return localStorage.getItem('all_tasks_completed') === 'true';
+      } catch {
+        return false;
+      }
+    };
+
+    if (!readAllCompleted()) {
+      toast.warning('Complete all internship tasks to unlock your certificate!');
+      navigate('/student/tasks', { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="certificate-page-wrapper">

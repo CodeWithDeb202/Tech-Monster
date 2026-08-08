@@ -1,33 +1,28 @@
-.all-courses {
-
-    margin-top: 60px;
-
+#all-courses {
+    margin-top: 2rem;
 }
 
-.course-heading {
 
+
+#course-heading {
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
-    margin-bottom: 25px;
-
+    margin-bottom: 1.5rem;
 }
 
-.course-heading h2 {
-    font-size: 30px;
+#course-heading h2 {
+    font-size: 1.5rem;
     color: var(--neon);
     margin-left: 1rem;
 }
 
-.course-heading p {
+#course-heading p {
     color: var(--muted);
 }
 
-.course-grid {
+#course-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
 }

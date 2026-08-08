@@ -149,3 +149,11 @@ export const initSocket = (server) => {
 export const getIO = () => io;
 
 export const getOnlineUsers = () => onlineUsers;
+
+export const emitToUser = (userId, event, payload) => {
+    const socketId = onlineUsers.get(String(userId));
+
+    if (io && socketId) {
+        io.to(socketId).emit(event, payload);
+    }
+};

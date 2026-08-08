@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getApprovedTasks } from "../../../../../services/api/adminTask.service";
+import { getApprovedTasks, getAllSubmissions } from "../../../../../services/api/adminTask.service";
 
 import "./ApprovedTasks.css";
 
@@ -23,15 +23,22 @@ export default function ApprovedTasks({ refresh }) {
 
         try {
 
-            const res = await getApprovedTasks();
+            // Approved submissions from the new submission flow.
+            const res = await getAllSubmissions("approved");
 
-            setTasks(res.tasks || []);
+            setTasks(res.submissions || []);
 
         }
 
         catch (error) {
 
-            console.log(error);
+            // Fall back to legacy approved tasks if the new endpoint fails.
+            try {
+                const legacy = await getApprovedTasks();
+                setTasks(legacy.tasks || []);
+            } catch {
+                console.log(error);
+            }
 
         }
 
@@ -119,13 +126,13 @@ export default function ApprovedTasks({ refresh }) {
 
                             </div>
 
-                            <div className="approvedTasksNotifyContent">
+<div className="approvedTasksNotifyContent">
 
                                 <h3>
 
-                                    {task.assignedTo?.firstName}{" "}
+                                    {task.student?.firstName || task.assignedTo?.firstName}{" "}
 
-                                    {task.assignedTo?.lastName}
+                                    {task.student?.lastName || task.assignedTo?.lastName}
 
                                 </h3>
 
@@ -135,7 +142,7 @@ export default function ApprovedTasks({ refresh }) {
 
                                     {" "}
 
-                                    {task.internship?.title}
+                                    {task.internship?.title || task.courseSlug || "—"}
 
                                 </p>
 
@@ -145,7 +152,7 @@ export default function ApprovedTasks({ refresh }) {
 
                                     {" "}
 
-                                    {task.title}
+                                    {task.taskTitle || task.title || "—"}
 
                                 </p>
 

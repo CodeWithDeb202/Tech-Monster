@@ -50,7 +50,7 @@ function SingleInternshipCard({
                     </span>
                 )}
 
-<div className="cardActions">
+                <div className="cardActions">
                     <button
                         title="View Lessons"
                         onClick={() =>

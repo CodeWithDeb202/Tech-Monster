@@ -8,7 +8,7 @@ import CircularProgressBar from "../CircularProgress";
 export default function LessonNavbar({
     readingMode,
     setReadingMode,
-    scrollYProgress
+    readPercent
 }){
     return(
         <>
@@ -24,7 +24,7 @@ export default function LessonNavbar({
                     compact
                 />
 
-                <CircularProgressBar progress={scrollYProgress} />
+                <CircularProgressBar value={readPercent} />
             </motion.div>
         </>
     )

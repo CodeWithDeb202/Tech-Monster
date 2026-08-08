@@ -19,11 +19,18 @@ import {
     FiLogOut,
     FiX,
     FiLock,
-    FiHelpCircle
+    FiHelpCircle,
+    FiChevronLeft,
+    FiMenu
 } from "react-icons/fi";
 
 
-function Sidebar({ role = "student", isCourseCompleted = false }) {
+function Sidebar({
+    role = "student",
+    isCourseCompleted = false,
+    collapsed = false,
+    onToggleCollapse
+}) {
     const navigate = useNavigate();
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,12 +43,12 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
     const studentLinks = [
         { name: "Home", path: "/student", icon: <FiHome /> },
         { name: "Dashboard", path: "/student/dashboard", icon: <FiGrid /> },
-        { name: "Lessions", path: "/student/lessions", icon: <FiGrid /> },
+        { name: "Lessions", path: "/student/lessions", icon: <FiBookOpen /> },
         { name: "Daily Task", path: "/student/tasks", icon: <FiCheckSquare /> },
         { name: "Attendance", path: "/student/attendance", icon: <FiCalendar /> },
         { name: "Account", path: "/student/account", icon: <FiUser /> },
         { name: "Certificate", path: "/student/certificate", icon: <FiAward />, locked: !isCourseCompleted },
-        { name: "Help & Support", path: "/student/help&support", icon: <FiHelpCircle /> }, // Added Help & Support Link
+        { name: "Help & Support", path: "/student/help&support", icon: <FiHelpCircle /> },
     ];
 
     const adminLinks = [
@@ -58,7 +65,7 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
     const handleLinkClick = (e, link) => {
         if (link.locked) {
             e.preventDefault();
-            toast.info("1st course complete kara 100%");
+            toast.warning("Complete all internship tasks to unlock your certificate!");
         }
     };
 
@@ -87,11 +94,20 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
             </AnimatePresence>
 
             <motion.aside
-                className={`dashboard-sidebar ${isMobileMenuOpen ? "mobile-open" : ""}`}
+                className={`dashboard-sidebar ${collapsed ? "collapsed" : ""} ${isMobileMenuOpen ? "mobile-open" : ""}`}
                 initial={{ x: -260 }}
                 animate={{ x: 0 }}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
             >
+                {/* Collapse toggle */}
+                <button
+                    id="sidebar-collapse-btn"
+                    onClick={() => onToggleCollapse && onToggleCollapse()}
+                    title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                >
+                    {collapsed ? <FiMenu /> : <FiChevronLeft />}
+                </button>
+
                 <div className="sidebar-header-mobile">
                     <h3>Tech <span>Monster</span></h3>
                     <button className="close-menu-btn" onClick={() => setIsMobileMenuOpen(false)}>
@@ -105,9 +121,12 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
                         return (
                             <li key={index} className={`${isActive ? "active" : ""} ${link.locked ? "locked-link" : ""}`}>
                                 <Link to={link.locked ? "#" : link.path} onClick={(e) => handleLinkClick(e, link)}>
-                                    {link.linkIcon || link.icon}
-                                    <span>{link.name}</span>
-                                    {link.locked && <FiLock className="lock-icon-right" />}
+                                    <span className="sidebar-link-icon">{link.linkIcon || link.icon}</span>
+                                    {!collapsed && <span className="sidebar-link-label">{link.name}</span>}
+                                    {link.locked && !collapsed && <FiLock className="lock-icon-right" />}
+                                    {collapsed && (
+                                        <span className="sidebar-tooltip">{link.name}</span>
+                                    )}
                                 </Link>
                             </li>
                         );
@@ -115,13 +134,16 @@ function Sidebar({ role = "student", isCourseCompleted = false }) {
                 </ul>
 
                 <div className="sidebar-footer">
-                    <Link to={`/${role}/settings`} className={location.pathname.includes("settings") ? "active" : ""}>
-                        <FiSettings />
-                        <span>Setting</span>
+                    <Link to={`/${role}/settings`} className={location.pathname.includes("settings") ? "active" : ""}
+                        title={collapsed ? "Setting" : undefined}>
+                        <span className="sidebar-link-icon"><FiSettings /></span>
+                        {!collapsed && <span className="sidebar-link-label">Setting</span>}
+                        {collapsed && <span className="sidebar-tooltip">Setting</span>}
                     </Link>
                     <button onClick={handleLogout} className="logout-btn">
-                        <FiLogOut />
-                        <span>Logout</span>
+                        <span className="sidebar-link-icon"><FiLogOut /></span>
+                        {!collapsed && <span className="sidebar-link-label">Logout</span>}
+                        {collapsed && <span className="sidebar-tooltip">Logout</span>}
                     </button>
                 </div>
             </motion.aside>

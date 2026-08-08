@@ -20,6 +20,8 @@ import searchRoutes from "./routes/search.routes.js";
 import adminTaskRoutes from "./routes/Admin/adminTask.routes.js";
 import internshipRoutes from "./routes/internship.routes.js";
 import serverRoutes from ".//routes/Server/server.routes.js";
+import submissionRoutes from "./routes/submission.routes.js";
+import adminSubmissionRoutes from "./routes/adminSubmissions.routes.js";
 
 
 import morganMiddleware from "./middleware/logger.middleware.js";
@@ -148,6 +150,9 @@ app.use("/api/messages", messageRoutes);
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin/tasks", adminTaskRoutes);
+app.use("/api/admin/submissions", adminSubmissionRoutes);
+
+app.use("/api/submissions", submissionRoutes);
 
 app.use("/api/notifications", notificationRoutes);
 

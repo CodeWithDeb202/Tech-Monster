@@ -68,3 +68,8 @@
     font-size: 0.9rem;
     color: var(--muted);
 }
+
+.pendingTasksApproveNotifyContent .expiredTaskLabel {
+    color: #ff7b9a;
+    font-weight: 700;
+}

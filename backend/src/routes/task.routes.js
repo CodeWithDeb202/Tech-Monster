@@ -13,7 +13,8 @@ import {
 
     deleteTask,
 
-    updateTaskStatus,
+updateTaskStatus,
+    submitTask,
 
     getPendingTasks,
 
@@ -102,6 +103,19 @@ router.patch(
     authorizeRoles("student"),
 
     updateTaskStatus
+
+);
+
+// Student submits a coding task for approval (POST spec requirement).
+router.post(
+
+    "/submit",
+
+    protect,
+
+    authorizeRoles("student"),
+
+    submitTask
 
 );
 

@@ -1,17 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FiSearch, FiX } from "react-icons/fi";
+import { FiSearch, FiX, FiBookOpen, FiUser } from "react-icons/fi";
+import { searchInternships, searchUsers } from "../../../services/api/search.service";
 import "./SearchBar.css";
+
+const COURSES_EMPTY_MSG =
+    "We couldn't find any courses or internships matching your search keywords on Tech Monster. Please try searching with a different keyword.";
+const USERS_EMPTY_MSG = "User not found.";
 
 function SearchBar() {
     const navigate = useNavigate();
     const location = useLocation();
-    
-    // Get search query from URL if available
+
     const searchParams = new URLSearchParams(location.search);
     const queryParam = searchParams.get("search") || "";
 
     const [searchTerm, setSearchTerm] = useState(queryParam);
+    const [courses, setCourses] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [searched, setSearched] = useState(false);
+
+    const containerRef = useRef(null);
+    const debounceRef = useRef(null);
 
     // Sync input with URL change
     useEffect(() => {
@@ -19,11 +31,70 @@ function SearchBar() {
         setSearchTerm(queryParam);
     }, [queryParam]);
 
+    // Close the dropdown when clicking outside the search container.
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setShowDropdown(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Perform real search (courses + users) with debounce as the user types.
+    // All setState calls happen inside the debounced callback (an external async
+    // side effect), not synchronously in the effect body, to avoid cascades.
+    useEffect(() => {
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        const term = searchTerm.trim();
+
+        debounceRef.current = setTimeout(async () => {
+            if (!term) {
+                setCourses([]);
+                setUsers([]);
+                setSearched(false);
+                setLoading(false);
+                setShowDropdown(false);
+                return;
+            }
+
+            setLoading(true);
+            setShowDropdown(true);
+
+            try {
+                const [courseData, userData] = await Promise.all([
+                    searchInternships(term),
+                    searchUsers(term),
+                ]);
+
+                setCourses(courseData?.internships || []);
+                setUsers(userData?.users || []);
+                setSearched(true);
+            } catch {
+                setCourses([]);
+                setUsers([]);
+                setSearched(true);
+            } finally {
+                setLoading(false);
+            }
+        }, 350);
+
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
+    }, [searchTerm]);
+
     const handleInputChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
 
-        // If user is on home page, update URL query parameter dynamically
+        // Keep the URL query in sync when on the home page.
         if (location.pathname.includes("/student/home")) {
             if (value.trim() !== "") {
                 navigate(`/student/home?search=${encodeURIComponent(value)}`, { replace: true });
@@ -35,24 +106,117 @@ function SearchBar() {
 
     const handleClear = () => {
         setSearchTerm("");
+        setCourses([]);
+        setUsers([]);
+        setSearched(false);
+        setShowDropdown(false);
         if (location.pathname.includes("/student/home")) {
             navigate(`/student/home`, { replace: true });
         }
     };
 
+    const handleCourseClick = (internship) => {
+        setShowDropdown(false);
+        navigate(`/student/lessions/${internship.slug || internship._id || "frontend-dev"}`);
+    };
+
+    const handleUserClick = (user) => {
+        setShowDropdown(false);
+        navigate(`/student/account`, { state: { userId: user?._id } });
+    };
+
     return (
-        <div className="search-bar-container">
+        <div className="search-bar-container" ref={containerRef}>
             <FiSearch className="search-icon" />
-            <input 
-                type="text" 
+            <input
+                type="text"
                 value={searchTerm}
                 onChange={handleInputChange}
-                placeholder="Search courses (e.g., React, Python)..." 
+                onFocus={() => searchTerm.trim() && setShowDropdown(true)}
+                placeholder="Search courses, users, categories..."
             />
             {searchTerm && (
                 <button className="clear-search-btn" onClick={handleClear}>
                     <FiX />
                 </button>
+            )}
+
+            {showDropdown && searchTerm.trim() && (
+                <div className="search-results-dropdown">
+                    {loading ? (
+                        <div className="search-loading">Searching...</div>
+                    ) : (
+                        <>
+                            {/* Courses / Internships */}
+                            <div className="search-group">
+                                <div className="search-group-title">
+                                    <FiBookOpen /> Courses & Internships
+                                </div>
+                                {courses.length > 0 ? (
+                                    courses.map((course) => (
+                                        <div
+                                            key={course._id}
+                                            className="search-result-item"
+                                            onClick={() => handleCourseClick(course)}
+                                        >
+                                            <FiBookOpen className="search-result-icon" />
+                                            <div className="search-result-text">
+                                                <span className="search-result-title">
+                                                    {course.title}
+                                                </span>
+                                                <span className="search-result-sub">
+                                                    {course.category || course.level || "Course"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    searched && (
+                                        <div className="search-empty">{COURSES_EMPTY_MSG}</div>
+                                    )
+                                )}
+                            </div>
+
+                            {/* Users */}
+                            <div className="search-group">
+                                <div className="search-group-title">
+                                    <FiUser /> Users
+                                </div>
+                                {users.length > 0 ? (
+                                    users.map((user) => (
+                                        <div
+                                            key={user._id}
+                                            className="search-result-item"
+                                            onClick={() => handleUserClick(user)}
+                                        >
+                                            <div className="search-result-avatar">
+                                                {user.avatar ? (
+                                                    <img src={user.avatar} alt={user.username} />
+                                                ) : (
+                                                    <FiUser />
+                                                )}
+                                            </div>
+                                            <div className="search-result-text">
+                                                <span className="search-result-title">
+                                                    {user.firstName || user.lastName
+                                                        ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+                                                        : user.username}
+                                                </span>
+                                                <span className="search-result-sub">
+                                                    @{user.username}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    searched && (
+                                        <div className="search-empty">{USERS_EMPTY_MSG}</div>
+                                    )
+                                )}
+                            </div>
+                        </>
+                    )}
+                </div>
             )}
         </div>
     );

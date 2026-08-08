@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     ChevronDown,
@@ -7,6 +8,8 @@ import {
     Circle,
     BookOpen,
 } from "lucide-react";
+import { FiLock, FiCheck, FiCheckSquare } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 import "./LessonAccordion.css";
 
@@ -15,8 +18,45 @@ export default function LessonAccordion({
     module,
     activeLesson,
     setActiveLesson,
+    courseSlug,
+    approvedModuleIds = new Set(),
+    moduleNumber = 1,
 }) {
     const [open, setOpen] = useState(true);
+    const navigate = useNavigate();
+
+    // All lessons in this module must be completed before the task unlocks.
+    const isModuleCompleted = (module || []).length > 0 &&
+        (module || []).every((item) => item.completed);
+
+    // Whether this module's task submission has been APPROVED by an admin.
+    const isModuleTaskApproved = approvedModuleIds.has(lesson?.id);
+
+    const handleLessonClick = (lessonItem) => {
+        if (lessonItem.locked) {
+            // Blocked because the PREVIOUS module's task is not yet approved.
+            toast.warning(
+                `Please submit and get Admin approval for Module ${moduleNumber - 1} Task before starting Module ${moduleNumber}!`
+            );
+            return;
+        }
+
+        setActiveLesson(lessonItem.id);
+    };
+
+    const handleTaskClick = () => {
+        if (!isModuleCompleted) {
+            toast.warning("Complete all lessons in this module before attempting the Task!");
+            return;
+        }
+
+        navigate("/student/tasks", {
+            state: {
+                courseSlug: courseSlug || null,
+                moduleId: lesson?.id || null,
+            },
+        });
+    };
 
     return (
         <div id="lesson-module">
@@ -69,30 +109,33 @@ export default function LessonAccordion({
                             duration: 0.35,
                         }}
                     >
-                        {module.map((lesson) => (
-
-                            console.log("lesson", lesson), 
+                        {(module || []).map((lessonItem) => (
                             <motion.div
-                                key={lesson.id}
+                                key={lessonItem.id}
                                 whileHover={{
                                     x: 6,
                                 }}
                                 whileTap={{
                                     scale: 0.98,
                                 }}
-                                className={`accordion-lesson ${activeLesson === lesson.id
+                                className={`accordion-lesson ${activeLesson === lessonItem.id
                                         ? "active"
                                         : ""
-                                    }`}
+                                    } ${lessonItem.locked ? "locked" : ""}`}
                                 onClick={() =>
-                                    setActiveLesson(lesson.id)
+                                    handleLessonClick(lessonItem)
                                 }
                             >
                                 <div className="lesson-icon">
-                                    {lesson.completed ? (
+                                    {lessonItem.completed ? (
                                         <CheckCircle2
                                             size={18}
                                             className="completed"
+                                        />
+                                    ) : lessonItem.locked ? (
+                                        <FiLock
+                                            size={18}
+                                            className="locked"
                                         />
                                     ) : (
                                         <Circle
@@ -102,11 +145,51 @@ export default function LessonAccordion({
                                     )}
                                 </div>
 
-                                <div id="lesson-text">
-                                    <h4>{lesson.heading}</h4>
+<div id="lesson-text">
+                                    <h4>{lessonItem.heading}</h4>
                                 </div>
                             </motion.div>
                         ))}
+
+{/* Module Task Bar (rendered after the last lesson) */}
+                        <motion.div
+                            whileHover={{ x: 6 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={`accordion-task ${isModuleCompleted
+                                    ? "task-unlocked"
+                                    : "task-locked"}`}
+                            onClick={handleTaskClick}
+                        >
+                            <div className="task-icon">
+                                {isModuleTaskApproved ? (
+                                    <FiCheck
+                                        size={18}
+                                        className="task-check"
+                                    />
+                                ) : isModuleCompleted ? (
+                                    <FiCheckSquare
+                                        size={18}
+                                        className="task-ready"
+                                    />
+                                ) : (
+                                    <FiLock
+                                        size={18}
+                                        className="task-lock"
+                                    />
+                                )}
+                            </div>
+
+                            <div id="task-text">
+                                <h4>Module Task</h4>
+                                <small>{lesson.title} assignment</small>
+                            </div>
+
+                            {isModuleTaskApproved ? (
+                                <span className="task-badge badge-approved">Approved</span>
+                            ) : isModuleCompleted ? (
+                                <span className="task-badge">Ready</span>
+                            ) : null}
+                        </motion.div>
                     </motion.div>
                 )}
 

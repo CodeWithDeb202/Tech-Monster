@@ -105,3 +105,69 @@ export const getSingleTask = async (id) => {
     return data;
 
 };
+
+// ===============================
+// Admin Submission Review (new flow)
+// ===============================
+
+export const getAllSubmissions = async (status) => {
+
+    const { data } = await api.get(API.ADMIN.SUBMISSIONS.BASE, {
+
+        params: status ? { status } : {}
+
+    });
+
+    return data;
+
+};
+
+export const getSubmissionDetails = async (id) => {
+
+    const { data } = await api.get(API.ADMIN.SUBMISSIONS.DETAILS(id));
+
+    return data;
+
+};
+
+export const approveSubmission = async (id, comment) => {
+
+    const { data } = await api.put(
+
+        API.ADMIN.SUBMISSIONS.APPROVE(id),
+
+        { comment }
+
+    );
+
+    return data;
+
+};
+
+export const rejectSubmission = async (id, comment) => {
+
+    const { data } = await api.put(
+
+        API.ADMIN.SUBMISSIONS.REJECT(id),
+
+        { comment }
+
+    );
+
+    return data;
+
+};
+
+export const extendSubmissionDeadline = async (id, hours = 48) => {
+
+    const { data } = await api.put(
+
+        API.ADMIN.SUBMISSIONS.EXTEND(id),
+
+        { hours }
+
+    );
+
+    return data;
+
+};

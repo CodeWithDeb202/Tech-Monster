@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Task from "../models/Task.js";
 import StudentInternship from "../models/StudentInternship.js";
 import Certificate from "../models/Certificate.js";
@@ -154,10 +155,15 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
         code,
         answer,
         githubLink,
-        liveLink
+        liveLink,
+        taskId
     } = req.body;
 
-    const task = await Task.findById(req.params.id);
+    // Support both PATCH /:id/status (req.params.id) and the POST /submit
+    // endpoint (taskId in the body).
+    const id = req.params.id || taskId;
+
+    const task = await Task.findById(id);
 
     if (!task) {
         throw new AppError("Task not found", 404);
@@ -255,6 +261,80 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
 
 });
 
+
+
+// =====================================
+// SUBMIT COURSE TASK (POST /api/tasks/submit)
+// Course tasks live in JSON files and may not have a DB Task document.
+// This endpoint records the submission without throwing a 404 (which the
+// frontend axios interceptor would redirect to /404).
+// =====================================
+export const submitTask = asyncHandler(async (req, res) => {
+
+    const {
+        taskId,
+        code,
+        answer,
+        githubLink,
+        liveLink,
+        courseSlug
+    } = req.body;
+
+    if (!taskId) {
+        throw new AppError("taskId is required", 400);
+    }
+
+    // If a matching DB task exists, update it (best-effort) so admins can
+    // review it in the Task Approval section.
+    if (taskId && mongoose.isValidObjectId(taskId)) {
+        const task = await Task.findById(taskId);
+        if (task && task.assignedTo.toString() === req.user._id.toString()) {
+            task.code = code || "";
+            task.answer = answer || "";
+            task.githubLink = githubLink || "";
+            task.liveLink = liveLink || "";
+            task.status = "Completed";
+            task.reviewStatus = "Pending";
+            task.submittedAt = new Date();
+            await task.save();
+
+            await logActivity(
+                req,
+                req.user._id,
+                "SUBMIT_TASK",
+                "Task",
+                `Submitted task: ${task.title}`
+            );
+
+            const io = getIO();
+            io.emit("taskSubmitted", {
+                taskId: task._id,
+                student: req.user._id,
+                title: task.title,
+                status: task.status
+            });
+
+            const admins = await User.find({ role: "admin" });
+            for (const admin of admins) {
+                await Notification.create({
+                    user: admin._id,
+                    title: "Task Approval",
+                    message: `${req.user.firstName} ${req.user.lastName} submitted "${task.title}" for approval.`,
+                    type: "system"
+                });
+            }
+        }
+    }
+
+    // Always return success — course task progress is tracked client-side.
+    return res.status(200).json({
+        success: true,
+        message: "Task submitted successfully. Waiting for approval.",
+        taskId,
+        courseSlug
+    });
+
+});
 
 
 export const updateTask = asyncHandler(async (req, res) => {

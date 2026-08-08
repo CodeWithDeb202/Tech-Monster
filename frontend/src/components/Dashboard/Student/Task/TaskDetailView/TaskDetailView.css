@@ -1,0 +1,161 @@
+.task-detail-empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 4rem 1rem;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 1rem;
+}
+
+.task-detail-view {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(0, 234, 255, 0.12);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    backdrop-filter: blur(12px);
+}
+
+.task-detail-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.task-detail-badge {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 0.85rem;
+    background: rgba(0, 234, 255, 0.1);
+    border: 1px solid rgba(0, 234, 255, 0.25);
+    color: var(--neon);
+}
+
+.task-detail-badge svg {
+    font-size: 1.35rem;
+}
+
+.task-detail-level {
+    display: inline-block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--neon);
+    background: rgba(0, 234, 255, 0.1);
+    border: 1px solid rgba(0, 234, 255, 0.25);
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.3rem;
+}
+
+.task-detail-head h2 {
+    color: var(--text);
+    font-size: 1.3rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.task-detail-section {
+    margin-bottom: 1.4rem;
+}
+
+.task-detail-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.task-detail-section-title svg {
+    color: var(--neon);
+}
+
+.task-detail-section-title h3 {
+    color: var(--text);
+    font-size: 0.95rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.task-detail-problem {
+    color: var(--muted);
+    line-height: 1.65;
+    font-size: 0.92rem;
+    margin: 0;
+}
+
+.task-detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.task-detail-list li {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    padding-left: 1.1rem;
+    position: relative;
+}
+
+.task-detail-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--neon);
+    box-shadow: 0 0 6px rgba(0, 234, 255, 0.6);
+}
+
+.task-detail-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.task-detail-steps li {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+}
+
+.task-step-num {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(0, 234, 255, 0.12);
+    border: 1px solid rgba(0, 234, 255, 0.3);
+    color: var(--neon);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.task-detail-steps p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.task-detail-hints {
+    background: rgba(255, 200, 0, 0.04);
+    border: 1px solid rgba(255, 200, 0, 0.15);
+    border-radius: 0.85rem;
+    padding: 1rem;
+}

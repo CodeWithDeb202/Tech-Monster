@@ -1,53 +1,133 @@
 .tasks-page {
-
     padding: 35px;
-
     min-height: 100vh;
-
     background: #06111d;
-
+    color: var(--text);
 }
 
 .page-title {
-
     font-size: 38px;
-
     color: white;
-
     margin-bottom: 30px;
-
     font-weight: 700;
-
 }
 
 .weeks-wrapper {
-
     margin-left: 35px;
-
     padding-left: 25px;
-
     border-left: 2px solid rgba(0, 255, 255, .15);
-
     animation: fade .4s;
-
 }
 
 @keyframes fade {
-
     from {
-
         opacity: 0;
-
         transform: translateY(15px);
-
     }
-
     to {
-
         opacity: 1;
-
         transform: translateY(0);
+    }
+}
 
+/* =====================================================
+   TASK MANAGEMENT LAYOUT
+===================================================== */
+
+.task-page-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 1rem;
+    min-height: 70vh;
+}
+
+.tasks-layout {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    align-items: start;
+}
+
+.tasks-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+}
+
+.tasks-main-empty {
+    color: var(--muted);
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 4rem 1rem;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 1rem;
+}
+
+.task-deadline-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 234, 255, 0.14);
+    border-radius: 0.8rem;
+}
+
+.task-deadline-card span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.72rem;
+    margin-bottom: 0.25rem;
+}
+
+.task-deadline-card strong {
+    color: var(--neon);
+    font-size: 1.2rem;
+}
+
+.task-deadline-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    text-align: right;
+}
+
+.task-deadline-card.expired {
+    border-color: rgba(255, 51, 102, 0.35);
+    background: rgba(255, 51, 102, 0.08);
+}
+
+.task-deadline-card.expired strong {
+    color: #ff6b8a;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 960px) {
+    .tasks-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .tasks-page {
+        padding: 20px;
     }
 
+    .task-deadline-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .task-deadline-card p {
+        text-align: left;
+    }
 }
+

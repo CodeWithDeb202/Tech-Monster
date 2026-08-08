@@ -1,27 +1,12 @@
 import "./CircularProgress.css";
-import { useState } from "react";
-import { useTransform, useMotionValueEvent, motion } from "framer-motion";
+
+import { motion } from "framer-motion";
 
 export default function CircularProgress({
-    progress
+    value = 0
 }) {
-    const percentage = useTransform(progress, [0, 1], [0, 100]);
-
-    const [value, setValue] = useState(0);
-
-    useMotionValueEvent(
-
-        percentage,
-
-        "change",
-
-        latest => {
-
-            setValue(Math.round(latest));
-
-        }
-
-    );
+    // Clamp value between 0 and 100 so the ring never over/underflows.
+    const percent = Math.min(100, Math.max(0, Math.round(value || 0)));
 
     const radius = 25;
     const stroke = 5;
@@ -30,7 +15,8 @@ export default function CircularProgress({
 
     const circumference = normalizedRadius * 2 * Math.PI;
 
-    const strokeDashoffset = circumference - (value / 100) * circumference;
+    const strokeDashoffset =
+        circumference - (percent / 100) * circumference;
 
     return (
 
@@ -47,6 +33,7 @@ export default function CircularProgress({
             transition={{
                 duration: .6
             }}
+            title={`${percent}% read`}
         >
 
             <svg
@@ -94,23 +81,21 @@ export default function CircularProgress({
                     cy={radius}
                     strokeDasharray={circumference}
                     initial={{
-                        strokeDashoffset:
-                            circumference
+                        strokeDashoffset: circumference
                     }}
                     animate={{
                         strokeDashoffset
                     }}
                     transition={{
-                        duration: 1.2
+                        duration: .8,
+                        ease: "easeOut"
                     }}
                 />
             </svg>
 
             <div id="circle-content">
                 <h2>
-
-                    {value}%
-
+                    {percent}%
                 </h2>
             </div>
         </motion.div>

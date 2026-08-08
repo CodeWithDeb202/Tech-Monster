@@ -23,6 +23,10 @@ function Navbar({ role = "student"}) {
     const userName = user?.username || '';
     const capitalName = userName.toUpperCase() || userName;
 
+    // Resolve the profile image URL: support `profilePic` or `avatar` fields.
+    // If neither is a valid image URL, fall back to the FiUser placeholder.
+    const profileImg = user?.profilePic || user?.avatar || "";
+
 
     const navigate = useNavigate();
 
@@ -144,9 +148,17 @@ function Navbar({ role = "student"}) {
                             onMouseEnter={() => setShowProfilePopup(true)}
                             onMouseLeave={() => setShowProfilePopup(false)}
                         >
-                            <div id="user-profile">
+<div id="user-profile">
                                 <div id="avatar-circle">
-                                    <FiUser />
+                                    {profileImg ? (
+                                        <img
+                                            src={profileImg}
+                                            alt={userName || "User"}
+                                            className="user-profile-img"
+                                        />
+                                    ) : (
+                                        <FiUser />
+                                    )}
                                 </div>
                                 <span id="username">{userName || 'username'}</span>
                             </div>

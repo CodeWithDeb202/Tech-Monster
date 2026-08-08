@@ -8,10 +8,10 @@ const AllInternship = ({ internships = [], refreshDashboard }) => {
   const allCount = Array.isArray(internships) ? internships.length : 0;
 
   return (
-    <section className="all-courses">
+    <section id="all-courses">
 
       <motion.div
-        className="course-heading"
+        id="course-heading"
         initial={{ opacity: 0, x: -40 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
@@ -20,24 +20,14 @@ const AllInternship = ({ internships = [], refreshDashboard }) => {
         <p>Explore every available Internships</p>
       </motion.div>
 
-      <div className="course-grid">
-
+      <div id="course-grid">
         {internships.map((internship, index) => (
-          <motion.div
-            key={internship._id}
-            initial={{ opacity: 0, y: 80 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              delay: index * .1,
-              duration: .5
-            }}
-          >
+          
             <CourseCard
+              index={index}
               internship={internship}
               refreshDashboard={refreshDashboard}
             />
-          </motion.div>
         ))}
 
       </div>

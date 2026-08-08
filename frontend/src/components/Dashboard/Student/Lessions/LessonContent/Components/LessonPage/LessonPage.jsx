@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
-import api from "../../../../../../../services/api/axios";
 import "./LessonPage.css";
 
 import Heading from "./Components/Heading";
@@ -12,63 +10,11 @@ import Table from "./Components/Table";
 import OutputPreview from "./Components/OutputPreview";
 import Button from "./Components/Button";
 
-export default function LessonPage({ courseSlug: propCourseSlug }) {
-  const [course, setCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [activeLessonIndex, setActiveLessonIndex] = useState(0);
-
-  const courseSlug = useMemo(() => {
-    if (propCourseSlug) return propCourseSlug;
-
-    const path = typeof window !== "undefined" ? window.location.pathname : "";
-    const match = path.match(/\/lessons\/([^/]+)/i);
-    return match?.[1] || "frontend-dev";
-  }, [propCourseSlug]);
-
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchCourse = async () => {
-      try {
-        setLoading(true);
-        setError("");
-
-        const response = await api.get(`/internships/slug/${courseSlug}`);
-        const data = response?.data?.internship || null;
-
-        if (!mounted) return;
-
-        if (data?.slug) {
-          setCourse(data);
-        } else {
-          setError("Course content could not be loaded.");
-        }
-      } catch {
-        if (!mounted) return;
-        setError("Unable to load the lesson content right now.");
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchCourse();
-
-    return () => {
-      mounted = false;
-    };
-  }, [courseSlug]);
-
-  const lessons = useMemo(() => {
-    if (!course?.modules) return [];
-
-    return course.modules.flatMap((module) => module.lessons || []);
-  }, [course]);
-
-  const activeLesson = lessons[activeLessonIndex] || null;
-  const notes = activeLesson?.notes ? [activeLesson.notes] : [];
+export default function LessonPage({ lesson }) {
+  // `lesson` is the normalized section. The raw lesson body (notes, tasks, etc.)
+  // lives on `lesson.lesson`. Fall back gracefully either way.
+  const rawLesson = lesson?.lesson || lesson || {};
+  const notes = rawLesson?.notes ? [rawLesson.notes] : [];
 
   const renderNotes = () => {
     if (!notes.length) {
@@ -77,9 +23,9 @@ export default function LessonPage({ courseSlug: propCourseSlug }) {
 
     return notes.map((note, index) => (
       <section className="lesson-section" key={`${note?.heading || "note"}-${index}`}>
-        <Heading title={note?.heading} />
-        <SubHeading text={note?.subHeading || note?.heading} />
-        <Paragraph text={note?.paragraph || note?.overview} />
+        <Heading title={note?.heading || lesson?.heading} />
+        <SubHeading text={note?.subHeading || note?.heading || lesson?.heading} />
+        <Paragraph text={note?.paragraph || note?.overview || lesson?.paragraph} />
 
         {note?.importantNotesPoint?.length ? (
           <NotePoint points={note.importantNotesPoint} />
@@ -113,39 +59,8 @@ export default function LessonPage({ courseSlug: propCourseSlug }) {
     ));
   };
 
-  if (loading) {
-    return <div id="lesson-page" className="lesson-page--loading">Loading lesson content...</div>;
-  }
-
-  if (error) {
-    return <div id="lesson-page" className="lesson-page--error">{error}</div>;
-  }
-
   return (
     <div id="lesson-page">
-      <div className="lesson-page__header">
-        <div>
-          <p className="lesson-page__eyebrow">{course?.category || "Course"}</p>
-          <h1 className="lesson-page__title">{course?.title || "Lesson Content"}</h1>
-        </div>
-        <div className="lesson-page__meta">
-          <span>{course?.totalEstimatedHours || "40 Hours"}</span>
-          <span>{lessons.length} lessons</span>
-        </div>
-      </div>
-
-      <div className="lesson-page__toolbar">
-        {lessons.map((lesson, index) => (
-          <button
-            key={lesson.lessonId || `${lesson.lessonTitle}-${index}`}
-            className={`lesson-page__pill ${index === activeLessonIndex ? "is-active" : ""}`}
-            onClick={() => setActiveLessonIndex(index)}
-          >
-            {lesson.lessonTitle || `Lesson ${index + 1}`}
-          </button>
-        ))}
-      </div>
-
       {renderNotes()}
     </div>
   );

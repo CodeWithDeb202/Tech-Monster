@@ -100,3 +100,108 @@
     background-color: rgba(248, 113, 113, 0.1);
     color: #ef4444;
 }
+
+/* ---------- COLLAPSE TOGGLE BUTTON ---------- */
+#sidebar-collapse-btn {
+    position: absolute;
+    right: 1.2rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: #0f172a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 0 10px var(--glow);
+    transition: 0.3s;
+}
+
+#sidebar-collapse-btn:hover {
+    color: var(--neon);
+    border-color: var(--neon);
+}
+
+/* ---------- COLLAPSED MODE ---------- */
+.dashboard-sidebar {
+    position: relative;
+    transition: width 0.35s ease;
+}
+
+.dashboard-sidebar.collapsed {
+    width: 74px;
+}
+
+.dashboard-sidebar.collapsed .sidebar-menu {
+    padding: 20px 10px;
+}
+
+.dashboard-sidebar.collapsed .sidebar-menu li a,
+.dashboard-sidebar.collapsed .sidebar-footer a,
+.dashboard-sidebar.collapsed .logout-btn {
+    justify-content: center;
+    gap: 0;
+    padding: 12px;
+}
+
+.dashboard-sidebar.collapsed .sidebar-link-icon {
+    font-size: 1.25rem;
+    display: inline-flex;
+}
+
+.dashboard-sidebar.collapsed .lock-icon-right {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 11px;
+    margin-left: 0;
+}
+
+.dashboard-sidebar.collapsed .sidebar-footer {
+    padding: 10px;
+}
+
+/* Make collapsed list items position-relative so tooltips anchor correctly */
+.sidebar-menu li,
+.sidebar-footer a,
+.sidebar-footer .logout-btn {
+    position: relative;
+}
+
+/* ---------- TOOLTIPS (collapsed mode) ---------- */
+.sidebar-link-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-tooltip {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #0f172a;
+    color: #fff;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-sidebar.collapsed .sidebar-menu li a:hover .sidebar-tooltip,
+.dashboard-sidebar.collapsed .sidebar-footer a:hover .sidebar-tooltip,
+.dashboard-sidebar.collapsed .logout-btn:hover .sidebar-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
